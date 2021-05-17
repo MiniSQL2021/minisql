@@ -1,3 +1,0 @@
-grammar SQL;
-
-SELECT: 'select';
