@@ -1,9 +1,9 @@
 ### Custom ###
 c_cpp_properties.json
+antlr4_runtime
 
-
-# Created by https://www.toptal.com/developers/gitignore/api/macos,c++
-# Edit at https://www.toptal.com/developers/gitignore?templates=macos,c++
+# Created by https://www.toptal.com/developers/gitignore/api/c++,windows,macos,cmake
+# Edit at https://www.toptal.com/developers/gitignore?templates=c++,windows,macos,cmake
 
 ### C++ ###
 # Prerequisites
@@ -44,6 +44,24 @@ c_cpp_properties.json
 *.exe
 *.out
 *.app
+
+### CMake ###
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
+CMakeUserPresets.json
+
+### CMake Patch ###
+# External projects
+*-prefix/
 
 ### macOS ###
 # General
@@ -100,4 +118,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.toptal.com/developers/gitignore/api/macos,c++
+# End of https://www.toptal.com/developers/gitignore/api/c++,windows,macos,cmake
