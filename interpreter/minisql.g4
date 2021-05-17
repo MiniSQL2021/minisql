@@ -1,0 +1,3 @@
+grammar minisql;
+
+SELECT: 'select';
