@@ -1,3 +1,3 @@
-grammar minisql;
+grammar SQL;
 
 SELECT: 'select';

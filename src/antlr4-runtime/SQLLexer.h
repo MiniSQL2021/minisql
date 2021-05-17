@@ -1,5 +1,5 @@
 
-// Generated from /Users/cobalt/Projects/courses/database-system/minisql/interpreter/minisql.g4 by ANTLR 4.8
+// Generated from /Users/cobalt/Projects/courses/database-system/minisql/src/SQL.g4 by ANTLR 4.8
 
 #pragma once
 
@@ -9,14 +9,14 @@
 
 
 
-class  minisqlLexer : public antlr4::Lexer {
+class  SQLLexer : public antlr4::Lexer {
 public:
   enum {
     SELECT = 1
   };
 
-  minisqlLexer(antlr4::CharStream *input);
-  ~minisqlLexer();
+  SQLLexer(antlr4::CharStream *input);
+  ~SQLLexer();
 
   virtual std::string getGrammarFileName() const override;
   virtual const std::vector<std::string>& getRuleNames() const override;

@@ -1,0 +1,20 @@
+token literal names:
+null
+'select'
+
+token symbolic names:
+null
+SELECT
+
+rule names:
+SELECT
+
+channel names:
+DEFAULT_TOKEN_CHANNEL
+HIDDEN
+
+mode names:
+DEFAULT_MODE
+
+atn:
+[3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 2, 3, 12, 8, 1, 4, 2, 9, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2, 2, 2, 3, 3, 3, 3, 2, 2, 2, 11, 2, 3, 3, 2, 2, 2, 3, 5, 3, 2, 2, 2, 5, 6, 7, 117, 2, 2, 6, 7, 7, 103, 2, 2, 7, 8, 7, 110, 2, 2, 8, 9, 7, 103, 2, 2, 9, 10, 7, 101, 2, 2, 10, 11, 7, 118, 2, 2, 11, 4, 3, 2, 2, 2, 3, 2, 2]
