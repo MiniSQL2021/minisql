@@ -1,5 +1,4 @@
 ### Custom ###
-c_cpp_properties.json
 antlr4_runtime
 
 # Created by https://www.toptal.com/developers/gitignore/api/c++,windows,macos,cmake
