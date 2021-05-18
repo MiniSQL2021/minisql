@@ -75,7 +75,10 @@ statement:
 	createTableStatement
 	| dropTableStatement
 	| createIndexStatement
-	| dropIndexStatement;
+	| dropIndexStatement
+	| selectStatement
+	| insertStatement
+	| deleteStatement;
 
 commands: quitCommand | executeFileCommand;
 

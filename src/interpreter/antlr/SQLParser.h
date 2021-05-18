@@ -99,6 +99,9 @@ public:
     DropTableStatementContext *dropTableStatement();
     CreateIndexStatementContext *createIndexStatement();
     DropIndexStatementContext *dropIndexStatement();
+    SelectStatementContext *selectStatement();
+    InsertStatementContext *insertStatement();
+    DeleteStatementContext *deleteStatement();
 
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
