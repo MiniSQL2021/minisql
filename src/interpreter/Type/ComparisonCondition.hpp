@@ -13,10 +13,6 @@ class ComparisonCondition {
     const Literal value;
 
   public:
-    ComparisonCondition(std::string columnName, BinaryOpearator binaryOperator, int value)
-        : columnName(columnName), binaryOperator(binaryOperator), value(value){};
-    ComparisonCondition(std::string columnName, BinaryOpearator binaryOperator, float value)
-        : columnName(columnName), binaryOperator(binaryOperator), value(value){};
-    ComparisonCondition(std::string columnName, BinaryOpearator binaryOperator, std::string value)
+    ComparisonCondition(std::string columnName, BinaryOpearator binaryOperator, Literal value)
         : columnName(columnName), binaryOperator(binaryOperator), value(value){};
 };
