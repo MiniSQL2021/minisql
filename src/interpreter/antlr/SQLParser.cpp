@@ -1818,12 +1818,12 @@ tree::TerminalNode* SQLParser::BinaryOperatorContext::GREATER_THAN() {
   return getToken(SQLParser::GREATER_THAN, 0);
 }
 
-tree::TerminalNode* SQLParser::BinaryOperatorContext::LESS_OR_EQUAL_THAN() {
-  return getToken(SQLParser::LESS_OR_EQUAL_THAN, 0);
+tree::TerminalNode* SQLParser::BinaryOperatorContext::LESS_THAN_OR_EQUAL() {
+  return getToken(SQLParser::LESS_THAN_OR_EQUAL, 0);
 }
 
-tree::TerminalNode* SQLParser::BinaryOperatorContext::GREATER_OR_EQUAL_THAN() {
-  return getToken(SQLParser::GREATER_OR_EQUAL_THAN, 0);
+tree::TerminalNode* SQLParser::BinaryOperatorContext::GREATER_THAN_OR_EQUAL() {
+  return getToken(SQLParser::GREATER_THAN_OR_EQUAL, 0);
 }
 
 
@@ -1856,8 +1856,8 @@ SQLParser::BinaryOperatorContext* SQLParser::binaryOperator() {
       | (1ULL << SQLParser::NOT_EQUAL)
       | (1ULL << SQLParser::LESS_THAN)
       | (1ULL << SQLParser::GREATER_THAN)
-      | (1ULL << SQLParser::LESS_OR_EQUAL_THAN)
-      | (1ULL << SQLParser::GREATER_OR_EQUAL_THAN))) != 0))) {
+      | (1ULL << SQLParser::LESS_THAN_OR_EQUAL)
+      | (1ULL << SQLParser::GREATER_THAN_OR_EQUAL))) != 0))) {
     _errHandler->recoverInline(this);
     }
     else {
@@ -2053,8 +2053,8 @@ std::vector<std::string> SQLParser::_symbolicNames = {
   "INT_NUMBER", "DECIMAL_NUMBER", "FLOAT_NUMBER", "CREATE", "DROP", "SELECT", 
   "INSERT", "DELETE", "QUIT", "EXEC_FILE", "FROM", "WHERE", "ON", "INTO", 
   "TABLE", "KEY", "INDEX", "VALUES", "PRIMARY", "UNIQUE", "INT", "CHAR", 
-  "FLOAT", "AND", "EQUAL", "NOT_EQUAL", "LESS_THAN", "GREATER_THAN", "LESS_OR_EQUAL_THAN", 
-  "GREATER_OR_EQUAL_THAN", "WHITESPACE", "IDENTIFIER", "BACKTICK_QUOTED_ID", 
+  "FLOAT", "AND", "EQUAL", "NOT_EQUAL", "LESS_THAN", "GREATER_THAN", "LESS_THAN_OR_EQUAL", 
+  "GREATER_THAN_OR_EQUAL", "WHITESPACE", "IDENTIFIER", "BACKTICK_QUOTED_ID", 
   "DOUBLE_QUOTED_STRING", "SINGLE_QUOTED_STRING", "STRING"
 };
 

@@ -48,8 +48,8 @@ EQUAL: '=';
 NOT_EQUAL: '<>';
 LESS_THAN: '<';
 GREATER_THAN: '>';
-LESS_OR_EQUAL_THAN: '<=';
-GREATER_OR_EQUAL_THAN: '>=';
+LESS_THAN_OR_EQUAL: '<=';
+GREATER_THAN_OR_EQUAL: '>=';
 
 // White space handling: ignore whitespaces
 WHITESPACE: [ \t\f\r\n] -> channel(HIDDEN);
@@ -144,8 +144,8 @@ binaryOperator:
 	| NOT_EQUAL
 	| LESS_THAN
 	| GREATER_THAN
-	| LESS_OR_EQUAL_THAN
-	| GREATER_OR_EQUAL_THAN;
+	| LESS_THAN_OR_EQUAL
+	| GREATER_THAN_OR_EQUAL;
 
 filePath: .*?;
 
