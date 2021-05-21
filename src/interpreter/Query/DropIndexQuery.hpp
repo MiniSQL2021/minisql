@@ -4,7 +4,7 @@
 
 #include "Query.hpp"
 
-class DropIndexQuery : Query {
+class DropIndexQuery : public Query {
     const std::string indexName;
 
   public:

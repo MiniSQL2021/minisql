@@ -7,7 +7,7 @@
 #include "Literal.hpp"
 #include "Query.hpp"
 
-class InsertQuery : Query {
+class InsertQuery : public Query {
     const std::string tableName;
     const std::vector<Literal> values;
 

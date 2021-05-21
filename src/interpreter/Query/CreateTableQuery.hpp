@@ -3,7 +3,7 @@
 #include "Column.hpp"
 #include "Query.hpp"
 
-class CreateTableQuery : Query {
+class CreateTableQuery : public Query {
     const std::string tableName;
     const std::vector<Column> columns;
     const std::string primaryKey;

@@ -4,7 +4,7 @@
 
 #include "Query.hpp"
 
-class CreateIndexQuery : Query {
+class CreateIndexQuery : public Query {
     const std::string indexName;
     const std::string tableName;
     const std::string columnName;

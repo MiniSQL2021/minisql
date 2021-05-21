@@ -4,7 +4,7 @@
 
 #include "Query.hpp"
 
-class DropTableQuery : Query {
+class DropTableQuery : public Query {
     const std::string tableName;
 
   public:

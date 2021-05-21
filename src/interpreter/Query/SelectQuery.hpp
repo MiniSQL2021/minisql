@@ -6,7 +6,7 @@
 #include "ComparisonCondition.hpp"
 #include "Query.hpp"
 
-class SelectQuery : Query {
+class SelectQuery : public Query {
     const std::string tableName;
     const std::vector<ComparisonCondition> conditions;
 
