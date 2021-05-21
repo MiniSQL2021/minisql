@@ -25,6 +25,8 @@ class Literal {
         if (std::holds_alternative<int>(value)) return LiteralType::Int;
         if (std::holds_alternative<float>(value)) return LiteralType::Float;
         if (std::holds_alternative<std::string>(value)) return LiteralType::String;
+        else
+            assert("No available type");
     }
 
     std::optional<int> intValue() { return getValue<int>(); }

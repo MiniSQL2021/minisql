@@ -1,7 +1,7 @@
-#include "SQLCustomVisitor.hpp"
 #include "Query.hpp"
+#include "QueryParser.hpp"
 
-Query SQLCustomVisitor::parseQuery(SQLParser::QueryContext *ctx) {
+Query QueryParser::parse(SQLParser::QueryContext *ctx) {
     if (ctx->statement()) {
         if (ctx->statement()->createTableStatement())
             return parseCreateTableStatement(ctx->statement()->createTableStatement());

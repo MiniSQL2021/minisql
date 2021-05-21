@@ -1,8 +1,8 @@
 #include "BinaryOperator.hpp"
 #include "Literal.hpp"
-#include "SQLCustomVisitor.hpp"
+#include "QueryParser.hpp"
 
-std::string SQLCustomVisitor::parseIdentifier(SQLParser::IdentifierContext *ctx) {
+std::string QueryParser::parseIdentifier(SQLParser::IdentifierContext *ctx) {
     if (ctx->IDENTIFIER()) return ctx->IDENTIFIER()->getText();
     else {
         std::string backtickQuotedString = ctx->BACKTICK_QUOTED_ID()->getText();
@@ -10,7 +10,7 @@ std::string SQLCustomVisitor::parseIdentifier(SQLParser::IdentifierContext *ctx)
     }
 }
 
-Literal SQLCustomVisitor::parseLiteral(SQLParser::LiteralContext *ctx) {
+Literal QueryParser::parseLiteral(SQLParser::LiteralContext *ctx) {
     if (ctx->string()) return Literal(parseString(ctx->string()));
     if (ctx->number()->INT_NUMBER())
         return Literal(std::stoi(ctx->number()->INT_NUMBER()->getText()));
@@ -20,13 +20,13 @@ Literal SQLCustomVisitor::parseLiteral(SQLParser::LiteralContext *ctx) {
         return Literal(std::stof(ctx->number()->FLOAT_NUMBER()->getText()));
 }
 
-std::string SQLCustomVisitor::parseString(SQLParser::StringContext *ctx) {
+std::string QueryParser::parseString(SQLParser::StringContext *ctx) {
     std::string text = ctx->SINGLE_QUOTED_STRING() ? ctx->SINGLE_QUOTED_STRING()->getText()
                                                    : ctx->DOUBLE_QUOTED_STRING()->getText();
     return text.substr(1, text.length() - 2);
 }
 
-BinaryOpearator SQLCustomVisitor::parseBinaryOperator(SQLParser::BinaryOperatorContext *ctx) {
+BinaryOpearator QueryParser::parseBinaryOperator(SQLParser::BinaryOperatorContext *ctx) {
     if (ctx->EQUAL()) return BinaryOpearator::Equal;
     if (ctx->NOT_EQUAL()) return BinaryOpearator::NotEqual;
     if (ctx->LESS_THAN()) return BinaryOpearator::LessThan;

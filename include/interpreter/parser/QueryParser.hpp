@@ -6,11 +6,11 @@
 #include "ComparisonCondition.hpp"
 #include "Queries.hpp"
 #include "Query.hpp"
-#include "SQLBaseVisitor.h"
+#include "SQLParser.h"
 
-class SQLCustomVisitor : public SQLBaseVisitor {
+class QueryParser {
   public:
-    Query parseQuery(SQLParser::QueryContext *ctx);
+    Query parse(SQLParser::QueryContext *ctx);
 
     CreateTableQuery parseCreateTableStatement(SQLParser::CreateTableStatementContext *ctx);
     DropTableQuery parseDropTableStatement(SQLParser::DropTableStatementContext *ctx);

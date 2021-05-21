@@ -1,8 +1,7 @@
 #include "Interpreter.hpp"
-#include "antlr/SQLLexer.h"
-#include "antlr/SQLParser.h"
-#include "antlr/SQLVisitor.h"
-// #include "antlr4-runtime.h"
+#include "SQLLexer.h"
+#include "SQLParser.h"
+#include "SQLVisitor.h"
 
 #include <iostream>
 #include <sstream>
@@ -17,6 +16,4 @@ void Interpreter::parse(std::string string) {
     SQLParser parser(&tokens);
 
     SQLParser::QueryContext *tree = parser.query();
-
-    std::cout << tree->toStringTree(true) << std::endl;
 }
