@@ -1,23 +1,12 @@
 # minimum required CMAKE version
-CMAKE_MINIMUM_REQUIRED(VERSION 3.7 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.19)
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+project(miniSQL VERSION 0.1.0
+                DESCRIPTION "Mini SQL implementation."
+                LANGUAGES CXX)
 
-# compiler must be 11 or 14
-set(CMAKE_CXX_STANDARD 11)
+# add_definitions(-DANTLR4CPP_STATIC)
 
-# required if linking to static library
-add_definitions(-DANTLR4CPP_STATIC)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-# add external build for antlrcpp
-include(ExternalAntlr4Cpp)
-# add antrl4cpp artifacts to project environment
-include_directories(${ANTLR4_INCLUDE_DIRS})
-
-file (GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "src/*.cpp")
-file (GLOB_RECURSE HEADERS CONFIGURE_DEPENDS "src/*.h")
-
-# add generated grammar to demo binary target
-add_executable(main.out ${SOURCES})
-target_link_libraries(main.out antlr4_static)
-target_include_directories(main.out PRIVATE ${HEADERS})
+add_subdirectory(src)
