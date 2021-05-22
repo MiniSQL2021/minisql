@@ -2,7 +2,6 @@
 
 #include <string>
 
-class Interpreter {
-  public:
+struct Interpreter {
     void parse(std::string string);
 };

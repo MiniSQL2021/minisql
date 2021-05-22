@@ -2,17 +2,17 @@
 
 #include <optional>
 #include <string>
+#include <utility>
 #include <variant>
 
 #include "BinaryOperator.hpp"
 #include "Literal.hpp"
 
-class ComparisonCondition {
+struct ComparisonCondition {
     const std::string columnName;
     const BinaryOpearator binaryOperator;
     const Literal value;
 
-  public:
     ComparisonCondition(std::string columnName, BinaryOpearator binaryOperator, Literal value)
-        : columnName(columnName), binaryOperator(binaryOperator), value(value){};
+            : columnName(std::move(columnName)), binaryOperator(binaryOperator), value(std::move(value)) {};
 };

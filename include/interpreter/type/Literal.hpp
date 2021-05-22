@@ -7,20 +7,25 @@
 
 using LiteralVariant = std::variant<int, float, std::string>;
 
-enum class LiteralType { Int, Float, String };
+enum class LiteralType {
+    Int, Float, String
+};
 
 class Literal {
     LiteralVariant value;
 
-    template <typename T> std::optional<T> getValue() {
+    template<typename T>
+    std::optional<T> getValue() {
         return std::holds_alternative<T>(value) ? std::optional<T>(std::get<T>(value))
                                                 : std::nullopt;
     }
 
-  public:
-    Literal(int value) : value(value){};
-    Literal(float value) : value(value){};
-    Literal(std::string value) : value(value){};
+public:
+    explicit Literal(int value) : value(value) {};
+
+    explicit Literal(float value) : value(value) {};
+
+    explicit Literal(std::string value) : value(value) {};
 
     LiteralType type() {
         if (std::holds_alternative<int>(value)) return LiteralType::Int;
@@ -30,6 +35,8 @@ class Literal {
     }
 
     std::optional<int> intValue() { return getValue<int>(); }
+
     std::optional<float> floatValue() { return getValue<float>(); }
+
     std::optional<std::string> stringValue() { return getValue<std::string>(); }
 };

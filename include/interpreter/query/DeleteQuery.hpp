@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "ComparisonCondition.hpp"
@@ -11,5 +12,5 @@ struct DeleteQuery : public Query {
     const std::vector<ComparisonCondition> conditions;
 
     DeleteQuery(std::string tableName, std::vector<ComparisonCondition> conditions)
-        : Query(QueryType::Delete), tableName(tableName), conditions(conditions){};
+        : Query(QueryType::Delete), tableName(std::move(tableName)), conditions(std::move(conditions)){};
 };

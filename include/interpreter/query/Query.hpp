@@ -15,6 +15,7 @@ enum class QueryType {
 struct Query {
     const QueryType type;
 
-    Query(QueryType type) : type(type){};
-    virtual ~Query(){};
+    explicit Query(QueryType type) : type(type) {};
+
+    virtual ~Query() = default;
 };
