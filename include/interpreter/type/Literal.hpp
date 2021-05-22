@@ -1,6 +1,7 @@
 #pragma once
 
 #include <optional>
+#include <stdexcept>
 #include <string>
 #include <variant>
 
@@ -25,8 +26,7 @@ class Literal {
         if (std::holds_alternative<int>(value)) return LiteralType::Int;
         if (std::holds_alternative<float>(value)) return LiteralType::Float;
         if (std::holds_alternative<std::string>(value)) return LiteralType::String;
-        else
-            assert("No available type");
+        throw std::logic_error("Unexpected type of Literal");
     }
 
     std::optional<int> intValue() { return getValue<int>(); }

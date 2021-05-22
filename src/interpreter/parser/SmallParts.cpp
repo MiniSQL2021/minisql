@@ -18,6 +18,7 @@ Literal QueryParser::parseLiteral(SQLParser::LiteralContext *ctx) {
         return Literal(std::stof(ctx->number()->DECIMAL_NUMBER()->getText()));
     if (ctx->number()->FLOAT_NUMBER())
         return Literal(std::stof(ctx->number()->FLOAT_NUMBER()->getText()));
+    throw std::logic_error("Unexpected Literal");
 }
 
 std::string QueryParser::parseString(SQLParser::StringContext *ctx) {
@@ -33,4 +34,5 @@ BinaryOpearator QueryParser::parseBinaryOperator(SQLParser::BinaryOperatorContex
     if (ctx->GREATER_THAN()) return BinaryOpearator::GreaterThan;
     if (ctx->LESS_THAN_OR_EQUAL()) return BinaryOpearator::LessThanOrEqual;
     if (ctx->GREATER_THAN_OR_EQUAL()) return BinaryOpearator::GreaterThanOrEqual;
+    throw std::logic_error("Unexpected BinaryOperator");
 }
