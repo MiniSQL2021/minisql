@@ -8,8 +8,7 @@
 #include "Query.hpp"
 #include "SQLParser.h"
 
-class QueryParser {
-  public:
+struct QueryParser {
     Query parse(SQLParser::QueryContext *ctx);
 
     CreateTableQuery parseCreateTableStatement(SQLParser::CreateTableStatementContext *ctx);

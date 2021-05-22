@@ -12,10 +12,9 @@ enum class QueryType {
     ExecuteFile
 };
 
-class Query {
+struct Query {
     const QueryType type;
 
-  public:
     Query(QueryType type) : type(type){};
     virtual ~Query(){};
 };

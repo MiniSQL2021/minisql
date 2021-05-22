@@ -2,7 +2,6 @@
 
 #include "Query.hpp"
 
-class QuitQuery : public Query {
-  public:
+struct QuitQuery : public Query {
     QuitQuery() : Query(QueryType::Quit){};
 };
