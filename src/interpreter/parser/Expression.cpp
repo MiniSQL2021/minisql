@@ -6,15 +6,15 @@ Column QueryParser::parseColumnElement(SQLParser::ColumnElementContext *ctx) {
     std::string columnName = parseIdentifier(ctx->columnName);
 
     LiteralType type;
-    std::optional<int> maxLength;
-    if (ctx->dataType()->intType()) type = LiteralType::Int;
-    if (ctx->dataType()->floatType()) type = LiteralType::Float;
     if (ctx->dataType()->charType()) {
         type = LiteralType::String;
-        maxLength = std::stoi(ctx->dataType()->charType()->INT_NUMBER()->getText());
+        int maxLength = std::stoi(ctx->dataType()->charType()->INT_NUMBER()->getText());
+        return Column(columnName, type, maxLength, ctx->unique != nullptr);
     }
+    if (ctx->dataType()->intType()) type = LiteralType::Int;
+    if (ctx->dataType()->floatType()) type = LiteralType::Float;
 
-    return Column(columnName, type, !!ctx->unique);
+    return Column(columnName, type, ctx->unique != nullptr);
 }
 
 std::vector<Column> QueryParser::parseColumnElementList(SQLParser::ColumnElementListContext *ctx) {
