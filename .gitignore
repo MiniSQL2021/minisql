@@ -1,5 +1,6 @@
 ### Custom ###
 build
+.vscode
 
 # Created by https://www.toptal.com/developers/gitignore/api/c++,windows,macos,cmake
 # Edit at https://www.toptal.com/developers/gitignore?templates=c++,windows,macos,cmake
