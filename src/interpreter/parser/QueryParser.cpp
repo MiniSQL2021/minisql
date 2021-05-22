@@ -1,7 +1,9 @@
+#include <memory>
+
 #include "QueryParser.hpp"
 #include "Query.hpp"
 
-Query QueryParser::parse(SQLParser::QueryContext *ctx) {
+std::unique_ptr<Query> QueryParser::parse(SQLParser::QueryContext *ctx) {
     if (ctx->statement()) {
         if (ctx->statement()->createTableStatement())
             return parseCreateTableStatement(ctx->statement()->createTableStatement());
@@ -21,7 +23,7 @@ Query QueryParser::parse(SQLParser::QueryContext *ctx) {
             return parseDeleteStatement(ctx->statement()->deleteStatement());
         throw std::logic_error("Unexpected statement");
     } else {
-        if (ctx->commands()->quitCommand()) return parseQuitCommand(ctx->commands()->quitCommand());
+        if (ctx->commands()->quitCommand()) return std::make_unique<QuitQuery>();
         if (ctx->commands()->executeFileCommand())
             return parseExecuteFileCommand(ctx->commands()->executeFileCommand());
         throw std::logic_error("Unexpected command");

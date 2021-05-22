@@ -3,5 +3,5 @@
 #include <string>
 
 struct Interpreter {
-    void parse(std::string string);
+    static void parse(const std::string &string);
 };

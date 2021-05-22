@@ -1,41 +1,39 @@
 #include "Queries.hpp"
 #include "QueryParser.hpp"
 
-CreateTableQuery
+std::unique_ptr<CreateTableQuery>
 QueryParser::parseCreateTableStatement(SQLParser::CreateTableStatementContext *ctx) {
-    return CreateTableQuery(parseIdentifier(ctx->tableName),
-                            parseColumnElementList(ctx->columnElementList()),
-                            parsePrimaryKeyConstraint(ctx->primaryKeyConstraint()));
+    return std::make_unique<CreateTableQuery>(parseIdentifier(ctx->tableName),
+                                              parseColumnElementList(ctx->columnElementList()),
+                                              parsePrimaryKeyConstraint(ctx->primaryKeyConstraint()));
 }
 
-DropTableQuery QueryParser::parseDropTableStatement(SQLParser::DropTableStatementContext *ctx) {
-    return DropTableQuery(parseIdentifier(ctx->tableName));
+std::unique_ptr<DropTableQuery> QueryParser::parseDropTableStatement(SQLParser::DropTableStatementContext *ctx) {
+    return std::make_unique<DropTableQuery>(parseIdentifier(ctx->tableName));
 }
 
-CreateIndexQuery
+std::unique_ptr<CreateIndexQuery>
 QueryParser::parseCreateIndexStatement(SQLParser::CreateIndexStatementContext *ctx) {
-    return CreateIndexQuery(parseIdentifier(ctx->indexName), parseIdentifier(ctx->tableName),
-                            parseIdentifier(ctx->columnName));
+    return std::make_unique<CreateIndexQuery>(parseIdentifier(ctx->indexName), parseIdentifier(ctx->tableName),
+                                              parseIdentifier(ctx->columnName));
 }
 
-DropIndexQuery QueryParser::parseDropIndexStatement(SQLParser::DropIndexStatementContext *ctx) {
-    return DropIndexQuery(parseIdentifier(ctx->indexName));
+std::unique_ptr<DropIndexQuery> QueryParser::parseDropIndexStatement(SQLParser::DropIndexStatementContext *ctx) {
+    return std::make_unique<DropIndexQuery>(parseIdentifier(ctx->indexName));
 }
 
-SelectQuery QueryParser::parseSelectStatement(SQLParser::SelectStatementContext *ctx) {
-    return SelectQuery(parseIdentifier(ctx->tableName), parseWhereClause(ctx->whereClause()));
+std::unique_ptr<SelectQuery> QueryParser::parseSelectStatement(SQLParser::SelectStatementContext *ctx) {
+    return std::make_unique<SelectQuery>(parseIdentifier(ctx->tableName), parseWhereClause(ctx->whereClause()));
 }
 
-InsertQuery QueryParser::parseInsertStatement(SQLParser::InsertStatementContext *ctx) {
-    return InsertQuery(parseIdentifier(ctx->tableName), parseAttributeList(ctx->attributeList()));
+std::unique_ptr<InsertQuery> QueryParser::parseInsertStatement(SQLParser::InsertStatementContext *ctx) {
+    return std::make_unique<InsertQuery>(parseIdentifier(ctx->tableName), parseAttributeList(ctx->attributeList()));
 }
 
-DeleteQuery QueryParser::parseDeleteStatement(SQLParser::DeleteStatementContext *ctx) {
-    return DeleteQuery(parseIdentifier(ctx->tableName), parseWhereClause(ctx->whereClause()));
+std::unique_ptr<DeleteQuery> QueryParser::parseDeleteStatement(SQLParser::DeleteStatementContext *ctx) {
+    return std::make_unique<DeleteQuery>(parseIdentifier(ctx->tableName), parseWhereClause(ctx->whereClause()));
 }
 
-QuitQuery QueryParser::parseQuitCommand(SQLParser::QuitCommandContext *ctx) { return QuitQuery(); }
-
-ExecuteFileQuery QueryParser::parseExecuteFileCommand(SQLParser::ExecuteFileCommandContext *ctx) {
-    return ExecuteFileQuery(ctx->filePath()->getText());
+std::unique_ptr<ExecuteFileQuery> QueryParser::parseExecuteFileCommand(SQLParser::ExecuteFileCommandContext *ctx) {
+    return std::make_unique<ExecuteFileQuery>(ctx->filePath()->getText());
 }

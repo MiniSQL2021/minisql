@@ -9,38 +9,46 @@
 #include "SQLParser.h"
 
 struct QueryParser {
-    Query parse(SQLParser::QueryContext *ctx);
+    static std::unique_ptr<Query> parse(SQLParser::QueryContext *ctx);
 
-    CreateTableQuery parseCreateTableStatement(SQLParser::CreateTableStatementContext *ctx);
-    DropTableQuery parseDropTableStatement(SQLParser::DropTableStatementContext *ctx);
-    CreateIndexQuery parseCreateIndexStatement(SQLParser::CreateIndexStatementContext *ctx);
-    DropIndexQuery parseDropIndexStatement(SQLParser::DropIndexStatementContext *ctx);
-    SelectQuery parseSelectStatement(SQLParser::SelectStatementContext *ctx);
-    InsertQuery parseInsertStatement(SQLParser::InsertStatementContext *ctx);
-    DeleteQuery parseDeleteStatement(SQLParser::DeleteStatementContext *ctx);
+    static std::unique_ptr<CreateTableQuery> parseCreateTableStatement(SQLParser::CreateTableStatementContext *ctx);
 
-    QuitQuery parseQuitCommand(SQLParser::QuitCommandContext *ctx);
-    ExecuteFileQuery parseExecuteFileCommand(SQLParser::ExecuteFileCommandContext *ctx);
+    static std::unique_ptr<DropTableQuery> parseDropTableStatement(SQLParser::DropTableStatementContext *ctx);
+
+    static std::unique_ptr<CreateIndexQuery> parseCreateIndexStatement(SQLParser::CreateIndexStatementContext *ctx);
+
+    static std::unique_ptr<DropIndexQuery> parseDropIndexStatement(SQLParser::DropIndexStatementContext *ctx);
+
+    static std::unique_ptr<SelectQuery> parseSelectStatement(SQLParser::SelectStatementContext *ctx);
+
+    static std::unique_ptr<InsertQuery> parseInsertStatement(SQLParser::InsertStatementContext *ctx);
+
+    static std::unique_ptr<DeleteQuery> parseDeleteStatement(SQLParser::DeleteStatementContext *ctx);
+
+    static std::unique_ptr<ExecuteFileQuery> parseExecuteFileCommand(SQLParser::ExecuteFileCommandContext *ctx);
 
     // MARK: - Clause
-    std::vector<ComparisonCondition> parseWhereClause(SQLParser::WhereClauseContext *ctx);
+    static std::vector<ComparisonCondition> parseWhereClause(SQLParser::WhereClauseContext *ctx);
 
     // MARK: - Secondary expression
-    Column parseColumnElement(SQLParser::ColumnElementContext *ctx);
-    std::vector<Column> parseColumnElementList(SQLParser::ColumnElementListContext *ctx);
+    static Column parseColumnElement(SQLParser::ColumnElementContext *ctx);
 
-    std::string parsePrimaryKeyConstraint(SQLParser::PrimaryKeyConstraintContext *ctx);
+    static std::vector<Column> parseColumnElementList(SQLParser::ColumnElementListContext *ctx);
 
-    ComparisonCondition parseCondition(SQLParser::ConditionContext *ctx);
-    std::vector<ComparisonCondition> parseConditionList(SQLParser::ConditionListContext *ctx);
+    static std::string parsePrimaryKeyConstraint(SQLParser::PrimaryKeyConstraintContext *ctx);
 
-    std::vector<Literal> parseAttributeList(SQLParser::AttributeListContext *ctx);
+    static ComparisonCondition parseCondition(SQLParser::ConditionContext *ctx);
+
+    static std::vector<ComparisonCondition> parseConditionList(SQLParser::ConditionListContext *ctx);
+
+    static std::vector<Literal> parseAttributeList(SQLParser::AttributeListContext *ctx);
 
     // MARK: - Small Parts
-    std::string parseIdentifier(SQLParser::IdentifierContext *ctx);
+    static std::string parseIdentifier(SQLParser::IdentifierContext *ctx);
 
-    Literal parseLiteral(SQLParser::LiteralContext *ctx);
-    std::string parseString(SQLParser::StringContext *ctx);
+    static Literal parseLiteral(SQLParser::LiteralContext *ctx);
 
-    BinaryOpearator parseBinaryOperator(SQLParser::BinaryOperatorContext *ctx);
+    static std::string parseString(SQLParser::StringContext *ctx);
+
+    static BinaryOpearator parseBinaryOperator(SQLParser::BinaryOperatorContext *ctx);
 };
