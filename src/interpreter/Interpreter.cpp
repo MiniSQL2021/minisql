@@ -1,4 +1,5 @@
 #include "Interpreter.hpp"
+#include "QueryParser.hpp"
 #include "SQLLexer.h"
 #include "SQLParser.h"
 #include "SQLVisitor.h"
@@ -16,4 +17,10 @@ void Interpreter::parse(std::string string) {
     SQLParser parser(&tokens);
 
     SQLParser::QueryContext *tree = parser.query();
+    QueryParser queryParser;
+    auto result = queryParser.parse(tree);
+
+    if (auto selectQuery = dynamic_cast<SelectQuery *>(&result)) {
+        std::cout << selectQuery->tableName << std::endl;
+    }
 }
