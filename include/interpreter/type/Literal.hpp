@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <string>
 #include <variant>
+#include <sstream>
 
 using LiteralVariant = std::variant<int, float, std::string>;
 
@@ -12,10 +13,10 @@ enum class LiteralType {
 };
 
 class Literal {
-    LiteralVariant value;
+    const LiteralVariant value;
 
     template<typename T>
-    std::optional<T> getValue() {
+    [[nodiscard]] std::optional<T> getValue() const {
         return std::holds_alternative<T>(value) ? std::optional<T>(std::get<T>(value))
                                                 : std::nullopt;
     }
@@ -25,18 +26,35 @@ public:
 
     explicit Literal(float value) : value(value) {};
 
-    explicit Literal(std::string value) : value(value) {};
+    explicit Literal(std::string value) : value(std::move(value)) {};
 
-    LiteralType type() {
+    [[nodiscard]] LiteralType type() const {
         if (std::holds_alternative<int>(value)) return LiteralType::Int;
         if (std::holds_alternative<float>(value)) return LiteralType::Float;
         if (std::holds_alternative<std::string>(value)) return LiteralType::String;
         throw std::logic_error("Unexpected type of Literal");
     }
 
-    std::optional<int> intValue() { return getValue<int>(); }
+    [[nodiscard]] std::optional<int> intValue() const { return getValue<int>(); }
 
-    std::optional<float> floatValue() { return getValue<float>(); }
+    [[nodiscard]]std::optional<float> floatValue() const { return getValue<float>(); }
 
-    std::optional<std::string> stringValue() { return getValue<std::string>(); }
+    [[nodiscard]] std::optional<std::string> stringValue() const { return getValue<std::string>(); }
+
+    [[nodiscard]] std::string toString() const {
+        std::stringstream stream;
+        switch (type()) {
+            case LiteralType::Int:
+                stream << "int(" << intValue().value();
+                break;
+            case LiteralType::Float:
+                stream << "float(" << floatValue().value();
+                break;
+            case LiteralType::String:
+                stream << "string(" << stringValue().value();
+                break;
+        }
+        stream << ")";
+        return stream.str();
+    }
 };
