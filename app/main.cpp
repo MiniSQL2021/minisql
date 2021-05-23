@@ -3,8 +3,10 @@
 #include <iostream>
 
 int main() {
-    Interpreter interpreter(std::cin);
-    interpreter.parse();
+    std::string str;
+    while (std::getline(std::cin, str)) {
+        Interpreter::parse(str);
+    }
 
     return 0;
 }
