@@ -12,5 +12,5 @@ struct SelectQuery : public Query {
     const std::vector<ComparisonCondition> conditions;
 
     SelectQuery(std::string tableName, std::vector<ComparisonCondition> conditions)
-        : Query(QueryType::Select), tableName(std::move(tableName)), conditions(std::move(conditions)){};
+            : Query(QueryType::Select), tableName(std::move(tableName)), conditions(std::move(conditions)) {};
 };
