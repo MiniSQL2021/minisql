@@ -3,11 +3,8 @@
 #include <iostream>
 
 int main() {
-    std::string str;
-    std::getline(std::cin, str);
-
-    Interpreter interpreter;
-    interpreter.parse(str);
+    Interpreter interpreter(std::cin);
+    interpreter.parse();
 
     return 0;
 }
