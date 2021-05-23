@@ -13,5 +13,5 @@ struct InsertQuery : public Query {
     const std::vector<Literal> values;
 
     InsertQuery(std::string tableName, std::vector<Literal> values)
-        : Query(QueryType::Insert), tableName(std::move(tableName)), values(std::move(values)){};
+            : Query(QueryType::Insert), tableName(std::move(tableName)), values(std::move(values)) {};
 };

@@ -8,5 +8,5 @@
 struct DropTableQuery : public Query {
     const std::string tableName;
 
-    explicit DropTableQuery(std::string tableName) : Query(QueryType::DropTable), tableName(std::move(tableName)){};
+    explicit DropTableQuery(std::string tableName) : Query(QueryType::DropTable), tableName(std::move(tableName)) {};
 };

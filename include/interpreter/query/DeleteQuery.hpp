@@ -12,5 +12,5 @@ struct DeleteQuery : public Query {
     const std::vector<ComparisonCondition> conditions;
 
     DeleteQuery(std::string tableName, std::vector<ComparisonCondition> conditions)
-        : Query(QueryType::Delete), tableName(std::move(tableName)), conditions(std::move(conditions)){};
+            : Query(QueryType::Delete), tableName(std::move(tableName)), conditions(std::move(conditions)) {};
 };
