@@ -1,27 +1,33 @@
 #include <iostream>
 
 #include "Interpreter.hpp"
-#include "SyntaxErrorListener.hpp"
 #include "Util.hpp"
 
 int main() {
-    std::string line, buffer;
+    Interpreter interpreter;
+    interpreter.onCreateTableQuery([](CreateTableQueryPointer query) {
+        util::printQuery(query.get());
+    });
+    interpreter.onDropTableQuery([](DropTableQueryPointer query) {
+        util::printQuery(query.get());
+    });
+    interpreter.onCreateIndexQuery([](CreateIndexQueryPointer query) {
+        util::printQuery(query.get());
+    });
+    interpreter.onDropIndexQuery([](DropIndexQueryPointer query) {
+        util::printQuery(query.get());
+    });
+    interpreter.onSelectQuery([](SelectQueryPointer query) {
+        util::printQuery(query.get());
+    });
+    interpreter.onInsertQuery([](InsertQueryPointer query) {
+        util::printQuery(query.get());
+    });
+    interpreter.onDeleteQuery([](DeleteQueryPointer query) {
+        util::printQuery(query.get());
+    });
 
-    while (std::getline(std::cin, line)) {
-        try {
-            buffer += ' ';
-            buffer.append(line);
-            buffer += ' ';
-            auto query = Interpreter::parse(buffer);
-            util::printQuery(query.get());
-            buffer.clear();
-        } catch (const SyntaxError &error) {
-            if (!error.hitEOF) {
-                std::cout << error.message() << std::endl;
-                buffer.clear();
-            }
-        }
-    }
+    interpreter.listen();
 
     return 0;
 }

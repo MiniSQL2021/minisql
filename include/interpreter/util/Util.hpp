@@ -5,10 +5,6 @@
 #include "BinaryOperator.hpp"
 
 namespace util {
-    template<typename Derived, typename Base, typename Del>
-    std::unique_ptr<Derived, Del>
-    dynamic_unique_ptr_cast(std::unique_ptr<Base, Del> &p);
-
     std::string literalTypeString(const LiteralType &type);
 
     std::string binaryOperatorString(const BinaryOpearator &binaryOperator);
