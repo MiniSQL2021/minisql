@@ -1,5 +1,5 @@
 
-// Generated from /Users/cobalt/Projects/courses/database-system/minisql/src/interpreter/SQL.g4 by ANTLR 4.8
+// Generated from SQL.g4 by ANTLR 4.9
 
 #pragma once
 
@@ -116,10 +116,6 @@ public:
   }
 
   virtual antlrcpp::Any visitBinaryOperator(SQLParser::BinaryOperatorContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual antlrcpp::Any visitFilePath(SQLParser::FilePathContext *ctx) override {
     return visitChildren(ctx);
   }
 

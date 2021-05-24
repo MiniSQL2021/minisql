@@ -1,5 +1,5 @@
 
-// Generated from /Users/cobalt/Projects/courses/database-system/minisql/src/interpreter/SQL.g4 by ANTLR 4.8
+// Generated from SQL.g4 by ANTLR 4.9
 
 
 #include "SQLLexer.h"
@@ -60,15 +60,14 @@ atn::ATN SQLLexer::_atn;
 std::vector<uint16_t> SQLLexer::_serializedATN;
 
 std::vector<std::string> SQLLexer::_ruleNames = {
-  u8"DOT", u8"COMMA", u8"SEMICOLON", u8"UNDERSCORE", u8"LPARN", u8"RPARN", 
-  u8"STAR", u8"DIGIT", u8"DIGITS", u8"INT_NUMBER", u8"DECIMAL_NUMBER", u8"FLOAT_NUMBER", 
-  u8"CREATE", u8"DROP", u8"SELECT", u8"INSERT", u8"DELETE", u8"QUIT", u8"EXEC_FILE", 
-  u8"FROM", u8"WHERE", u8"ON", u8"INTO", u8"TABLE", u8"KEY", u8"INDEX", 
-  u8"VALUES", u8"PRIMARY", u8"UNIQUE", u8"INT", u8"CHAR", u8"FLOAT", u8"AND", 
-  u8"EQUAL", u8"NOT_EQUAL", u8"LESS_THAN", u8"GREATER_THAN", u8"LESS_THAN_OR_EQUAL", 
-  u8"GREATER_THAN_OR_EQUAL", u8"WHITESPACE", u8"LETTER", u8"IDENTIFIER", 
-  u8"BACKTICK_QUOTED_ID", u8"DOUBLE_QUOTED_STRING", u8"SINGLE_QUOTED_STRING", 
-  u8"STRING"
+  "DOT", "COMMA", "SEMICOLON", "UNDERSCORE", "LPARN", "RPARN", "STAR", "DIGIT", 
+  "DIGITS", "INT_NUMBER", "DECIMAL_NUMBER", "FLOAT_NUMBER", "CREATE", "DROP", 
+  "SELECT", "INSERT", "DELETE", "QUIT", "EXEC_FILE", "FROM", "WHERE", "ON", 
+  "INTO", "TABLE", "KEY", "INDEX", "VALUES", "PRIMARY", "UNIQUE", "INT", 
+  "CHAR", "FLOAT", "AND", "EQUAL", "NOT_EQUAL", "LESS_THAN", "GREATER_THAN", 
+  "LESS_THAN_OR_EQUAL", "GREATER_THAN_OR_EQUAL", "WHITESPACE", "LETTER", 
+  "IDENTIFIER", "BACKTICK_QUOTED_ID", "DOUBLE_QUOTED_STRING", "SINGLE_QUOTED_STRING", 
+  "STRING"
 };
 
 std::vector<std::string> SQLLexer::_channelNames = {
@@ -76,27 +75,25 @@ std::vector<std::string> SQLLexer::_channelNames = {
 };
 
 std::vector<std::string> SQLLexer::_modeNames = {
-  u8"DEFAULT_MODE"
+  "DEFAULT_MODE"
 };
 
 std::vector<std::string> SQLLexer::_literalNames = {
-  "", u8"'.'", u8"','", u8"';'", u8"'_'", u8"'('", u8"')'", u8"'*'", "", 
-  "", "", u8"'create'", u8"'drop'", u8"'select'", u8"'insert'", u8"'delete'", 
-  u8"'quit'", u8"'execfile'", u8"'from'", u8"'where'", u8"'on'", u8"'into'", 
-  u8"'table'", u8"'key'", u8"'index'", u8"'values'", u8"'primary'", u8"'unique'", 
-  u8"'int'", u8"'char'", u8"'float'", u8"'and'", u8"'='", u8"'<>'", u8"'<'", 
-  u8"'>'", u8"'<='", u8"'>='"
+  "", "'.'", "','", "';'", "'_'", "'('", "')'", "'*'", "", "", "", "'create'", 
+  "'drop'", "'select'", "'insert'", "'delete'", "'quit'", "'execfile'", 
+  "'from'", "'where'", "'on'", "'into'", "'table'", "'key'", "'index'", 
+  "'values'", "'primary'", "'unique'", "'int'", "'char'", "'float'", "'and'", 
+  "'='", "'<>'", "'<'", "'>'", "'<='", "'>='"
 };
 
 std::vector<std::string> SQLLexer::_symbolicNames = {
-  "", u8"DOT", u8"COMMA", u8"SEMICOLON", u8"UNDERSCORE", u8"LPARN", u8"RPARN", 
-  u8"STAR", u8"INT_NUMBER", u8"DECIMAL_NUMBER", u8"FLOAT_NUMBER", u8"CREATE", 
-  u8"DROP", u8"SELECT", u8"INSERT", u8"DELETE", u8"QUIT", u8"EXEC_FILE", 
-  u8"FROM", u8"WHERE", u8"ON", u8"INTO", u8"TABLE", u8"KEY", u8"INDEX", 
-  u8"VALUES", u8"PRIMARY", u8"UNIQUE", u8"INT", u8"CHAR", u8"FLOAT", u8"AND", 
-  u8"EQUAL", u8"NOT_EQUAL", u8"LESS_THAN", u8"GREATER_THAN", u8"LESS_THAN_OR_EQUAL", 
-  u8"GREATER_THAN_OR_EQUAL", u8"WHITESPACE", u8"IDENTIFIER", u8"BACKTICK_QUOTED_ID", 
-  u8"DOUBLE_QUOTED_STRING", u8"SINGLE_QUOTED_STRING", u8"STRING"
+  "", "DOT", "COMMA", "SEMICOLON", "UNDERSCORE", "LPARN", "RPARN", "STAR", 
+  "INT_NUMBER", "DECIMAL_NUMBER", "FLOAT_NUMBER", "CREATE", "DROP", "SELECT", 
+  "INSERT", "DELETE", "QUIT", "EXEC_FILE", "FROM", "WHERE", "ON", "INTO", 
+  "TABLE", "KEY", "INDEX", "VALUES", "PRIMARY", "UNIQUE", "INT", "CHAR", 
+  "FLOAT", "AND", "EQUAL", "NOT_EQUAL", "LESS_THAN", "GREATER_THAN", "LESS_THAN_OR_EQUAL", 
+  "GREATER_THAN_OR_EQUAL", "WHITESPACE", "IDENTIFIER", "BACKTICK_QUOTED_ID", 
+  "DOUBLE_QUOTED_STRING", "SINGLE_QUOTED_STRING", "STRING"
 };
 
 dfa::Vocabulary SQLLexer::_vocabulary(_literalNames, _symbolicNames);

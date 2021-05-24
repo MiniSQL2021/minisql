@@ -1,5 +1,5 @@
 
-// Generated from /Users/cobalt/Projects/courses/database-system/minisql/src/interpreter/SQL.g4 by ANTLR 4.8
+// Generated from SQL.g4 by ANTLR 4.9
 
 #pragma once
 
@@ -23,7 +23,7 @@ public:
     SINGLE_QUOTED_STRING = 42, STRING = 43
   };
 
-  SQLLexer(antlr4::CharStream *input);
+  explicit SQLLexer(antlr4::CharStream *input);
   ~SQLLexer();
 
   virtual std::string getGrammarFileName() const override;

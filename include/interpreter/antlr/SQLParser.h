@@ -1,5 +1,5 @@
 
-// Generated from /Users/cobalt/Projects/courses/database-system/minisql/src/interpreter/SQL.g4 by ANTLR 4.8
+// Generated from SQL.g4 by ANTLR 4.9
 
 #pragma once
 
@@ -31,11 +31,10 @@ public:
     RulePrimaryKeyConstraint = 13, RuleCondition = 14, RuleConditionList = 15, 
     RuleAttributeList = 16, RuleIdentifier = 17, RuleDataType = 18, RuleIntType = 19, 
     RuleFloatType = 20, RuleCharType = 21, RuleLiteral = 22, RuleString = 23, 
-    RuleNumber = 24, RuleBinaryOperator = 25, RuleFilePath = 26, RuleQuitCommand = 27, 
-    RuleExecuteFileCommand = 28
+    RuleNumber = 24, RuleBinaryOperator = 25, RuleQuitCommand = 26, RuleExecuteFileCommand = 27
   };
 
-  SQLParser(antlr4::TokenStream *input);
+  explicit SQLParser(antlr4::TokenStream *input);
   ~SQLParser();
 
   virtual std::string getGrammarFileName() const override;
@@ -71,7 +70,6 @@ public:
   class StringContext;
   class NumberContext;
   class BinaryOperatorContext;
-  class FilePathContext;
   class QuitCommandContext;
   class ExecuteFileCommandContext; 
 
@@ -126,7 +124,7 @@ public:
 
   class  CreateTableStatementContext : public antlr4::ParserRuleContext {
   public:
-    SQLParser::IdentifierContext *tableName = nullptr;;
+    SQLParser::IdentifierContext *tableName = nullptr;
     CreateTableStatementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *CREATE();
@@ -146,7 +144,7 @@ public:
 
   class  DropTableStatementContext : public antlr4::ParserRuleContext {
   public:
-    SQLParser::IdentifierContext *tableName = nullptr;;
+    SQLParser::IdentifierContext *tableName = nullptr;
     DropTableStatementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *DROP();
@@ -162,9 +160,9 @@ public:
 
   class  CreateIndexStatementContext : public antlr4::ParserRuleContext {
   public:
-    SQLParser::IdentifierContext *indexName = nullptr;;
-    SQLParser::IdentifierContext *tableName = nullptr;;
-    SQLParser::IdentifierContext *columnName = nullptr;;
+    SQLParser::IdentifierContext *indexName = nullptr;
+    SQLParser::IdentifierContext *tableName = nullptr;
+    SQLParser::IdentifierContext *columnName = nullptr;
     CreateIndexStatementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *CREATE();
@@ -184,7 +182,7 @@ public:
 
   class  DropIndexStatementContext : public antlr4::ParserRuleContext {
   public:
-    SQLParser::IdentifierContext *indexName = nullptr;;
+    SQLParser::IdentifierContext *indexName = nullptr;
     DropIndexStatementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *DROP();
@@ -200,7 +198,7 @@ public:
 
   class  SelectStatementContext : public antlr4::ParserRuleContext {
   public:
-    SQLParser::IdentifierContext *tableName = nullptr;;
+    SQLParser::IdentifierContext *tableName = nullptr;
     SelectStatementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *SELECT();
@@ -218,7 +216,7 @@ public:
 
   class  InsertStatementContext : public antlr4::ParserRuleContext {
   public:
-    SQLParser::IdentifierContext *tableName = nullptr;;
+    SQLParser::IdentifierContext *tableName = nullptr;
     InsertStatementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *INSERT();
@@ -238,7 +236,7 @@ public:
 
   class  DeleteStatementContext : public antlr4::ParserRuleContext {
   public:
-    SQLParser::IdentifierContext *tableName = nullptr;;
+    SQLParser::IdentifierContext *tableName = nullptr;
     DeleteStatementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *DELETE();
@@ -269,8 +267,8 @@ public:
 
   class  ColumnElementContext : public antlr4::ParserRuleContext {
   public:
-    SQLParser::IdentifierContext *columnName = nullptr;;
-    antlr4::Token *unique = nullptr;;
+    SQLParser::IdentifierContext *columnName = nullptr;
+    antlr4::Token *unique = nullptr;
     ColumnElementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     DataTypeContext *dataType();
@@ -286,8 +284,8 @@ public:
 
   class  ColumnElementListContext : public antlr4::ParserRuleContext {
   public:
-    SQLParser::ColumnElementContext *columnElementContext = nullptr;;
-    std::vector<ColumnElementContext *> elements;;
+    SQLParser::ColumnElementContext *columnElementContext = nullptr;
+    std::vector<ColumnElementContext *> elements;
     ColumnElementListContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     std::vector<antlr4::tree::TerminalNode *> COMMA();
@@ -304,7 +302,7 @@ public:
 
   class  PrimaryKeyConstraintContext : public antlr4::ParserRuleContext {
   public:
-    SQLParser::IdentifierContext *columnName = nullptr;;
+    SQLParser::IdentifierContext *columnName = nullptr;
     PrimaryKeyConstraintContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *PRIMARY();
@@ -322,8 +320,8 @@ public:
 
   class  ConditionContext : public antlr4::ParserRuleContext {
   public:
-    SQLParser::IdentifierContext *columnName = nullptr;;
-    SQLParser::LiteralContext *value = nullptr;;
+    SQLParser::IdentifierContext *columnName = nullptr;
+    SQLParser::LiteralContext *value = nullptr;
     ConditionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     BinaryOperatorContext *binaryOperator();
@@ -339,8 +337,8 @@ public:
 
   class  ConditionListContext : public antlr4::ParserRuleContext {
   public:
-    SQLParser::ConditionContext *conditionContext = nullptr;;
-    std::vector<ConditionContext *> conditions;;
+    SQLParser::ConditionContext *conditionContext = nullptr;
+    std::vector<ConditionContext *> conditions;
     ConditionListContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     std::vector<antlr4::tree::TerminalNode *> AND();
@@ -357,8 +355,8 @@ public:
 
   class  AttributeListContext : public antlr4::ParserRuleContext {
   public:
-    SQLParser::LiteralContext *literalContext = nullptr;;
-    std::vector<LiteralContext *> attributes;;
+    SQLParser::LiteralContext *literalContext = nullptr;
+    std::vector<LiteralContext *> attributes;
     AttributeListContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     std::vector<LiteralContext *> literal();
@@ -430,7 +428,7 @@ public:
 
   class  CharTypeContext : public antlr4::ParserRuleContext {
   public:
-    antlr4::Token *length = nullptr;;
+    antlr4::Token *length = nullptr;
     CharTypeContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *CHAR();
@@ -506,18 +504,6 @@ public:
 
   BinaryOperatorContext* binaryOperator();
 
-  class  FilePathContext : public antlr4::ParserRuleContext {
-  public:
-    FilePathContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-
-
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
-  };
-
-  FilePathContext* filePath();
-
   class  QuitCommandContext : public antlr4::ParserRuleContext {
   public:
     QuitCommandContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -533,10 +519,11 @@ public:
 
   class  ExecuteFileCommandContext : public antlr4::ParserRuleContext {
   public:
+    SQLParser::StringContext *filePath = nullptr;
     ExecuteFileCommandContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *EXEC_FILE();
-    FilePathContext *filePath();
+    StringContext *string();
 
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;

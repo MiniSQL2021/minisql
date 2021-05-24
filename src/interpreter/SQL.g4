@@ -147,9 +147,7 @@ binaryOperator:
 	| LESS_THAN_OR_EQUAL
 	| GREATER_THAN_OR_EQUAL;
 
-filePath: .*?;
-
 // System commands
 quitCommand: QUIT;
 
-executeFileCommand: EXEC_FILE filePath;
+executeFileCommand: EXEC_FILE filePath = string;

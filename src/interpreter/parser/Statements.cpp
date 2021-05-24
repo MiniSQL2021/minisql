@@ -35,5 +35,5 @@ std::unique_ptr<DeleteQuery> QueryParser::parseDeleteStatement(SQLParser::Delete
 }
 
 std::unique_ptr<ExecuteFileQuery> QueryParser::parseExecuteFileCommand(SQLParser::ExecuteFileCommandContext *ctx) {
-    return std::make_unique<ExecuteFileQuery>(ctx->filePath()->getText());
+    return std::make_unique<ExecuteFileQuery>(parseString(ctx->filePath));
 }

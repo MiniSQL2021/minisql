@@ -1,5 +1,5 @@
 
-// Generated from /Users/cobalt/Projects/courses/database-system/minisql/src/interpreter/SQL.g4 by ANTLR 4.8
+// Generated from SQL.g4 by ANTLR 4.9
 
 #pragma once
 
@@ -70,8 +70,6 @@ public:
     virtual antlrcpp::Any visitNumber(SQLParser::NumberContext *context) = 0;
 
     virtual antlrcpp::Any visitBinaryOperator(SQLParser::BinaryOperatorContext *context) = 0;
-
-    virtual antlrcpp::Any visitFilePath(SQLParser::FilePathContext *context) = 0;
 
     virtual antlrcpp::Any visitQuitCommand(SQLParser::QuitCommandContext *context) = 0;
 
