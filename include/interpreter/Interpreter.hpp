@@ -57,5 +57,5 @@ private:
 
     void handleQuery(std::unique_ptr<Query> query);
 
-    void processFile(const std::string &path);
+    static void processFile(const std::string &path);
 };

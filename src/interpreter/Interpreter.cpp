@@ -96,5 +96,10 @@ void Interpreter::listen() {
 }
 
 void Interpreter::processFile(const std::string &path) {
-
+    std::ifstream stream(path);
+    if (stream.is_open())
+        parse(stream);
+    else
+        std::cout << "File Error: cannot open file '" << path << "'" << std::endl;
+    stream.close();
 }
