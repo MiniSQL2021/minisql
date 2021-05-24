@@ -4,7 +4,8 @@ include(ExternalAntlr4Cpp)
 add_library(interpreter Interpreter.cpp
         antlr/SQLLexer.cpp antlr/SQLParser.cpp antlr/SQLVisitor.cpp antlr/SQLBaseVisitor.cpp
         parser/QueryParser.cpp parser/Clause.cpp parser/Expression.cpp
-        parser/SmallParts.cpp parser/Statements.cpp)
+        parser/SmallParts.cpp parser/Statements.cpp
+        util/Util.cpp)
 
 target_include_directories(interpreter PUBLIC ${CMAKE_SOURCE_DIR}/include/interpreter)
 target_include_directories(interpreter PUBLIC ${CMAKE_SOURCE_DIR}/include/interpreter/antlr)
