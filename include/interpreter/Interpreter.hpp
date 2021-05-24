@@ -1,7 +1,11 @@
 #pragma once
 
-#include <string>
+#include <memory>
+
+#include "Query.hpp"
 
 struct Interpreter {
-    static void parse(const std::string &string);
+    static std::unique_ptr<Query> parse(std::istream &stream);
+
+    static std::unique_ptr<Query> parse(const std::string &string);
 };

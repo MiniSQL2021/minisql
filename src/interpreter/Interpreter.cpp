@@ -8,9 +8,7 @@
 #include "SyntaxErrorListener.hpp"
 
 
-void Interpreter::parse(const std::string &string) {
-    std::stringstream stream(string);
-
+std::unique_ptr<Query> Interpreter::parse(std::istream &stream) {
     antlr4::ANTLRInputStream input(stream);
     SQLLexer lexer(&input);
     antlr4::CommonTokenStream tokens(&lexer);
@@ -22,13 +20,11 @@ void Interpreter::parse(const std::string &string) {
     parser.removeErrorListeners();
     parser.addErrorListener(&errorListener);
 
-    try {
-        SQLParser::QueryContext *tree = parser.query();
-        auto result = QueryParser::parse(tree);
-        util::printQuery(result.get());
-    } catch (QueryParserSyntaxError &error) {
-        std::cout << error.what() << std::endl;
-    } catch (...) {
-        std::cout << "Unexpected error" << std::endl;
-    }
+    SQLParser::QueryContext *tree = parser.query();
+    return QueryParser::parse(tree);
+}
+
+std::unique_ptr<Query> Interpreter::parse(const std::string &string) {
+    std::stringstream stream(string);
+    return parse(stream);
 }
