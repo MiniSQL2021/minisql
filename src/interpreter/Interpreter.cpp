@@ -12,26 +12,39 @@ std::unique_ptr<Derived, Del> dynamic_unique_ptr_cast(std::unique_ptr<Base, Del>
 // Required to use ANTLR to work on the "infinite" stream, and interactively
 // See also: https://stackoverflow.com/questions/14864777/using-antlr-for-parsing-data-from-never-ending-stream
 void Interpreter::listen() {
+    std::cout << "Welcome to the MiniSQL monitor. Commands end with semicolon." << std::endl;
+    std::cout << "Copyright (c) 2021, Wang, Hu, Chen, Huang." << std::endl;
+
     std::string line;
     std::stringstream buffer;
-    while (std::getline(std::cin, line))
+    bool isWaitingForMoreInput = false;
+    while (true) {
         try {
-            buffer << " " << line << " ";
+            std::cout << (isWaitingForMoreInput ? "      -> " : "minisql> ");
+            std::getline(std::cin, line);
+
+            buffer << " " << line;
             parse(buffer);
-            buffer.str("");  // No syntax error occurs, clear buffer
+
+            // No syntax error occurs, clear buffer
+            buffer.str("");
+            isWaitingForMoreInput = false;
         } catch (const SyntaxError &error) {
             if (!error.hitEOF) {
                 // Didn't hit EOF, that is to say there exists syntax error in the middle
                 // Discard buffer, and print error message
                 std::cout << error.message() << std::endl;
                 buffer.str("");
+                isWaitingForMoreInput = false;
             } else {
                 // Hit EOF, that is to say additional input is expected
                 // Reset buffer's get pointer to the beginning
                 buffer.clear();
                 buffer.seekg(0);
+                isWaitingForMoreInput = true;
             }
         }
+    }
 }
 
 void Interpreter::processFile(const std::string &path) {
@@ -56,8 +69,10 @@ void Interpreter::parse(std::istream &stream) {
     parser.addErrorListener(&errorListener);
 
     SQLParser::QueryContext *tree;
-    while ((tree = parser.query()))
+    while (!parser.isMatchedEOF()) {
+        tree = parser.query();
         handleQuery(QueryParser::parse(tree));
+    }
 }
 
 void Interpreter::handleQuery(std::unique_ptr<Query> query) {
