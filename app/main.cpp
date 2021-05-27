@@ -5,25 +5,26 @@
 
 int main() {
     Interpreter interpreter;
-    interpreter.onCreateTableQuery([](CreateTableQueryPointer query) {
+
+    interpreter.onCreateTableQuery([](QueryPointer<CreateTableQuery> query) {
         util::printQuery(query.get());
     });
-    interpreter.onDropTableQuery([](DropTableQueryPointer query) {
+    interpreter.onDropTableQuery([](QueryPointer<DropTableQuery> query) {
         util::printQuery(query.get());
     });
-    interpreter.onCreateIndexQuery([](CreateIndexQueryPointer query) {
+    interpreter.onCreateIndexQuery([](QueryPointer<CreateIndexQuery> query) {
         util::printQuery(query.get());
     });
-    interpreter.onDropIndexQuery([](DropIndexQueryPointer query) {
+    interpreter.onDropIndexQuery([](QueryPointer<DropIndexQuery> query) {
         util::printQuery(query.get());
     });
-    interpreter.onSelectQuery([](SelectQueryPointer query) {
+    interpreter.onSelectQuery([](QueryPointer<SelectQuery> query) {
         util::printQuery(query.get());
     });
-    interpreter.onInsertQuery([](InsertQueryPointer query) {
+    interpreter.onInsertQuery([](QueryPointer<InsertQuery> query) {
         util::printQuery(query.get());
     });
-    interpreter.onDeleteQuery([](DeleteQueryPointer query) {
+    interpreter.onDeleteQuery([](QueryPointer<DeleteQuery> query) {
         util::printQuery(query.get());
     });
 
