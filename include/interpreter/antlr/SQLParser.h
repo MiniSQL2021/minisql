@@ -77,9 +77,9 @@ public:
   public:
     QueryContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *SEMICOLON();
     StatementContext *statement();
     CommandsContext *commands();
-    antlr4::tree::TerminalNode *SEMICOLON();
     antlr4::tree::TerminalNode *EOF();
 
 
