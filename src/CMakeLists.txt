@@ -1,2 +1,2 @@
 add_subdirectory(interpreter)
-add_subdirectory(api)
+add_subdirectory(index-manager)
