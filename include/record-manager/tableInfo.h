@@ -10,6 +10,15 @@
 
 using namespace std;
 
+struct attrStruct {
+    char *attrName;
+    AttributeType attrType;
+    bool attrUnique;
+    bool hasIndex;
+    char *indexname;
+    int attrlength;
+};
+
 class tableInfo {
 public:
     tableInfo();
@@ -42,15 +51,5 @@ public:
     void getFromRowData();
 };
 
-struct attrStruct {
-    char *attrName;
-    AttributeType attrType;
-    bool attrUnique;
-    bool hasIndex;
-    char *indexname;
-    int attrlength;
-};
-
-
-#endif tableInfo_hpp
+#endif
 

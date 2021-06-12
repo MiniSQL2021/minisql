@@ -2,8 +2,8 @@
 //检查表、属性、索引等关系模式是否存在、用于增删时候检查报错
 //继承catalogPage，方便数据传递
 
-#ifndef CatalogManager
-#define CatalogManager
+#ifndef CatalogManager_hpp
+#define CatalogManager_hpp
 //实现关系模式的储存调用，提供函数
 
 
@@ -17,7 +17,7 @@
 
 using namespace std;
 
-class catalogManager {
+class CatalogManager {
 public:
     BufferManager buffer;
 
@@ -37,5 +37,4 @@ public:
 
 };
 
-#endif // !CatalogManager
-#pragma once
+#endif // !CatalogManager_hpp

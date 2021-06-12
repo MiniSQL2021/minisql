@@ -1,7 +1,7 @@
 #include"CatalogManager.h"
 
 
-bool catalogManager::checkTable(char *tableName)            //参数：表名；检查table是否存在
+bool CatalogManager::checkTable(char *tableName)            //参数：表名；检查table是否存在
 {
     CatalogPage cgpage;
     int pgNum = buffer.getCatalogPageNum();
@@ -24,7 +24,7 @@ bool catalogManager::checkTable(char *tableName)            //参数：表名；
 }
 
 
-bool catalogManager::checkIndex(char *tableName)            //参数：表名；检查table是否存在索引
+bool CatalogManager::checkIndex(char *tableName)            //参数：表名；检查table是否存在索引
 {
     CatalogPage cgpage;
     int pgNum = buffer.getCatalogPageNum();
@@ -49,7 +49,7 @@ bool catalogManager::checkIndex(char *tableName)            //参数：表名；
 
 }
 
-bool catalogManager::checkAttr(char *tableName, char *attrnm)        //参数：表名，属性名；检查属性是否存在
+bool CatalogManager::checkAttr(char *tableName, char *attrnm)        //参数：表名，属性名；检查属性是否存在
 {
     CatalogPage cgpage;
     int pgNum = buffer.getCatalogPageNum();
@@ -73,7 +73,7 @@ bool catalogManager::checkAttr(char *tableName, char *attrnm)        //参数：
     return flag;
 }
 
-bool catalogManager::checkUnique(char *tableName, char *)    //参数：表名，属性名；检查属性是否unique
+bool CatalogManager::checkUnique(char *tableName, char *)    //参数：表名，属性名；检查属性是否unique
 {
     CatalogPage cgpage;
     int pgNum = buffer.getCatalogPageNum();
@@ -97,7 +97,7 @@ bool catalogManager::checkUnique(char *tableName, char *)    //参数：表名�
     return flag;
 }
 
-bool catalogManager::checkPrimaryKey(char *tableName)        //参数：表名；检查是否存在主键
+bool CatalogManager::checkPrimaryKey(char *tableName)        //参数：表名；检查是否存在主键
 {
     CatalogPage cgpage;
     int pgNum = buffer.getCatalogPageNum();
@@ -119,7 +119,7 @@ bool catalogManager::checkPrimaryKey(char *tableName)        //参数：表名�
     return flag;
 }
 
-int catalogManager::getAttrNo(char *tableName, char *attrname) {
+int CatalogManager::getAttrNo(char *tableName, char *attrname) {
     CatalogPage cgpage;
     int pgNum = buffer.getCatalogPageNum();
     int i, j;
@@ -148,7 +148,7 @@ int catalogManager::getAttrNo(char *tableName, char *attrname) {
 }
 
 
-AttributeType *catalogManager::getAttrType(char *tableName, char *attrname)    //参数：表名，属性名；返回属性类型
+AttributeType *CatalogManager::getAttrType(char *tableName, char *attrname)    //参数：表名，属性名；返回属性类型
 {
     CatalogPage cgpage;
     int pgNum = buffer.getCatalogPageNum();
@@ -168,7 +168,7 @@ AttributeType *catalogManager::getAttrType(char *tableName, char *attrname)    /
     return (cgpage.tbif + n)->attrType;
 }
 
-tableInfo *catalogManager::getTableInfo(char *tableName)   //参数：表名；返回表信息
+tableInfo *CatalogManager::getTableInfo(char *tableName)   //参数：表名；返回表信息
 {
     CatalogPage cgpage;
     int pgNum = buffer.getCatalogPageNum();
@@ -192,7 +192,7 @@ tableInfo *catalogManager::getTableInfo(char *tableName)   //参数：表名；�
 
 }
 
-void catalogManager::dropTable(char *tableName)                //参数：表名；删除一个表，并删除表的索引
+void CatalogManager::dropTable(char *tableName)                //参数：表名；删除一个表，并删除表的索引
 {
     CatalogPage cgpage;
     int pgNum = buffer.getCatalogPageNum();
@@ -213,7 +213,7 @@ void catalogManager::dropTable(char *tableName)                //参数：表名
 
 }
 
-void catalogManager::createTable(tableInfo tbif)        //参数：tableInfo;若失败打印报错
+void CatalogManager::createTable(tableInfo tbif)        //参数：tableInfo;若失败打印报错
 {
     CatalogPage cgpage;
     int pgNum = buffer.getCatalogPageNum();
@@ -246,7 +246,7 @@ void catalogManager::createTable(tableInfo tbif)        //参数：tableInfo;若
 }
 
 
-void catalogManager::editIndex(char *tableName, char *attrnm, int flag) {
+void CatalogManager::editIndex(char *tableName, char *attrnm, int flag) {
 
     CatalogPage cgpage;
     int pgNum = buffer.getCatalogPageNum();

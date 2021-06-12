@@ -17,6 +17,7 @@
 using namespace std;
 
 class RecordManager {
+public:
     BufferManager buffer;
 
     RecordManager();
