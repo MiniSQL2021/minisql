@@ -1,7 +1,8 @@
 #pragma once
 
-#include <string>
+#include "CatalogManager.h"
+#include "RecordManager.h"
 
 namespace Util {
-    char *toCStyleString(std::string str);
+    void printTable(std::vector<Tuple> tuples, tableInfo table);
 }

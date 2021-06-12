@@ -1,4 +1,4 @@
-add_executable(app main.cpp API.cpp)
+add_executable(app main.cpp API.cpp Adapter.cpp Util.cpp Util.h)
 
 target_include_directories(app PUBLIC ${CMAKE_SOURCE_DIR}/app)
 target_include_directories(app PUBLIC ${CMAKE_SOURCE_DIR}/include/interpreter)
