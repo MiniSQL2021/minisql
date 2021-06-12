@@ -15,39 +15,39 @@ struct Data {
 class Index{
 
 public :
-	//¹¹Ôìº¯Êı
-	Index(std::string table_name, Attribute attr);  //Õâ¸öattrÊÇAPI´«Èë´Ócatlog»ñÈ¡µÄ±íĞÅÏ¢
-	//Îö¹¹º¯Êı
+	//æ„é€ å‡½æ•°
+	Index(std::string table_name, Attribute attr);  //è¿™ä¸ªattræ˜¯APIä¼ å…¥ä»catlogè·å–çš„è¡¨ä¿¡æ¯
+	//ææ„å‡½æ•°
 	~Index();
-	//ÊäÈë£ºIndexÎÄ¼şÃû(Â·¾¶)£¬Ë÷ÒıµÄkeyµÄÀàĞÍ
-	//Êä³ö£ºvoid
-	//¹¦ÄÜ£º´´½¨Ë÷ÒıÎÄ¼ş¼°B+Ê÷
-	//Òì³££º
+	//è¾“å…¥ï¼šIndexæ–‡ä»¶å(è·¯å¾„)ï¼Œç´¢å¼•çš„keyçš„ç±»å‹
+	//è¾“å‡ºï¼švoid
+	//åŠŸèƒ½ï¼šåˆ›å»ºç´¢å¼•æ–‡ä»¶åŠB+æ ‘
+	//å¼‚å¸¸ï¼š
 	void createIndex(std::string file_path, int type);
-	//ÊäÈë£ºIndexÎÄ¼şÃû(Â·¾¶)£¬Ë÷ÒıµÄkeyµÄÀàĞÍ
-	//Êä³ö£ºvoid
-	//¹¦ÄÜ£ºÉ¾³ıË÷Òı¡¢B+Ê÷¼°ÎÄ¼ş
-	//Òì³££º
+	//è¾“å…¥ï¼šIndexæ–‡ä»¶å(è·¯å¾„)ï¼Œç´¢å¼•çš„keyçš„ç±»å‹
+	//è¾“å‡ºï¼švoid
+	//åŠŸèƒ½ï¼šåˆ é™¤ç´¢å¼•ã€B+æ ‘åŠæ–‡ä»¶
+	//å¼‚å¸¸ï¼š
 	void dropIndex(std::string file_path, int type);
-	//ÊäÈë£ºIndexÎÄ¼şÃû(Â·¾¶)£¬Ë÷ÒıµÄkey(°üº¬ÀàĞÍ)
-	//Êä³ö£ºvoid
-	//¹¦ÄÜ£º´´½¨Ë÷ÒıÎÄ¼ş¼°B+Ê÷
-	//Òì³££º
+	//è¾“å…¥ï¼šIndexæ–‡ä»¶å(è·¯å¾„)ï¼Œç´¢å¼•çš„key(åŒ…å«ç±»å‹)
+	//è¾“å‡ºï¼švoid
+	//åŠŸèƒ½ï¼šåˆ›å»ºç´¢å¼•æ–‡ä»¶åŠB+æ ‘
+	//å¼‚å¸¸ï¼š
 	int findIndex(std::string file_path, Data data);
-	//ÊäÈë£ºIndexÎÄ¼şÃû(Â·¾¶)£¬Ë÷ÒıµÄkey(°üº¬ÀàĞÍ)£¬block_id
-	//Êä³ö£ºvoid
-	//¹¦ÄÜ£ºÔÚÖ¸¶¨Ë÷ÒıÖĞ²åÈëÒ»¸ökey
-	//Òì³££º
+	//è¾“å…¥ï¼šIndexæ–‡ä»¶å(è·¯å¾„)ï¼Œç´¢å¼•çš„key(åŒ…å«ç±»å‹)ï¼Œblock_id
+	//è¾“å‡ºï¼švoid
+	//åŠŸèƒ½ï¼šåœ¨æŒ‡å®šç´¢å¼•ä¸­æ’å…¥ä¸€ä¸ªkey
+	//å¼‚å¸¸ï¼š
 	void insertIndex(std::string file_path, Data data, int block_id);
-	//ÊäÈë£ºIndexÎÄ¼şÃû(Â·¾¶)£¬Ë÷ÒıµÄkey(°üº¬ÀàĞÍ)
-	//Êä³ö£ºvoid
-	//¹¦ÄÜ£ºÔÚË÷ÒıÖĞÉ¾³ıÏàÓ¦µÄKey
-	//Òì³££º
+	//è¾“å…¥ï¼šIndexæ–‡ä»¶å(è·¯å¾„)ï¼Œç´¢å¼•çš„key(åŒ…å«ç±»å‹)
+	//è¾“å‡ºï¼švoid
+	//åŠŸèƒ½ï¼šåœ¨ç´¢å¼•ä¸­åˆ é™¤ç›¸åº”çš„Key
+	//å¼‚å¸¸ï¼š
 	void deleteIndexByKey(std::string file_path, Data data);
-	//ÊäÈë£ºIndexÎÄ¼şÃû(Â·¾¶)£¬Ë÷ÒıµÄkey1(°üº¬ÀàĞÍ)£¬Ë÷ÒıµÄkey2(°üº¬ÀàĞÍ)£¬·µ»ØµÄindex_in_recordsÊı×é
-	//Êä³ö£ºvoid
-	//¹¦ÄÜ£º·¶Î§²éÕÒ£¬·µ»ØÒ»¶¨·¶Î§ÄÚµÄindex_in_record
-	//Òì³££º
+	//è¾“å…¥ï¼šIndexæ–‡ä»¶å(è·¯å¾„)ï¼Œç´¢å¼•çš„key1(åŒ…å«ç±»å‹)ï¼Œç´¢å¼•çš„key2(åŒ…å«ç±»å‹)ï¼Œè¿”å›çš„index_in_recordsæ•°ç»„
+	//è¾“å‡ºï¼švoid
+	//åŠŸèƒ½ï¼šèŒƒå›´æŸ¥æ‰¾ï¼Œè¿”å›ä¸€å®šèŒƒå›´å†…çš„index_in_record
+	//å¼‚å¸¸ï¼š
 	void searchRange(std::string file_path, Data data1, Data data2, std::vector<int>& index_in_records);
 
 private:
@@ -64,10 +64,10 @@ private:
 	floatMap indexFloatMap;
 
 
-	//¼ÆËãB+Ê÷ÊÊºÏµÄdegree
+	//è®¡ç®—B+æ ‘é€‚åˆçš„degree
 	int getDegree(int type);
 
-	//¼ÆËã²»Í¬ÀàĞÍKeyµÄsize
+	//è®¡ç®—ä¸åŒç±»å‹Keyçš„size
 	int getKeySize(int type);
 
 };

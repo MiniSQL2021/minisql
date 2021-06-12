@@ -2,7 +2,7 @@
 
 
 
-bool catalogManager::checkTable(char* tableName)			//²ÎÊı£º±íÃû£»¼ì²étableÊÇ·ñ´æÔÚ
+bool catalogManager::checkTable(char* tableName)			//å‚æ•°ï¼šè¡¨åï¼›æ£€æŸ¥tableæ˜¯å¦å­˜åœ¨
 {
 	CatalogPage cgpage;
 	int pgNum = buffer.getCatalogPageNum();
@@ -28,7 +28,7 @@ bool catalogManager::checkTable(char* tableName)			//²ÎÊı£º±íÃû£»¼ì²étableÊÇ·ñ´æ
 }
 
 
-bool catalogManager::checkIndex(char* tableName)			//²ÎÊı£º±íÃû£»¼ì²étableÊÇ·ñ´æÔÚË÷Òı
+bool catalogManager::checkIndex(char* tableName)			//å‚æ•°ï¼šè¡¨åï¼›æ£€æŸ¥tableæ˜¯å¦å­˜åœ¨ç´¢å¼•
 {
 	CatalogPage cgpage;
 	int pgNum = buffer.getCatalogPageNum();
@@ -55,7 +55,7 @@ bool catalogManager::checkIndex(char* tableName)			//²ÎÊı£º±íÃû£»¼ì²étableÊÇ·ñ´æ
 	return flag;
 	
 }
-bool catalogManager::checkAttr(char* tableName, char* attrnm)	    //²ÎÊı£º±íÃû£¬ÊôĞÔÃû£»¼ì²éÊôĞÔÊÇ·ñ´æÔÚ
+bool catalogManager::checkAttr(char* tableName, char* attrnm)	    //å‚æ•°ï¼šè¡¨åï¼Œå±æ€§åï¼›æ£€æŸ¥å±æ€§æ˜¯å¦å­˜åœ¨
 {
 	CatalogPage cgpage;
 	int pgNum = buffer.getCatalogPageNum();
@@ -81,7 +81,7 @@ bool catalogManager::checkAttr(char* tableName, char* attrnm)	    //²ÎÊı£º±íÃû£¬
 	buffer.releasePage(pgdata);
 	return flag;
 }
-bool catalogManager::checkUnique(char* tableName, char*)	//²ÎÊı£º±íÃû£¬ÊôĞÔÃû£»¼ì²éÊôĞÔÊÇ·ñunique
+bool catalogManager::checkUnique(char* tableName, char*)	//å‚æ•°ï¼šè¡¨åï¼Œå±æ€§åï¼›æ£€æŸ¥å±æ€§æ˜¯å¦unique
 {
 	CatalogPage cgpage;
 	int pgNum = buffer.getCatalogPageNum();
@@ -107,7 +107,7 @@ bool catalogManager::checkUnique(char* tableName, char*)	//²ÎÊı£º±íÃû£¬ÊôĞÔÃû£»¼
 	buffer.releasePage(pgdata);
 	return flag;
 }
-bool catalogManager::checkPrimaryKey(char* tableName)		//²ÎÊı£º±íÃû£»¼ì²éÊÇ·ñ´æÔÚÖ÷¼ü
+bool catalogManager::checkPrimaryKey(char* tableName)		//å‚æ•°ï¼šè¡¨åï¼›æ£€æŸ¥æ˜¯å¦å­˜åœ¨ä¸»é”®
 {
 	CatalogPage cgpage;
 	int pgNum = buffer.getCatalogPageNum();
@@ -166,7 +166,7 @@ int catalogManager::getAttrNo(char* tableName, char* attrname)
 }
 
 
-AttributeType* catalogManager::getAttrType(char* tableName, char* attrname)	//²ÎÊı£º±íÃû£¬ÊôĞÔÃû£»·µ»ØÊôĞÔÀàĞÍ
+AttributeType* catalogManager::getAttrType(char* tableName, char* attrname)	//å‚æ•°ï¼šè¡¨åï¼Œå±æ€§åï¼›è¿”å›å±æ€§ç±»å‹
 {
 	CatalogPage cgpage;
 	int pgNum = buffer.getCatalogPageNum();
@@ -187,7 +187,7 @@ AttributeType* catalogManager::getAttrType(char* tableName, char* attrname)	//²Î
 	buffer.releasePage(pgdata);
 	return (cgpage.tbif + n)->attrType;
 }
-tableInfo* catalogManager::getTableInfo(char* tableName)   //²ÎÊı£º±íÃû£»·µ»Ø±íĞÅÏ¢
+tableInfo* catalogManager::getTableInfo(char* tableName)   //å‚æ•°ï¼šè¡¨åï¼›è¿”å›è¡¨ä¿¡æ¯
 {
 	CatalogPage cgpage;
 	int pgNum = buffer.getCatalogPageNum();
@@ -214,7 +214,7 @@ tableInfo* catalogManager::getTableInfo(char* tableName)   //²ÎÊı£º±íÃû£»·µ»Ø±íĞ
 	
 }
 
-void catalogManager::dropTable(char* tableName)				//²ÎÊı£º±íÃû£»É¾³ıÒ»¸ö±í£¬²¢É¾³ı±íµÄË÷Òı
+void catalogManager::dropTable(char* tableName)				//å‚æ•°ï¼šè¡¨åï¼›åˆ é™¤ä¸€ä¸ªè¡¨ï¼Œå¹¶åˆ é™¤è¡¨çš„ç´¢å¼•
 {
 	CatalogPage cgpage;
 	int pgNum = buffer.getCatalogPageNum();
@@ -236,7 +236,7 @@ void catalogManager::dropTable(char* tableName)				//²ÎÊı£º±íÃû£»É¾³ıÒ»¸ö±í£¬²¢É
 	buffer.releasePage(pgdata);
 	
 }
-void catalogManager::createTable(tableInfo tbif)		//²ÎÊı£ºtableInfo;ÈôÊ§°Ü´òÓ¡±¨´í
+void catalogManager::createTable(tableInfo tbif)		//å‚æ•°ï¼štableInfo;è‹¥å¤±è´¥æ‰“å°æŠ¥é”™
 {
 	CatalogPage cgpage;
 	int pgNum = buffer.getCatalogPageNum();

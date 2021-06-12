@@ -22,7 +22,7 @@ void RecordManager::deleteTable(char* tablename)
 {
 	buffer.dropTable(tablename);
 }
-void RecordManager::insertRecord(char* tbnm, Tuple tup, tableInfo tbif)	   //²ÎÊı£º±íÃû£¬rowdata£»Ïò±íÖĞ²åÈëÔª×é£¬²åÈëÊ§°ÜÔò±¨´í
+void RecordManager::insertRecord(char* tbnm, Tuple tup, tableInfo tbif)	   //å‚æ•°ï¼šè¡¨åï¼Œrowdataï¼›å‘è¡¨ä¸­æ’å…¥å…ƒç»„ï¼Œæ’å…¥å¤±è´¥åˆ™æŠ¥é”™
 {
 	tablePage tbpg;
 	int pgNum = buffer.getTablePageNum(tbnm);
@@ -82,7 +82,7 @@ void RecordManager::deleteRecord(char* tableName, int attrno, char* op, Attribut
 	}
 	buffer.releasePage(pgdata);
 }
-void RecordManager::conditionSelect(char* tableName,int attrno,char* op, Attribute attr,tableInfo tbif,Tuple* tup)//²ÎÊı£º±íÃû£¬ÊôĞÔÃû£¬ËãÊı±È½Ï·û£¬±È½ÏÖµ
+void RecordManager::conditionSelect(char* tableName,int attrno,char* op, Attribute attr,tableInfo tbif,Tuple* tup)//å‚æ•°ï¼šè¡¨åï¼Œå±æ€§åï¼Œç®—æ•°æ¯”è¾ƒç¬¦ï¼Œæ¯”è¾ƒå€¼
 {
 	tablePage tbpg;
 	int pgNum = buffer.getTablePageNum(tableName);
@@ -105,7 +105,7 @@ void RecordManager::conditionSelect(char* tableName,int attrno,char* op, Attribu
 	}
 	buffer.releasePage(pgdata);
 }
-void RecordManager::nonconditionSelect(char* tableName,Tuple* tup,tableInfo tbif)                      //²ÎÊı£º±íÃû£»´òÓ¡È«²¿Ôª×é
+void RecordManager::nonconditionSelect(char* tableName,Tuple* tup,tableInfo tbif)                      //å‚æ•°ï¼šè¡¨åï¼›æ‰“å°å…¨éƒ¨å…ƒç»„
 {
 	tablePage tbpg;
 	int pgNum = buffer.getTablePageNum(tableName);

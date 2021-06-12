@@ -4,12 +4,12 @@
 
 
 class addKey_already_in : public std::exception {
-	//²åÈëµÄkeyÒÑ´æÔÚ
+	//æ’å…¥çš„keyå·²å­˜åœ¨
 };
 
 
 class addKeyInLeafButNotLeaf : public std::exception {
-	//ÏòÓÃÒ¶×Ó½áµã²åÈëÃüÁîÏò·ÇÒ¶×Ó½áµã²åÈë
+	//å‘ç”¨å¶å­ç»“ç‚¹æ’å…¥å‘½ä»¤å‘éå¶å­ç»“ç‚¹æ’å…¥
 };
 
 

@@ -1,8 +1,8 @@
 /*
-¸ñÊ½£º
-	tupleÊıÄ¿ 4×Ö½Ú
-	tuple³¤¶È 4×Ö½Ú
-	tupleÊı×é£º tupleLength*tupleNum
+æ ¼å¼ï¼š
+	tupleæ•°ç›® 4å­—èŠ‚
+	tupleé•¿åº¦ 4å­—èŠ‚
+	tupleæ•°ç»„ï¼š tupleLength*tupleNum
 */
 
 
@@ -53,7 +53,7 @@ void tablePage:: deleteTuple(int* no)
 
 
 
-void tablePage::conditionsearch(Attribute attr, char* operater,int attrno,int* no)		//²ÎÊı£ºattr£¬ËãÊõÔËËã·û,int attrno;·µ»Øtuple±àºÅ
+void tablePage::conditionsearch(Attribute attr, char* operater,int attrno,int* no)		//å‚æ•°ï¼šattrï¼Œç®—æœ¯è¿ç®—ç¬¦,int attrno;è¿”å›tupleç¼–å·
 {
 	int i;
 	for (i = 0; i < tupleNum; i++)

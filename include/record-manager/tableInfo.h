@@ -1,5 +1,5 @@
-//´¢´æ±íĞÅÏ¢
-//ÉÏ²ã½Ó¿Úº¯Êı£ºsetAttrInfo£¬setTableInfo¡£ÓĞ±¨´í
+//å‚¨å­˜è¡¨ä¿¡æ¯
+//ä¸Šå±‚æ¥å£å‡½æ•°ï¼šsetAttrInfoï¼ŒsetTableInfoã€‚æœ‰æŠ¥é”™
 
 #ifndef tableInfo_hpp
 #define tableInfo_hpp
@@ -15,7 +15,7 @@ public:
 	tableInfo();
 	tableInfo(const tableInfo&);
 	~tableInfo();				
-	void setTableInfo(char*, char*, bool,int,attrStruct*);				//²ÎÊı£º±íÃû£¬Ö÷¼üÃû£¬ÓĞÎŞÖ÷¼ü£¬ÊôĞÔÊı,attrStructÊôĞÔÊı×é
+	void setTableInfo(char*, char*, bool,int,attrStruct*);				//å‚æ•°ï¼šè¡¨åï¼Œä¸»é”®åï¼Œæœ‰æ— ä¸»é”®ï¼Œå±æ€§æ•°,attrStructå±æ€§æ•°ç»„
 
     char primaryKey[31]="";
 	bool hasPrimaryKey=false;
@@ -30,7 +30,7 @@ public:
 	int attrLength[32];
 	int searchAttr(char* attrname);
 
-	int dataLength;											//Ö¸µÄÊÇcatalogPageµÄ´óĞ¡
+	int dataLength;											//æŒ‡çš„æ˜¯catalogPageçš„å¤§å°
 	char rowData[1024]="";   
 	void insertRowData();
 	void getFromRowData();

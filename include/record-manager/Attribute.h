@@ -1,4 +1,4 @@
-//´¢´æÊôĞÔĞÅÏ¢¡¢²¢ÖØÔØÊôĞÔÖµµÄ±È½ÏËãÊõ·û\Ìá¹©ÊôĞÔ´æÈë×ª³öµÄÁÙÊ±±äÁ¿
+//å‚¨å­˜å±æ€§ä¿¡æ¯ã€å¹¶é‡è½½å±æ€§å€¼çš„æ¯”è¾ƒç®—æœ¯ç¬¦\æä¾›å±æ€§å­˜å…¥è½¬å‡ºçš„ä¸´æ—¶å˜é‡
 
 #ifndef Attribute_hpp
 #define Attribute_hpp
@@ -21,7 +21,7 @@ enum class AttributeType
 class Attribute
 {
 public:
-	int dataLength;               //¶¨³¤Êı¾İ
+	int dataLength;               //å®šé•¿æ•°æ®
 	AttributeType type;
 	int intData;
 	float floatData;
@@ -33,10 +33,10 @@ public:
 	~Attribute();
 	Attribute(const Attribute&);
 
-	void getRowData();			//´ÓattributeÀàÖĞµ¼Èëµ½rowData²¢×ª»»ÎªcharÀàĞÍ
-	void releaseRowData();		//´ÓrowDataµ¼³öµ½attribute²¢×ª»»ÎªÔ­ÀàĞÍÊı¾İ
-	int compare(const Attribute&);  //±È½ÏÊı¾İ´óĞ¡£¬ÓÃÓÚËãÊõÔËËã·ûÖØÔØ
-	int getDataLength();        //·µ»ØÊı¾İ³¤¶È
+	void getRowData();			//ä»attributeç±»ä¸­å¯¼å…¥åˆ°rowDataå¹¶è½¬æ¢ä¸ºcharç±»å‹
+	void releaseRowData();		//ä»rowDataå¯¼å‡ºåˆ°attributeå¹¶è½¬æ¢ä¸ºåŸç±»å‹æ•°æ®
+	int compare(const Attribute&);  //æ¯”è¾ƒæ•°æ®å¤§å°ï¼Œç”¨äºç®—æœ¯è¿ç®—ç¬¦é‡è½½
+	int getDataLength();        //è¿”å›æ•°æ®é•¿åº¦
 
 	bool operator <  (const Attribute& attr);
 	bool operator == (const Attribute& attr);

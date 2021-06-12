@@ -17,13 +17,13 @@ extern BufferManager buffer_manager;
 template <typename T>
 class Tree {
 private:
-	//ÖØÃüÃûTreeNodeÖ¸Õë£¬·½±ãºó±ß½øĞĞ²Ù×÷Çø·Ö
+	//é‡å‘½åTreeNodeæŒ‡é’ˆï¼Œæ–¹ä¾¿åè¾¹è¿›è¡Œæ“ä½œåŒºåˆ†
 	typedef TreeNode<T>* TreeNode;
-	//ÎÄ¼şÃû
+	//æ–‡ä»¶å
 	std::string file_name;
-	//¸ù½Úµã
+	//æ ¹èŠ‚ç‚¹
 	TreeNode root;
-	//Ò¶½ÚµãÍ·Ö¸Õë
+	//å¶èŠ‚ç‚¹å¤´æŒ‡é’ˆ
 	TreeNode leafHead;
 	int key_num;
 	int level;
@@ -32,55 +32,55 @@ private:
 	int degree;
 
 
-	//³õÊ¼»¯B+Ê÷£¬²¢·ÖÅäÄÚ´æ¿Õ¼ä
+	//åˆå§‹åŒ–B+æ ‘ï¼Œå¹¶åˆ†é…å†…å­˜ç©ºé—´
 	bool initialization();
-	//ÓÃÓÚ²åÈëÄ³keyºó½áµãÂúÇé¿ö£¬¶ÔÕû¿ÃÊ÷½øĞĞµ÷Õû
+	//ç”¨äºæ’å…¥æŸkeyåç»“ç‚¹æ»¡æƒ…å†µï¼Œå¯¹æ•´æ£µæ ‘è¿›è¡Œè°ƒæ•´
 	bool adjustAfterinsert(TreeNode pNode);
-	//ÓÃÓÚÉ¾³ıÄ³keyºó¿ÉÄÜ³öÏÖ½áµã¿ÕÇé¿ö£¬¶ÔÕû¿ÃÊ÷½øĞĞµ÷Õû
+	//ç”¨äºåˆ é™¤æŸkeyåå¯èƒ½å‡ºç°ç»“ç‚¹ç©ºæƒ…å†µï¼Œå¯¹æ•´æ£µæ ‘è¿›è¡Œè°ƒæ•´
 	bool adjustAfterDelete(TreeNode pNode);
-	//ÓÃÓÚ²éÕÒÄ³keyÖµËù´¦µÄÒ¶½áµãÎ»ÖÃ
+	//ç”¨äºæŸ¥æ‰¾æŸkeyå€¼æ‰€å¤„çš„å¶ç»“ç‚¹ä½ç½®
 	bool findToLeaf(TreeNode pNode, T key, TreeNode &return_node, int &return_index);
-	//»ñÈ¡ÎÄ¼ş´óĞ¡
+	//è·å–æ–‡ä»¶å¤§å°
 	void getFile(std::string file_path);
 	int getBlockNum(std::string table_name);
 
 public:
-	//¹¹Ôìº¯Êı
-	//ÓÃÓÚ¹¹ÔìÒ»¿ÅĞÂµÄÊ÷£¬È·¶¨m_name,keyµÄsize£¬Ê÷µÄ¶È
-	//Í¬Ê±µ÷ÓÃÆäËûº¯ÊıÎª±¾Ê÷·ÖÅäÄÚ´æ
+	//æ„é€ å‡½æ•°
+	//ç”¨äºæ„é€ ä¸€é¢—æ–°çš„æ ‘ï¼Œç¡®å®šm_name,keyçš„sizeï¼Œæ ‘çš„åº¦
+	//åŒæ—¶è°ƒç”¨å…¶ä»–å‡½æ•°ä¸ºæœ¬æ ‘åˆ†é…å†…å­˜
 	Tree(std::string m_name, int key_size, int degree);
-	//Îö¹¹º¯Êı
-	//ÊÍ·ÅÏàÓ¦µÄÄÚ´æ
+	//ææ„å‡½æ•°
+	//é‡Šæ”¾ç›¸åº”çš„å†…å­˜
 	~Tree();
 
-	//¸ù¾İkeyÖµ·µ»Ø¶ÔÓ¦µÄindex_in_record
+	//æ ¹æ®keyå€¼è¿”å›å¯¹åº”çš„index_in_record
 	int searchKey(T &key);
 
-	//ÊäÈë£ºkeyÖµ¼°Æäindex_in_record
-	//Êä³ö£ºbool
-	//¹¦ÄÜ£ºÔÚÊ÷ÖĞ²åÈëÒ»¸ökeyÖµ
-	//·µ»ØÊÇ·ñ²åÈë³É¹¦
+	//è¾“å…¥ï¼škeyå€¼åŠå…¶index_in_record
+	//è¾“å‡ºï¼šbool
+	//åŠŸèƒ½ï¼šåœ¨æ ‘ä¸­æ’å…¥ä¸€ä¸ªkeyå€¼
+	//è¿”å›æ˜¯å¦æ’å…¥æˆåŠŸ
 	bool insertKey(T &key, int index_in_record);
 
-	//ÊäÈë£ºkeyÖµ
-	//Êä³ö£ºbool
-	//¹¦ÄÜ£ºÔÚÊ÷ÖĞÉ¾³ıÒ»¸ökeyÖµ
-	//·µ»ØÊÇ·ñÉ¾³ı³É¹¦
+	//è¾“å…¥ï¼škeyå€¼
+	//è¾“å‡ºï¼šbool
+	//åŠŸèƒ½ï¼šåœ¨æ ‘ä¸­åˆ é™¤ä¸€ä¸ªkeyå€¼
+	//è¿”å›æ˜¯å¦åˆ é™¤æˆåŠŸ
 	bool deleteKey(T &key);
 
-	//ÊäÈë£ºÊ÷µÄ¸ù½áµã
-	//¹¦ÄÜ£ºÉ¾³ıÕû¿ÃÊ÷²¢ÊÍ·ÅÄÚ´æ¿Õ¼ä£¬Ö÷ÒªÓÃÔÚÎö¹¹º¯ÊıÖĞ
+	//è¾“å…¥ï¼šæ ‘çš„æ ¹ç»“ç‚¹
+	//åŠŸèƒ½ï¼šåˆ é™¤æ•´æ£µæ ‘å¹¶é‡Šæ”¾å†…å­˜ç©ºé—´ï¼Œä¸»è¦ç”¨åœ¨ææ„å‡½æ•°ä¸­
 	void dropTree(TreeNode tree_node);
 
-	//ÊäÈë£ºkey1£¬key2£¬·µ»Øindex_in_recordsµÄÈİÆ÷
-	//¹¦ÄÜ£º·µ»Ø·¶Î§ËÑË÷½á¹û£¬½«index_in_record·ÅÈëindex_in_recordsÈİÆ÷ÖĞ
+	//è¾“å…¥ï¼škey1ï¼Œkey2ï¼Œè¿”å›index_in_recordsçš„å®¹å™¨
+	//åŠŸèƒ½ï¼šè¿”å›èŒƒå›´æœç´¢ç»“æœï¼Œå°†index_in_recordæ”¾å…¥index_in_recordså®¹å™¨ä¸­
 	void searchRange(T &key1, T &key2, std::vector<int>& index_in_records, int flag);
 
-	//´Ó´ÅÅÌ¶ÁÈ¡ËùÓĞÊı¾İ
+	//ä»ç£ç›˜è¯»å–æ‰€æœ‰æ•°æ®
 	void readFromDiskAll();
-	//½«ĞÂÊı¾İĞ´Èë´ÅÅÌ
+	//å°†æ–°æ•°æ®å†™å…¥ç£ç›˜
 	void writtenbackToDiskAll();
-	//ÔÚ´ÅÅÌÖĞ¶ÁÈ¡Ä³Ò»¿éµÄÊı¾İ
+	//åœ¨ç£ç›˜ä¸­è¯»å–æŸä¸€å—çš„æ•°æ®
 	void readFromDisk(char *p, char* end);
 
 
@@ -99,7 +99,7 @@ inline Tree<T>::Tree(std::string in_name, int key_size, int in_degree):
 	key_size(key_size),
 	degree(in_degree)
 {
-	//³õÊ¼»¯²¢¶ÁÈ¡Êı¾İ
+	//åˆå§‹åŒ–å¹¶è¯»å–æ•°æ®
 	initialization();
 	readFromDiskAll();
 }
@@ -136,18 +136,18 @@ inline bool Tree<T>::insertKey(T & key, int index_in_record)
 {
 	TreeNode pNode;
 	int index;
-	//¸ù½áµã²»´æÔÚ
+	//æ ¹ç»“ç‚¹ä¸å­˜åœ¨
 	if (!root)
 		initialization();
-	//²éÕÒ²åÈëÖµÊÇ·ñ´æÔÚ
+	//æŸ¥æ‰¾æ’å…¥å€¼æ˜¯å¦å­˜åœ¨
 	bool ifFound = findToLeaf(root, key, pNode, index);
-	if (ifFound) { //ÒÑ´æÔÚ
+	if (ifFound) { //å·²å­˜åœ¨
 		
 		return false;
 	}
-	else { //²»´æÔÚ£¬¿ÉÒÔ²åÈë
+	else { //ä¸å­˜åœ¨ï¼Œå¯ä»¥æ’å…¥
 		pNode->addKey(key, index_in_record);
-		//²åÈëºó½áµãÂú£¬ĞèÒª½øĞĞµ÷Õû
+		//æ’å…¥åç»“ç‚¹æ»¡ï¼Œéœ€è¦è¿›è¡Œè°ƒæ•´
 		if (pNode->num == degree) {
 			adjustAfterinsert(pNode);
 		}
@@ -163,29 +163,29 @@ inline bool Tree<T>::deleteKey(T & key)
 {
 	TreeNode pNode;
 	int index;
-	//¸ù½áµã²»´æÔÚ
+	//æ ¹ç»“ç‚¹ä¸å­˜åœ¨
 	if (!root) {
 		throw deleteKey_no_node_in_tree ;
 	
 		return false;
 	}
-	else { //Õı³£½øĞĞ²Ù×÷
-	 //²éÕÒÎ»ÖÃ
+	else { //æ­£å¸¸è¿›è¡Œæ“ä½œ
+	 //æŸ¥æ‰¾ä½ç½®
 		bool ifFound = findToLeaf(root, key, pNode, index);
-		if (!ifFound) { //ÕÒ²»µ½¸Ãkey
+		if (!ifFound) { //æ‰¾ä¸åˆ°è¯¥key
 			throw deleteKey_no_keys_in_tree;
 			return false;
 		}
-		else { //Õı³£ÕÒµ½½øĞĞÉ¾³ı
-			if (pNode->isRoot()) { //µ±Ç°Îª¸ù½áµã
+		else { //æ­£å¸¸æ‰¾åˆ°è¿›è¡Œåˆ é™¤
+			if (pNode->isRoot()) { //å½“å‰ä¸ºæ ¹ç»“ç‚¹
 				pNode->deleteKeyByIndex(index);
 				key_num--;
 				return adjustAfterDelete(pNode);
 			}
 			else {
 				if (index == 0 && leafHead != pNode) {
-					//key´æÔÚÓÚÖ¦¸É½áµãÉÏ
-					//µ½ÉÏÒ»²ãÈ¥¸üĞÂÖ¦¸É²ã
+					//keyå­˜åœ¨äºæå¹²ç»“ç‚¹ä¸Š
+					//åˆ°ä¸Šä¸€å±‚å»æ›´æ–°æå¹²å±‚
 					int i = 0;
 
 					TreeNode now_parent = pNode->parent;
@@ -205,7 +205,7 @@ inline bool Tree<T>::deleteKey(T & key)
 					return adjustAfterDelete(pNode);
 
 				}
-				else { //Í¬Ê±±ØÈ»´æÔÚÓÚÒ¶½áµã
+				else { //åŒæ—¶å¿…ç„¶å­˜åœ¨äºå¶ç»“ç‚¹
 					pNode->deleteKeyByIndex(index);
 					key_num--;
 					return adjustAfterDelete(pNode);
@@ -237,7 +237,7 @@ inline bool Tree<T>::adjustAfterinsert(TreeNode pNode)
 	TreeNode newNode = pNode->splitNode(key);
 	node_num++;
 
-	//µ±Ç°½áµãÎª¸ù½áµãÇé¿ö
+	//å½“å‰ç»“ç‚¹ä¸ºæ ¹ç»“ç‚¹æƒ…å†µ
 	if (pNode->isRoot()) {
 		TreeNode root = new TreeNode<T>(degree, false);
 		if (root == NULL) {
@@ -255,13 +255,13 @@ inline bool Tree<T>::adjustAfterinsert(TreeNode pNode)
 			return true;
 		}
 	}
-	else { //µ±Ç°½áµã·Ç¸ù½áµã
+	else { //å½“å‰ç»“ç‚¹éæ ¹ç»“ç‚¹
 		Tree parent = pNode->parent;
 		int i = parent->addKey(key);
 
 		parent->childs[i + 1] = newNode;
 		newNode->parent = parent;
-		//µİ¹é½øĞĞµ÷Õû
+		//é€’å½’è¿›è¡Œè°ƒæ•´
 		if (parent->num == degree)
 			return adjustAfterinsert(parent);
 
@@ -275,27 +275,27 @@ template<typename T>
 inline bool Tree<T>::adjustAfterDelete(TreeNode pNode)
 {
 	int minmumKeyNum = (degree - 1) / 2;
-	//ÈıÖÖ²»ĞèÒªµ÷ÕûµÄÇé¿ö
+	//ä¸‰ç§ä¸éœ€è¦è°ƒæ•´çš„æƒ…å†µ
 	if (((pNode->isLeaf) && (pNode->num >= minmumKeyNum)) ||
 		((degree != 3) && (!pNode->isLeaf) && (pNode->num >= minmumKeyNum - 1)) ||
 		((degree == 3) && (!pNode->isLeaf) && (pNode->num < 0))) {
 		return  true;
 	}
-	if (pNode->isRoot()) { //µ±Ç°½áµãÎª¸ù½áµã
-		//²»ĞèÒªµ÷Õû
+	if (pNode->isRoot()) { //å½“å‰ç»“ç‚¹ä¸ºæ ¹ç»“ç‚¹
+		//ä¸éœ€è¦è°ƒæ•´
 		if (pNode->num > 0) {
 			return true;
 		}
-		//Õı³£ĞèÒªµ÷Õû
+		//æ­£å¸¸éœ€è¦è°ƒæ•´
 		else { 
-			if (root->isLeaf) { //½«³ÉÎª¿ÕÊ÷Çé¿ö
+			if (root->isLeaf) { //å°†æˆä¸ºç©ºæ ‘æƒ…å†µ
 				delete pNode;
 				root = NULL;
 				leafHead = NULL;
 				level--;
 				node_num--;
 			}
-			else { //¸ù½Úµã½«³ÉÎª×óÍ·²¿
+			else { //æ ¹èŠ‚ç‚¹å°†æˆä¸ºå·¦å¤´éƒ¨
 				root = pNode->childs[0];
 				root->parent = NULL;
 				delete pNode;
@@ -304,13 +304,13 @@ inline bool Tree<T>::adjustAfterDelete(TreeNode pNode)
 			}
 		}
 	}
-	else { //·Ç¸ù½ÚµãÇé¿ö
+	else { //éæ ¹èŠ‚ç‚¹æƒ…å†µ
 		TreeNode parent = pNode->parent, brother = NULL;
-		if (pNode->isLeaf) { //µ±Ç°ÎªÒ¶½Úµã
+		if (pNode->isLeaf) { //å½“å‰ä¸ºå¶èŠ‚ç‚¹
 			int index = 0;
 			parent->findKey(pNode->keys[0], index);
 
-			//Ñ¡Ôñ×óĞÖµÜ
+			//é€‰æ‹©å·¦å…„å¼Ÿ
 			if ((parent->childs[0] != pNode) && (index + 1 == parent->num)) {
 				brother = parent->childs[index];
 				if (brother->num > minmumKeyNum) {
@@ -380,7 +380,7 @@ inline bool Tree<T>::adjustAfterDelete(TreeNode pNode)
 			}
 
 		}
-		else { //Ö¦¸É½ÚµãÇé¿ö
+		else { //æå¹²èŠ‚ç‚¹æƒ…å†µ
 			int index = 0;
 			parent->findKey(pNode->childs[0]->keys[0], index);
 			if ((parent->childs[0] != pNode) && (index + 1 == parent->num)) {
@@ -489,14 +489,14 @@ inline bool Tree<T>::findToLeaf(TreeNode pNode, T key, TreeNode &return_node, in
 {
 	int index = 0;
 	if (pNode->findKey(key, index)) {
-		//Èç¹ûÊÇÒ¶½Úµã
+		//å¦‚æœæ˜¯å¶èŠ‚ç‚¹
 		if(pNode->isLeaf) {
 			return_node = pNode;
 			return_index = index;
 			return true;
 		}
 		else {
-			//´Ë½áµã²»ÊÇÒ¶½áµã£¬µİ¹é²éÕÒËüµÄÏÂÒ»²ã
+			//æ­¤ç»“ç‚¹ä¸æ˜¯å¶ç»“ç‚¹ï¼Œé€’å½’æŸ¥æ‰¾å®ƒçš„ä¸‹ä¸€å±‚
 			pNode = pNode->childs[index + 1];
 			while (!pNode->isLeaf) {
 				pNode = pNode->childs[0];
@@ -506,16 +506,16 @@ inline bool Tree<T>::findToLeaf(TreeNode pNode, T key, TreeNode &return_node, in
 			return true;
 		}
 	}
-	//¸Ã½áµãÄÚÃ»ÓĞµÄ»°
+	//è¯¥ç»“ç‚¹å†…æ²¡æœ‰çš„è¯
 	else{
-		//Èç¹ûÊÇÒÑ¾­µ½ÁËÒ¶½Úµã»¹Ã»ÓĞ
+		//å¦‚æœæ˜¯å·²ç»åˆ°äº†å¶èŠ‚ç‚¹è¿˜æ²¡æœ‰
 		if (pNode->isLeaf) {
 			return_node = pNode;
 			return_index = index;
 			return false;
 		}
 		else {
-			//µİ¹éÑ°ÕÒÏÂÒ»²ã
+			//é€’å½’å¯»æ‰¾ä¸‹ä¸€å±‚
 			findToLeaf(pNode->childs[index], return_node, return_index);
 		}
 
@@ -571,7 +571,7 @@ inline void Tree<T>::dropTree(TreeNode tree_root)
 template<typename T>
 inline void Tree<T>::searchRange(T & key1, T & key2, std::vector<int>& index_in_records, int flag)
 {
-	//¿ÕÊ÷
+	//ç©ºæ ‘
 	if (!root) {
 		return;
 	}
@@ -627,10 +627,10 @@ inline void Tree<T>::readFromDiskAll()
 		block_num = 1;
 
 	for (int i = 0; i < block_num; i++) {
-		//»ñÈ¡µ±Ç°¿éµÄ¾ä±ú
+		//è·å–å½“å‰å—çš„å¥æŸ„
 		char* p = buffer_manager.getPage(fname, i);
 		//char* t = p;
-		//±éÀú¿éÖĞËùÓĞ¼ÇÂ¼
+		//éå†å—ä¸­æ‰€æœ‰è®°å½•
 
 		readFromDisk(p, p + PAGESIZE);
 	}

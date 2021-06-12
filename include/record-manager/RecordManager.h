@@ -1,5 +1,5 @@
-//ÊµÏÖÊı¾İÎÄ¼şµÄ´´½¨ÓëÉ¾³ı£¨ÓÉ±íµÄ¶¨ÒåÓëÉ¾³ıÒıÆğ£©¡¢¼ÇÂ¼µÄ²åÈë¡¢É¾³ı¡¢²éÕÒ²Ù×÷£¬²¢¶ÔÍâÌá¹©ÏàÓ¦µÄ½Ó¿Ú¡£
-//ÆäÖĞ¼ÇÂ¼µÄ²éÕÒ²Ù×÷ÒªÇóÄÜ¹»Ö§³Ö²»´øÌõ¼şµÄ²éÕÒºÍ´øÒ»¸öÌõ¼şµÄ²éÕÒ£¨°üÀ¨µÈÖµ²éÕÒ¡¢²»µÈÖµ²éÕÒºÍÇø¼ä²éÕÒ£©
+//å®ç°æ•°æ®æ–‡ä»¶çš„åˆ›å»ºä¸åˆ é™¤ï¼ˆç”±è¡¨çš„å®šä¹‰ä¸åˆ é™¤å¼•èµ·ï¼‰ã€è®°å½•çš„æ’å…¥ã€åˆ é™¤ã€æŸ¥æ‰¾æ“ä½œï¼Œå¹¶å¯¹å¤–æä¾›ç›¸åº”çš„æ¥å£ã€‚
+//å…¶ä¸­è®°å½•çš„æŸ¥æ‰¾æ“ä½œè¦æ±‚èƒ½å¤Ÿæ”¯æŒä¸å¸¦æ¡ä»¶çš„æŸ¥æ‰¾å’Œå¸¦ä¸€ä¸ªæ¡ä»¶çš„æŸ¥æ‰¾ï¼ˆåŒ…æ‹¬ç­‰å€¼æŸ¥æ‰¾ã€ä¸ç­‰å€¼æŸ¥æ‰¾å’ŒåŒºé—´æŸ¥æ‰¾ï¼‰
 
 
 #ifndef RecordManager_hpp
@@ -25,14 +25,14 @@ class RecordManager
 	void createTable(char* tablename,tableInfo tbif);
 	void deleteTable(char* tablename);
 	
-	void insertRecord(char*, Tuple,tableInfo);	   //²ÎÊı£º±íÃû£¬Tuple£»Ïò±íÖĞ²åÈëÔª×é£¬²åÈëÊ§°ÜÔò±¨´í
-	void deleteRecord(char* tableName, int attrno, char* op, Attribute attr, tableInfo tbif);	   //²ÎÊı£ºÍ¬select£¬²»ĞèÒªtup
+	void insertRecord(char*, Tuple,tableInfo);	   //å‚æ•°ï¼šè¡¨åï¼ŒTupleï¼›å‘è¡¨ä¸­æ’å…¥å…ƒç»„ï¼Œæ’å…¥å¤±è´¥åˆ™æŠ¥é”™
+	void deleteRecord(char* tableName, int attrno, char* op, Attribute attr, tableInfo tbif);	   //å‚æ•°ï¼šåŒselectï¼Œä¸éœ€è¦tup
 	void conditionSelect(char* , int, char*, Attribute, tableInfo tbif, Tuple* tup);
-	//²ÎÊı£º±íÃû£¬ÊôĞÔĞòºÅ£¨ÓÃcatalog'µÄgetattrNo£©£¬ËãÊı±È½Ï·û£¬±È½ÏÖµ, tbif
-	//·µ»ØÖµÓÉtupleÊı×é´«³ö
-	void nonconditionSelect(char*, Tuple* tup, tableInfo tbif);                       //²ÎÊı£º±íÃû,´æ·ÅÊı×é£¬tableinfo£»·µ»ØÈ«²¿tuple
+	//å‚æ•°ï¼šè¡¨åï¼Œå±æ€§åºå·ï¼ˆç”¨catalog'çš„getattrNoï¼‰ï¼Œç®—æ•°æ¯”è¾ƒç¬¦ï¼Œæ¯”è¾ƒå€¼, tbif
+	//è¿”å›å€¼ç”±tupleæ•°ç»„ä¼ å‡º
+	void nonconditionSelect(char*, Tuple* tup, tableInfo tbif);                       //å‚æ•°ï¼šè¡¨å,å­˜æ”¾æ•°ç»„ï¼Œtableinfoï¼›è¿”å›å…¨éƒ¨tuple
 
-	bool checkUnique(char* tablename, int attrno, Tuple tup, tableInfo tbif);					    	//²ÎÊı£ºattrnoÓÉcatalogÖĞµÄcheckattrnoµÃµ½
+	bool checkUnique(char* tablename, int attrno, Tuple tup, tableInfo tbif);					    	//å‚æ•°ï¼šattrnoç”±catalogä¸­çš„checkattrnoå¾—åˆ°
 
 };
 

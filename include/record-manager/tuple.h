@@ -1,4 +1,4 @@
-//Ôª×é×÷Îª²åÈëÃ½½é£¬°üº¬ĞĞ¼ÇÂ¼ÖĞÃ¿¸ödata¶ÔÓ¦µÄattribute£¬ÒÔ¼°Òª²åÈëµÄ±íÃû
+//å…ƒç»„ä½œä¸ºæ’å…¥åª’ä»‹ï¼ŒåŒ…å«è¡Œè®°å½•ä¸­æ¯ä¸ªdataå¯¹åº”çš„attributeï¼Œä»¥åŠè¦æ’å…¥çš„è¡¨å
 
 #ifndef tuple_hpp
 #define tuple_hpp
@@ -17,17 +17,17 @@ public:
 	~Tuple();
 	Tuple(const Tuple&);
 
-	Attribute attr[32];		//Ôª×éÖĞµÄÊôĞÔÊı×é
-	int attrNum;			//Ôª×éÖĞÊôĞÔÊı
+	Attribute attr[32];		//å…ƒç»„ä¸­çš„å±æ€§æ•°ç»„
+	int attrNum;			//å…ƒç»„ä¸­å±æ€§æ•°
 	bool hasdeleted = false;
 
-	void insertAttr(int num, Attribute* attr);      //²åÈëÊôĞÔ,²¢½«×Ö·û´®²åÈë
+	void insertAttr(int num, Attribute* attr);      //æ’å…¥å±æ€§,å¹¶å°†å­—ç¬¦ä¸²æ’å…¥
 	
 
-	char rowData[4096]="";				 //Ôª×é¼ÇÂ¼µÄ¸ñÊ½»¯£¬ÓÃÓÚ´æÈëpage
+	char rowData[4096]="";				 //å…ƒç»„è®°å½•çš„æ ¼å¼åŒ–ï¼Œç”¨äºå­˜å…¥page
 
-	void writeRowData(char* pageRowData);	//Ğ´Èërowdata£»
-	void readRowData(char* RowData,tableInfo);	 //Í¬Ê±¶ÔÉÏ²ãÓëÏÂ²ã
+	void writeRowData(char* pageRowData);	//å†™å…¥rowdataï¼›
+	void readRowData(char* RowData,tableInfo);	 //åŒæ—¶å¯¹ä¸Šå±‚ä¸ä¸‹å±‚
 	void setTuple(int attrnum, char** rowdata, tableInfo tbif);
 };
 

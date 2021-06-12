@@ -1,8 +1,8 @@
-//tableInfoºÍpagedataµÄ´«µİ
+//tableInfoå’Œpagedataçš„ä¼ é€’
 /*
-catalogPage¸ñÊ½ £º²»¶¨³¤¡¢µ¥¸öÊı¾İ¶¨³¤
-±íÊıÄ¿4×Ö½Ú int
-±íĞÅÏ¢
+catalogPageæ ¼å¼ ï¼šä¸å®šé•¿ã€å•ä¸ªæ•°æ®å®šé•¿
+è¡¨æ•°ç›®4å­—èŠ‚ int
+è¡¨ä¿¡æ¯
 */
 
 #ifndef pageData_hpp
@@ -24,8 +24,8 @@ public:
 	int searchTableInfo(char*);
 
 
-	void updatePage(char*, int i);		//²ÎÊı£ºpageÖ¸Õë£¬¸üĞÂµÄ±íĞòºÅ¡£¸üĞÂ±í
-	void writePage(char*);				//Ìí¼Ó±í
+	void updatePage(char*, int i);		//å‚æ•°ï¼špageæŒ‡é’ˆï¼Œæ›´æ–°çš„è¡¨åºå·ã€‚æ›´æ–°è¡¨
+	void writePage(char*);				//æ·»åŠ è¡¨
 	void readPage(char*);
 	void deleteTable(char*,int i);
 };

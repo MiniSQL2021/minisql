@@ -1,10 +1,10 @@
-//ÊµÏÖ´´½¨¡¢É¾³ı±í¡¢Ë÷ÒıÕâĞ©¹ØÏµÄ£Ê½
-//¼ì²é±í¡¢ÊôĞÔ¡¢Ë÷ÒıµÈ¹ØÏµÄ£Ê½ÊÇ·ñ´æÔÚ¡¢ÓÃÓÚÔöÉ¾Ê±ºò¼ì²é±¨´í
-//¼Ì³ĞcatalogPage£¬·½±ãÊı¾İ´«µİ
+//å®ç°åˆ›å»ºã€åˆ é™¤è¡¨ã€ç´¢å¼•è¿™äº›å…³ç³»æ¨¡å¼
+//æ£€æŸ¥è¡¨ã€å±æ€§ã€ç´¢å¼•ç­‰å…³ç³»æ¨¡å¼æ˜¯å¦å­˜åœ¨ã€ç”¨äºå¢åˆ æ—¶å€™æ£€æŸ¥æŠ¥é”™
+//ç»§æ‰¿catalogPageï¼Œæ–¹ä¾¿æ•°æ®ä¼ é€’
 
 #ifndef CatalogManager
 #define CatalogManager
-//ÊµÏÖ¹ØÏµÄ£Ê½µÄ´¢´æµ÷ÓÃ£¬Ìá¹©º¯Êı
+//å®ç°å…³ç³»æ¨¡å¼çš„å‚¨å­˜è°ƒç”¨ï¼Œæä¾›å‡½æ•°
 
 
 #include<iostream>
@@ -22,19 +22,19 @@ class catalogManager
 public:
 	BufferManager buffer;
 
-	bool checkTable(char*);			//²ÎÊı£º±íÃû£»¼ì²étableÊÇ·ñ´æÔÚ
-	bool checkIndex(char*);			//²ÎÊı£º±íÃû£¬ÊôĞÔÃû£»¼ì²étableµÄattrÉÏÊÇ·ñ´æÔÚË÷Òı
-	bool checkAttr(char*, char*);	    //²ÎÊı£º±íÃû£¬ÊôĞÔÃû£»¼ì²éÊôĞÔÊÇ·ñ´æÔÚ
-	bool checkUnique(char*, char*);	//²ÎÊı£º±íÃû£¬ÊôĞÔÃû£»¼ì²éÊôĞÔÊÇ·ñunique
-	bool checkPrimaryKey(char*);		//²ÎÊı£º±íÃû£»¼ì²éÊÇ·ñ´æÔÚÖ÷¼ü
+	bool checkTable(char*);			//å‚æ•°ï¼šè¡¨åï¼›æ£€æŸ¥tableæ˜¯å¦å­˜åœ¨
+	bool checkIndex(char*);			//å‚æ•°ï¼šè¡¨åï¼Œå±æ€§åï¼›æ£€æŸ¥tableçš„atträ¸Šæ˜¯å¦å­˜åœ¨ç´¢å¼•
+	bool checkAttr(char*, char*);	    //å‚æ•°ï¼šè¡¨åï¼Œå±æ€§åï¼›æ£€æŸ¥å±æ€§æ˜¯å¦å­˜åœ¨
+	bool checkUnique(char*, char*);	//å‚æ•°ï¼šè¡¨åï¼Œå±æ€§åï¼›æ£€æŸ¥å±æ€§æ˜¯å¦unique
+	bool checkPrimaryKey(char*);		//å‚æ•°ï¼šè¡¨åï¼›æ£€æŸ¥æ˜¯å¦å­˜åœ¨ä¸»é”®
 
-	int getAttrNo(char*, char*);		//²ÎÊı£º±íÃû£¬ÊôĞÔÃû£¬·µ»ØÕâÊÇµÚ¼¸¸öÊôĞÔ
-	AttributeType* getAttrType(char*, char*);	//²ÎÊı£º±íÃû£¬ÊôĞÔÃû£»·µ»ØÊôĞÔÀàĞÍ
-	tableInfo* getTableInfo(char*);    //²ÎÊı£º±íÃû£»·µ»Ø±íĞÅÏ¢
+	int getAttrNo(char*, char*);		//å‚æ•°ï¼šè¡¨åï¼Œå±æ€§åï¼Œè¿”å›è¿™æ˜¯ç¬¬å‡ ä¸ªå±æ€§
+	AttributeType* getAttrType(char*, char*);	//å‚æ•°ï¼šè¡¨åï¼Œå±æ€§åï¼›è¿”å›å±æ€§ç±»å‹
+	tableInfo* getTableInfo(char*);    //å‚æ•°ï¼šè¡¨åï¼›è¿”å›è¡¨ä¿¡æ¯
 
-	void dropTable(char*);				//²ÎÊı£º±íÃû£»É¾³ıÒ»¸ö±í£¬²¢É¾³ı±íµÄË÷Òı
-	void createTable(tableInfo);		//²ÎÊı£ºtableInfo;ÈôÊ§°Ü´òÓ¡±¨´í
-	void editIndex(char*, char*, int);	//²ÎÊı£º±íÃû£¬ÊôĞÔÃû£¬1Îª´´½¨£¬0ÎªÉ¾³ıË÷Òı
+	void dropTable(char*);				//å‚æ•°ï¼šè¡¨åï¼›åˆ é™¤ä¸€ä¸ªè¡¨ï¼Œå¹¶åˆ é™¤è¡¨çš„ç´¢å¼•
+	void createTable(tableInfo);		//å‚æ•°ï¼štableInfo;è‹¥å¤±è´¥æ‰“å°æŠ¥é”™
+	void editIndex(char*, char*, int);	//å‚æ•°ï¼šè¡¨åï¼Œå±æ€§åï¼Œ1ä¸ºåˆ›å»ºï¼Œ0ä¸ºåˆ é™¤ç´¢å¼•
 
 };
 

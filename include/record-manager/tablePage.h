@@ -1,5 +1,5 @@
 /*
-	recordµÄ´¢´æ¡¢É¾³ı¡¢¸üĞÂ
+	recordçš„å‚¨å­˜ã€åˆ é™¤ã€æ›´æ–°
 */
 #ifndef tablePage_hpp
 
@@ -24,7 +24,7 @@ public:
 	tableInfo tbif;		
 	Tuple tp[1024];
 
-	void conditionsearch(Attribute, char*, int attrno,int* no);			//²ÎÊı£ºattr£¬ËãÊõÔËËã·û£ºÕ¼Á½¸ö×Ö½Ú£¨µÚ¶ş¸ö×Ö½Ú¿ÉÎª\0£©;·µ»Øtuple±àºÅ´æ´¢ÔÚ´«ÈëµÄÖ¸ÕëÖĞ
+	void conditionsearch(Attribute, char*, int attrno,int* no);			//å‚æ•°ï¼šattrï¼Œç®—æœ¯è¿ç®—ç¬¦ï¼šå ä¸¤ä¸ªå­—èŠ‚ï¼ˆç¬¬äºŒä¸ªå­—èŠ‚å¯ä¸º\0ï¼‰;è¿”å›tupleç¼–å·å­˜å‚¨åœ¨ä¼ å…¥çš„æŒ‡é’ˆä¸­
 	void nonconditionsearch(int* no);
 	void insertTuple(char*, Tuple tup,int k);
 	void deleteTuple(int *);

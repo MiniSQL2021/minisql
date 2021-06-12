@@ -69,7 +69,7 @@ void CatalogPage::deleteTable(char* pagedata, int i)
 	{
 		memcpy(&size, pagedata + p, 4);
 		p += size;
-	}//p指向所删数组后一个的位置
+	}//p鎸囧悜鎵�鍒犳暟缁勫悗涓�涓殑浣嶇疆
 	memcpy(temp, pagedata + p, 4097 - p);
 	memcpy(pagedata+p-size, temp, 4097 - p+size);
 	
