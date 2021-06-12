@@ -16,23 +16,27 @@
 
 using namespace std;
 
-class RecordManager 
-{
-	BufferManager buffer;
-	RecordManager();
-	~RecordManager();
+class RecordManager {
+    BufferManager buffer;
 
-	void createTable(char* tablename,tableInfo tbif);
-	void deleteTable(char* tablename);
-	
-	void insertRecord(char*, Tuple,tableInfo);	   //参数：表名，Tuple；向表中插入元组，插入失败则报错
-	void deleteRecord(char* tableName, int attrno, char* op, Attribute attr, tableInfo tbif);	   //参数：同select，不需要tup
-	void conditionSelect(char* , int, char*, Attribute, tableInfo tbif, Tuple* tup);
-	//参数：表名，属性序号（用catalog'的getattrNo），算数比较符，比较值, tbif
-	//返回值由tuple数组传出
-	void nonconditionSelect(char*, Tuple* tup, tableInfo tbif);                       //参数：表名,存放数组，tableinfo；返回全部tuple
+    RecordManager();
 
-	bool checkUnique(char* tablename, int attrno, Tuple tup, tableInfo tbif);					    	//参数：attrno由catalog中的checkattrno得到
+    ~RecordManager();
+
+    void createTable(char *tablename, tableInfo tbif);
+
+    void deleteTable(char *tablename);
+
+    void insertRecord(char *, Tuple, tableInfo);       //参数：表名，Tuple；向表中插入元组，插入失败则报错
+    void deleteRecord(char *tableName, int attrno, char *op, Attribute attr, tableInfo tbif);       //参数：同select，不需要tup
+    void conditionSelect(char *, int, char *, Attribute, tableInfo tbif, Tuple *tup);
+
+    //参数：表名，属性序号（用catalog'的getattrNo），算数比较符，比较值, tbif
+    //返回值由tuple数组传出
+    void nonconditionSelect(char *, Tuple *tup, tableInfo tbif);                       //参数：表名,存放数组，tableinfo；返回全部tuple
+
+    bool checkUnique(char *tablename, int attrno, Tuple tup,
+                     tableInfo tbif);                            //参数：attrno由catalog中的checkattrno得到
 
 };
 

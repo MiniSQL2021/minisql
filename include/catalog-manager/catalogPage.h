@@ -13,21 +13,23 @@ catalogPage格式 ：不定长、单个数据定长
 
 using namespace std;
 
-class CatalogPage     
-{
+class CatalogPage {
 public:
-	CatalogPage();
-	~CatalogPage();
+    CatalogPage();
 
-	int tableNum=0;
-	tableInfo tbif[50];
-	int searchTableInfo(char*);
+    ~CatalogPage();
+
+    int tableNum = 0;
+    tableInfo tbif[50];
+
+    int searchTableInfo(char *);
 
 
-	void updatePage(char*, int i);		//参数：page指针，更新的表序号。更新表
-	void writePage(char*);				//添加表
-	void readPage(char*);
-	void deleteTable(char*,int i);
+    void updatePage(char *, int i);        //参数：page指针，更新的表序号。更新表
+    void writePage(char *);                //添加表
+    void readPage(char *);
+
+    void deleteTable(char *, int i);
 };
 
 

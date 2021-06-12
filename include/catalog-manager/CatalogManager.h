@@ -17,24 +17,23 @@
 
 using namespace std;
 
-class catalogManager
-{
+class catalogManager {
 public:
-	BufferManager buffer;
+    BufferManager buffer;
 
-	bool checkTable(char*);			//参数：表名；检查table是否存在
-	bool checkIndex(char*);			//参数：表名，属性名；检查table的attr上是否存在索引
-	bool checkAttr(char*, char*);	    //参数：表名，属性名；检查属性是否存在
-	bool checkUnique(char*, char*);	//参数：表名，属性名；检查属性是否unique
-	bool checkPrimaryKey(char*);		//参数：表名；检查是否存在主键
+    bool checkTable(char *);            //参数：表名；检查table是否存在
+    bool checkIndex(char *);            //参数：表名，属性名；检查table的attr上是否存在索引
+    bool checkAttr(char *, char *);        //参数：表名，属性名；检查属性是否存在
+    bool checkUnique(char *, char *);    //参数：表名，属性名；检查属性是否unique
+    bool checkPrimaryKey(char *);        //参数：表名；检查是否存在主键
 
-	int getAttrNo(char*, char*);		//参数：表名，属性名，返回这是第几个属性
-	AttributeType* getAttrType(char*, char*);	//参数：表名，属性名；返回属性类型
-	tableInfo* getTableInfo(char*);    //参数：表名；返回表信息
+    int getAttrNo(char *, char *);        //参数：表名，属性名，返回这是第几个属性
+    AttributeType *getAttrType(char *, char *);    //参数：表名，属性名；返回属性类型
+    tableInfo *getTableInfo(char *);    //参数：表名；返回表信息
 
-	void dropTable(char*);				//参数：表名；删除一个表，并删除表的索引
-	void createTable(tableInfo);		//参数：tableInfo;若失败打印报错
-	void editIndex(char*, char*, int);	//参数：表名，属性名，1为创建，0为删除索引
+    void dropTable(char *);                //参数：表名；删除一个表，并删除表的索引
+    void createTable(tableInfo);        //参数：tableInfo;若失败打印报错
+    void editIndex(char *, char *, int);    //参数：表名，属性名，1为创建，0为删除索引
 
 };
 
