@@ -22,6 +22,8 @@ namespace Adapter {
 
     Attribute toAttribute(tableInfo &table, const std::string &attributeName);
 
+    Attribute toAttribute(tableInfo &table, int attributeIndex);
+
     Data toData(const Literal &literal);
 
     Data toData(const Attribute &attribute);
@@ -29,4 +31,6 @@ namespace Adapter {
     std::tuple<Data, Data> toDataRange(const ComparisonCondition &condition);
 
     char *toOperatorString(BinaryOpearator op);
+
+    Tuple toTuple(const std::vector<Literal> &literals);
 }

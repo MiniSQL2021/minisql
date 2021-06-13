@@ -77,6 +77,14 @@ Attribute Adapter::toAttribute(tableInfo &table, const std::string &attributeNam
     return result;
 }
 
+// Get info of an attribute by index
+Attribute Adapter::toAttribute(tableInfo &table, int attributeIndex) {
+    Attribute result;
+    result.type = table.attrType[attributeIndex];
+    result.dataLength = table.attrLength[attributeIndex];
+    return result;
+}
+
 Data Adapter::toData(const Literal &literal) {
     Data result;
     // Problem: What does 'int type' represents?
@@ -150,4 +158,14 @@ char *Adapter::toOperatorString(BinaryOpearator op) {
             break;
     }
     return dynamicCStyleString(str);
+}
+
+Tuple Adapter::toTuple(const std::vector<Literal> &literals) {
+    // Problem: insertAttr, rowData of Attribute?
+    //          Should provide proper ctor of Attribute and Tuple
+    std::vector<Attribute> attributes;
+    for (const auto &literal : literals) attributes.push_back(toAttribute(literal));
+    Tuple result;
+    result.insertAttr(static_cast<int>(attributes.size()), attributes.data());
+    return result;
 }
