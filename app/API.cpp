@@ -28,13 +28,8 @@ void API::handleDropTableQuery(QueryPointer<DropTableQuery> query) {
     }
 
     // Delete all indices of attributes in the table
-    // Problem: Why return pointer to tableInfo?
-    tableInfo table = *catalogManager.getTableInfo(tableName);
-    for (int i = 0; i < table.attrNum; i++) {
-        if (table.hasIndex[i]) {
-            char *attributeName = table.attrName[i];
-            dropIndex(tableName, attributeName);
-        }
+    for (const auto &attributeName:getAllIndexedAttributeName(query->tableName)) {
+        dropIndex(tableName, Adapter::unsafeCStyleString(attributeName));
     }
 
     recordManager.deleteTable(tableName);
@@ -160,28 +155,35 @@ void API::listen() {
     interpreter.listen();
 }
 
-void API::dropIndex(char *tableName, char *attributeName) {
-    // Assume the index exists
-    // Problem: Attribute?
-    Index index((std::string(tableName)), Attribute());
-    // Problem: Path? Type?
-    index.dropIndex("", 0);
-    catalogManager.editIndex(tableName, attributeName, 0);  // '0' represents 'to delete'
+std::vector<std::string> API::getAllIndexedAttributeName(const std::string &tableName) {
+    tableInfo table = *catalogManager.getTableInfo(Adapter::unsafeCStyleString(tableName));
+    std::vector<std::string> result;
+    for (int i = 0; i < table.attrNum; i++)
+        if (table.hasIndex[i]) result.emplace_back(table.attrName[i]);
+    return result;
 }
 
+void API::dropIndex(const std::string &tableName, const std::string &attributeName) {
+    // Assume the index exists
+    tableInfo table = *catalogManager.getTableInfo(Adapter::unsafeCStyleString(tableName));
+    Index index(tableName, Adapter::toAttribute(table, attributeName));
+    // Problem: Path? Type?
+    index.dropIndex("", 0);
+    catalogManager.editIndex(Adapter::unsafeCStyleString(tableName), Adapter::unsafeCStyleString(attributeName),
+                             0);  // '0' represents 'to delete'
+}
 
-void API::dropIndex(char *indexName) {
+void API::dropIndex(const std::string &indexName) {
     // Assume the index exists
     // Problem: Should get names of table and attribute
-    char *tableNameString;
-    char *attributeNameString;
-    std::string tableName(tableNameString);
-    std::string attributeName(attributeNameString);
-    // Problem: Attribute?
+    std::string tableName;
+    std::string attributeName;
+    // Problem: CatalogManager should provide a method to get name of table and attribute by name of index
     Index index(tableName, Attribute());
     // Problem: Path? Type?
     index.dropIndex("", 0);
-    catalogManager.editIndex(tableNameString, attributeNameString, 0);  // '0' represents 'to delete'
+    catalogManager.editIndex(Adapter::unsafeCStyleString(tableName), Adapter::unsafeCStyleString(attributeName),
+                             0);  // '0' represents 'to delete'
 }
 
 bool API::isConditionListValid(char *tableName, const std::vector<ComparisonCondition> &conditions) {

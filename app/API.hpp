@@ -30,9 +30,11 @@ private:
     RecordManager recordManager;
     CatalogManager catalogManager;
 
-    void dropIndex(char *tableName, char *attributeName);
+    std::vector<std::string> getAllIndexedAttributeName(const std::string &tableName);
 
-    void dropIndex(char *indexName);
+    void dropIndex(const std::string &tableName, const std::string &attributeName);
+
+    void dropIndex(const std::string &indexName);
 
     bool isConditionListValid(char *tableName, const std::vector<ComparisonCondition> &conditions);
 };
