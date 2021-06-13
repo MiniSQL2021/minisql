@@ -6,10 +6,6 @@
 #include "Index.h"
 
 class API {
-    Interpreter interpreter;
-    RecordManager recordManager;
-    CatalogManager catalogManager;
-
 public:
     API() : interpreter(Interpreter()) {};
 
@@ -28,4 +24,15 @@ public:
     void handleInsertQuery(QueryPointer<InsertQuery> query);
 
     void handleDeleteQuery(QueryPointer<DeleteQuery> query);
+
+private:
+    Interpreter interpreter;
+    RecordManager recordManager;
+    CatalogManager catalogManager;
+
+    void dropIndex(char *tableName, char *attributeName);
+
+    void dropIndex(char *indexName);
+
+    bool isConditionListValid(char *tableName, const std::vector<ComparisonCondition> &conditions);
 };

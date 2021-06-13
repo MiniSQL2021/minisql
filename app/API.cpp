@@ -10,7 +10,10 @@
 
 void API::handleCreateTableQuery(QueryPointer<CreateTableQuery> query) {
     tableInfo table = Adapter::toTableInfo(*query);
-    // Problem: Handle exception that the table already exists
+    if (catalogManager.checkTable(table.TableName)) {
+        // Table already exists
+    }
+
     // Problem: Why bother pass name of table?
     recordManager.createTable(table.TableName, table);
     catalogManager.createTable(table);
@@ -20,11 +23,22 @@ void API::handleCreateTableQuery(QueryPointer<CreateTableQuery> query) {
 
 void API::handleDropTableQuery(QueryPointer<DropTableQuery> query) {
     char *tableName = Adapter::toCStyleString(query->tableName);
+    if (!catalogManager.checkTable(tableName)) {
+        // Table doesn't exist
+    }
 
-    // Problem: Handle exception that the table doesn't exist
+    // Delete all indices of attributes in the table
+    // Problem: Why return pointer to tableInfo?
+    tableInfo table = *catalogManager.getTableInfo(tableName);
+    for (int i = 0; i < table.attrNum; i++) {
+        if (table.hasIndex[i]) {
+            char *attributeName = table.attrName[i];
+            dropIndex(tableName, attributeName);
+        }
+    }
+
     recordManager.deleteTable(tableName);
     catalogManager.dropTable(tableName);
-    // Problem: Also need to delete index if exists?
 
     // Problem: Whose responsibility to delete char* strings?
     delete tableName;
@@ -67,16 +81,7 @@ void API::handleDropIndexQuery(QueryPointer<DropIndexQuery> query) {
     if (catalogManager.checkIndex(indexName)) {
         // Index doesn't exists
     }
-
-    // Problem: Need to instantiate Index?
-    // Index index(*, *);
-    // Problem: Pass name of index to dropIndex
-    // index.dropIndex(query->indexName);
-
-    // Problem: Pass name of index to delete index from catalog
-    catalogManager.editIndex(indexName, nullptr, 0); // '0' represents 'to delete'
-
-    delete indexName;
+    dropIndex(indexName);
 }
 
 void API::handleSelectQuery(QueryPointer<SelectQuery> query) {
@@ -84,23 +89,7 @@ void API::handleSelectQuery(QueryPointer<SelectQuery> query) {
     if (!catalogManager.checkTable(tableName)) {
         // Table doesn't exist
     }
-
-    // Check 1) if some attribute name in the condition list doesn't exist
-    //       2) if type of some value in the condition list doesn't match the actual type
-    bool conditionListIsValid = true;
-    for (const auto &condition: query->conditions) {
-        char *attributeName = Adapter::toCStyleString(condition.columnName);
-        bool columnExists = catalogManager.checkAttr(tableName, attributeName);
-        // Problem: Why return a pointer to AttributeType?
-        AttributeType actualType = *catalogManager.getAttrType(tableName, attributeName);
-        AttributeType inputType = Adapter::toAttributeType(condition.value.type());
-        delete attributeName;
-        if (!columnExists || inputType != actualType) {
-            conditionListIsValid = false;
-            break;
-        }
-    }
-    if (!conditionListIsValid) {
+    if (!isConditionListValid(tableName, query->conditions)) {
         // Some attribute in the input doesn't exist, or the type doesn't match the actual type
     }
 
@@ -116,14 +105,12 @@ void API::handleSelectQuery(QueryPointer<SelectQuery> query) {
         return;
     }
 
-    // Problem: RecordManager::conditionSelect, should returns std::vector
-    // Problem: RecordManager::conditionSelect, comparison involved with multiple conditions
+    // Problem: RecordManager::conditionSelect, should returns array of locations
     // Problem: Index, should returns array of locations
     // Problem: Should get a series of arrays of locations of all the expected tuples,
     //          do intersection, and then get data
     for (const auto &condition: query->conditions) {
-        bool hasIndex = catalogManager.checkIndex(tableName/*, columnName*/);
-        if (hasIndex) {
+        if (catalogManager.checkIndex(tableName/*, columnName*/)) {
             // Problem: Attribute?
             Index index(query->tableName, Attribute());
             if (condition.binaryOperator == BinaryOpearator::Equal ||
@@ -171,4 +158,42 @@ void API::listen() {
     interpreter.onInsertQuery([this](auto query) { handleInsertQuery(std::move(query)); });
     interpreter.onDeleteQuery([this](auto query) { handleDeleteQuery(std::move(query)); });
     interpreter.listen();
+}
+
+void API::dropIndex(char *tableName, char *attributeName) {
+    // Assume the index exists
+    // Problem: Attribute?
+    Index index((std::string(tableName)), Attribute());
+    // Problem: Path? Type?
+    index.dropIndex("", 0);
+    catalogManager.editIndex(tableName, attributeName, 0);  // '0' represents 'to delete'
+}
+
+
+void API::dropIndex(char *indexName) {
+    // Assume the index exists
+    // Problem: Should get names of table and attribute
+    char *tableNameString;
+    char *attributeNameString;
+    std::string tableName(tableNameString);
+    std::string attributeName(attributeNameString);
+    // Problem: Attribute?
+    Index index(tableName, Attribute());
+    // Problem: Path? Type?
+    index.dropIndex("", 0);
+    catalogManager.editIndex(tableNameString, attributeNameString, 0);  // '0' represents 'to delete'
+}
+
+bool API::isConditionListValid(char *tableName, const std::vector<ComparisonCondition> &conditions) {
+    // Check 1) if some attribute name in the condition list doesn't exist
+    //       2) if type of some value in the condition list doesn't match the actual type
+    return std::all_of(conditions.begin(), conditions.end(), [this, tableName](auto condition) {
+        char *attributeName = Adapter::toCStyleString(condition.columnName);
+        bool columnExists = catalogManager.checkAttr(tableName, attributeName);
+        // Problem: Why return a pointer to AttributeType?
+        AttributeType actualType = *catalogManager.getAttrType(tableName, attributeName);
+        AttributeType inputType = Adapter::toAttributeType(condition.value.type());
+        delete attributeName;
+        if (!columnExists || inputType != actualType) return false;
+    });
 }
