@@ -1,7 +1,14 @@
 #include "Adapter.h"
 #include "Util.h"
 
-char *Adapter::toCStyleString(const std::string &str) {
+// Warning: Erasing type-safety guard of const-ness
+// Need to guarantee that the string is not deallocated when using
+char *Adapter::unsafeCStyleString(const string &str) {
+    return const_cast<char *>(str.c_str());
+}
+
+// Need to be deallocated after used
+char *Adapter::dynamicCStyleString(const std::string &str) {
     char *result = new char[str.size() + 1];
     strcpy(result, str.c_str());
     return result;
@@ -20,7 +27,7 @@ AttributeType Adapter::toAttributeType(LiteralType type) {
 
 attrStruct Adapter::toAttrStruct(const Column &column) {
     attrStruct result{};
-    result.attrName = toCStyleString(column.name);
+    result.attrName = dynamicCStyleString(column.name);
     result.attrType = toAttributeType(column.type);
     result.attrUnique = column.unique;
     if (auto maxLength = column.maxLength) result.attrlength = *maxLength;
@@ -31,15 +38,12 @@ attrStruct Adapter::toAttrStruct(const Column &column) {
 
 tableInfo Adapter::toTableInfo(const CreateTableQuery &query) {
     tableInfo result;
-    char *tableName = toCStyleString(query.tableName);
-    char *primaryKeyName = toCStyleString(query.primaryKey);
     std::vector<attrStruct> attributes;
     for (const auto &column : query.columns) attributes.push_back(toAttrStruct(column));
 
-    result.setTableInfo(tableName, primaryKeyName, true, static_cast<int>(query.columns.size()), attributes.data());
+    result.setTableInfo(Adapter::unsafeCStyleString(query.tableName), Adapter::unsafeCStyleString(query.primaryKey),
+                        true, static_cast<int>(query.columns.size()), attributes.data());
 
-    delete tableName;
-    delete primaryKeyName;
     for (const auto &attribute : attributes) {
         delete attribute.attrName;
         delete attribute.indexname;
@@ -116,5 +120,5 @@ char *Adapter::toOperatorString(BinaryOpearator op) {
             str = ">=";
             break;
     }
-    return toCStyleString(str);
+    return dynamicCStyleString(str);
 }

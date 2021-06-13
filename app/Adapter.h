@@ -8,7 +8,9 @@
 #include "Index.h"
 
 namespace Adapter {
-    char *toCStyleString(const std::string &str);
+    char *unsafeCStyleString(const std::string &str);
+
+    char *dynamicCStyleString(const std::string &str);
 
     AttributeType toAttributeType(LiteralType type);
 
