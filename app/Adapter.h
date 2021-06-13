@@ -20,7 +20,11 @@ namespace Adapter {
 
     Attribute toAttribute(const Literal &literal);
 
+    Attribute toAttribute(tableInfo &table, const std::string &attributeName);
+
     Data toData(const Literal &literal);
+
+    Data toData(const Attribute &attribute);
 
     std::tuple<Data, Data> toDataRange(const ComparisonCondition &condition);
 

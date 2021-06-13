@@ -52,6 +52,7 @@ tableInfo Adapter::toTableInfo(const CreateTableQuery &query) {
     return result;
 }
 
+// Convert Literal to Attribute, for passing data
 Attribute Adapter::toAttribute(const Literal &literal) {
     Attribute result;
     if (auto intValue = literal.intValue()) {
@@ -67,6 +68,15 @@ Attribute Adapter::toAttribute(const Literal &literal) {
     return result;
 }
 
+// Get info of an attribute
+Attribute Adapter::toAttribute(tableInfo &table, const std::string &attributeName) {
+    Attribute result;
+    int attributeIndex = table.searchAttr(unsafeCStyleString(attributeName));
+    result.type = table.attrType[attributeIndex];
+    result.dataLength = table.attrLength[attributeIndex];
+    return result;
+}
+
 Data Adapter::toData(const Literal &literal) {
     Data result;
     // Problem: What does 'int type' represents?
@@ -79,6 +89,25 @@ Data Adapter::toData(const Literal &literal) {
     } else if (auto stringValue = literal.stringValue()) {
         result.datas = *stringValue;
         // result.type =
+    }
+    return result;
+}
+
+Data Adapter::toData(const Attribute &attribute) {
+    Data result;
+    // Problem: What does 'int type' represents?
+    switch (attribute.type) {
+        case AttributeType::INT:
+            result.datai = attribute.intData;
+            break;
+        case AttributeType::FLOAT:
+            result.dataf = attribute.floatData;
+            break;
+        case AttributeType::CHAR:
+            result.datas = std::string(attribute.charData);
+            break;
+        case AttributeType::UNDEFINE:
+            break;
     }
     return result;
 }
