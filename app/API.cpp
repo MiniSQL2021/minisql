@@ -35,29 +35,28 @@ void API::handleDropTableQuery(QueryPointer<DropTableQuery> query) {
 
 void API::handleCreateIndexQuery(QueryPointer<CreateIndexQuery> query) {
     char *tableName = Adapter::unsafeCStyleString(query->tableName);
-    char *columnName = Adapter::unsafeCStyleString(query->columnName);
+    char *attributeName = Adapter::unsafeCStyleString(query->columnName);
     char *indexName = Adapter::unsafeCStyleString(query->indexName);
     if (!catalogManager.checkTable(tableName)) {
         // Table doesn't exist
     }
-    if (!catalogManager.checkAttr(tableName, columnName)) {
+    if (!catalogManager.checkAttr(tableName, attributeName)) {
         // Attribute doesn't exist
     }
-    if (!catalogManager.checkUnique(tableName, columnName)) {
+    if (!catalogManager.checkUnique(tableName, attributeName)) {
         // Attribute is not unique
     }
     // Problem: checkIndex's parameters represent what?
-    if (catalogManager.checkIndex(tableName/*, columnName*/)) {
+    if (catalogManager.checkIndex(tableName/*, attributeName*/)) {
         // Index already exists
     }
-
-    // Problem: Index's ctor needs 'Attribute'? Where to get?
-    Index index(query->tableName, Attribute());
+    tableInfo table = *catalogManager.getTableInfo(tableName);
+    Index index(query->tableName, Adapter::toAttribute(table, attributeName));
     // Problem: createIndex needs file path? type?
     index.createIndex("", 0);
 
     // Problem: Pass name of index to create index to catalog
-    catalogManager.editIndex(tableName, columnName, 1); // '1' represents 'to create'
+    catalogManager.editIndex(tableName, attributeName, 1); // '1' represents 'to create'
 }
 
 void API::handleDropIndexQuery(QueryPointer<DropIndexQuery> query) {
