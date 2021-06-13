@@ -38,5 +38,7 @@ private:
 
     static bool isConditionListValid(tableInfo &table, const std::vector<ComparisonCondition> &conditions);
 
+    bool isInsertingValueValid(tableInfo &table, const std::vector<Literal> &literals);
+
     std::vector<int> selectTuples(tableInfo &table, const std::vector<ComparisonCondition> &conditions);
 };

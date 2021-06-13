@@ -30,9 +30,9 @@ void API::dropIndex(const std::string &indexName) {
                              0);  // '0' represents 'to delete'
 }
 
+// Check 1) if some attribute name in the condition list doesn't exist
+//       2) if type of some value in the condition list doesn't match the actual type
 bool API::isConditionListValid(tableInfo &table, const std::vector<ComparisonCondition> &conditions) {
-    // Check 1) if some attribute name in the condition list doesn't exist
-    //       2) if type of some value in the condition list doesn't match the actual type
     return std::all_of(conditions.begin(), conditions.end(), [table](auto condition) {
         try {
             int attributeIndex = table.searchAttr(Adapter::unsafeCStyleString(condition.columnName));
@@ -43,6 +43,21 @@ bool API::isConditionListValid(tableInfo &table, const std::vector<ComparisonCon
             return false;
         }
     });
+}
+
+// Check 1) if type of some value in the value list doesn't match the actual type
+//       2) if some value of unique attribute conflicts with existing values
+bool API::isInsertingValueValid(tableInfo &table, const std::vector<Literal> &values) {
+    for (auto attributeIter = values.cbegin(); attributeIter < values.cend(); attributeIter++) {
+        int attributeIndex = static_cast<int>(attributeIter - values.cbegin());
+        if (Adapter::toAttributeType(attributeIter->type()) != table.attrType[attributeIndex])
+            return false;
+        // Problem: Should pass value of the attribute to verify if it's not unique
+        if (table.attrUnique[attributeIndex] &&
+            !recordManager.checkUnique(table.TableName, attributeIndex, Tuple(), table))
+            return false;
+    }
+    return true;
 }
 
 std::vector<int> API::selectTuples(tableInfo &table, const std::vector<ComparisonCondition> &conditions) {
