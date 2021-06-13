@@ -107,8 +107,8 @@ void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
         auto locations = selectTuples(table, query->conditions);
         // (Retrieve tuples)
         std::vector<Tuple> tuples;
-        // Delete all the selected records from all indices in the table
 
+        // Delete all the selected records from all indices in the table
         for (const auto &attributeName: getAllIndexedAttributeName(table)) {
             Index index(query->tableName, Adapter::toAttribute(table, attributeName));
             int attributeIndex = catalogManager.getAttrNo(tableName, Adapter::unsafeCStyleString(attributeName));
@@ -121,7 +121,31 @@ void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
 }
 
 void API::handleInsertQuery(QueryPointer<InsertQuery> query) {
+    char *tableName = Adapter::unsafeCStyleString(query->tableName);
+    if (!catalogManager.checkTable(tableName)) {
+        // Table doesn't exist
+    }
 
+    tableInfo table = *catalogManager.getTableInfo(tableName);
+    // Check if valid
+    if (query->values.size() != table.attrNum) {
+        // The number of attributes doesn't match
+    }
+    if (!isInsertingValueValid(table, query->values)) {
+        // Some attribute in the input doesn't match the actual type, or conflicts in uniqueness
+    }
+
+    recordManager.insertRecord(tableName, Adapter::toTuple(query->values), table);
+
+    // Update indices
+    for (auto attributeIter = query->values.cbegin(); attributeIter < query->values.cend(); attributeIter++) {
+        int attributeIndex = static_cast<int>(attributeIter - query->values.cbegin());
+        if (table.hasIndex[attributeIndex]) {
+            Index index(query->tableName, Adapter::toAttribute(table, attributeIndex));
+            // Problem: What's block_id?
+            index.insertIndex("", Adapter::toData(*attributeIter), 0);
+        }
+    }
 }
 
 void API::listen() {
