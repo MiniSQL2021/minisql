@@ -36,5 +36,7 @@ private:
 
     void dropIndex(const std::string &indexName);
 
-    bool isConditionListValid(char *tableName, const std::vector<ComparisonCondition> &conditions);
+    bool isConditionListValid(const std::string &tableName, const std::vector<ComparisonCondition> &conditions);
+
+    std::vector<int> selectTuples(const std::string &tableName, const std::vector<ComparisonCondition> &conditions);
 };

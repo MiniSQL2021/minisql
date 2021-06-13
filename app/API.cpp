@@ -91,49 +91,15 @@ void API::handleSelectQuery(QueryPointer<SelectQuery> query) {
     // Problem: Why return pointer to tableInfo?
     tableInfo table = *catalogManager.getTableInfo(tableName);
 
+    std::vector<Tuple> tuples;
     if (query->conditions.empty()) {
-        std::vector<Tuple> tuples;
+        // Problem: Should return an array of tuples
         recordManager.nonconditionSelect(tableName, nullptr, table);
-        //
-        Util::printTable(tuples, table);
-        delete tableName;
-        return;
+    } else {
+        auto locations = selectTuples(tableName, query->conditions);
+        // Problem: RecordManager should provide a method to retrieve records by locations
     }
-
-    // Problem: RecordManager::conditionSelect, should returns array of locations
-    // Problem: Index, should returns array of locations
-    // Problem: Should get a series of arrays of locations of all the expected tuples,
-    //          do intersection, and then get data
-    for (const auto &condition: query->conditions) {
-        if (catalogManager.checkIndex(tableName/*, columnName*/)) {
-            // Problem: Attribute?
-            Index index(query->tableName, Attribute());
-            if (condition.binaryOperator == BinaryOpearator::Equal ||
-                condition.binaryOperator == BinaryOpearator::NotEqual) {
-                // Problem: Path?
-                int location = index.findIndex("", Adapter::toData(condition.value));
-                //
-            } else {
-                auto[leftValue, rightValue] = Adapter::toDataRange(condition);
-                std::vector<int> locations;
-                // Problem: Handle equal or not equal
-                index.searchRange("", leftValue, rightValue, locations);
-                //
-            }
-        } else {
-            recordManager.conditionSelect(tableName,
-                                          catalogManager.getAttrNo(tableName,
-                                                                   Adapter::toCStyleString(condition.columnName)),
-                                          Adapter::toOperatorString(condition.binaryOperator),
-                                          Adapter::toAttribute(condition.value),
-                                          table,
-                                          nullptr);
-            //
-        }
-    }
-    //
-
-    delete tableName;
+    Util::printTable(tuples, table);
 }
 
 void API::handleInsertQuery(QueryPointer<InsertQuery> query) {
@@ -198,4 +164,43 @@ bool API::isConditionListValid(char *tableName, const std::vector<ComparisonCond
         delete attributeName;
         if (!columnExists || inputType != actualType) return false;
     });
+}
+
+std::vector<int> API::selectTuples(const std::string &tableName, const std::vector<ComparisonCondition> &conditions) {
+    // Problem: RecordManager::conditionSelect should returns array of locations
+    // Problem: IndexManager should returns array of locations
+    // Problem: Should get a series of arrays of locations of all the expected tuples,
+    //          an then do intersection
+    char *tableNameString = Adapter::unsafeCStyleString(tableName);
+    tableInfo table = *catalogManager.getTableInfo(Adapter::unsafeCStyleString(tableName));
+
+    std::vector<int> result;
+    bool firstCondition = true;
+    for (const auto &condition: conditions) {
+        char *attributeNameString = Adapter::unsafeCStyleString(condition.columnName);
+        if (catalogManager.checkIndex(tableNameString/*, attributeNameString*/)) {
+            Index index(tableName, Adapter::toAttribute(table, condition.columnName));
+            if (condition.binaryOperator == BinaryOpearator::Equal ||
+                condition.binaryOperator == BinaryOpearator::NotEqual) {
+                // Problem: Path?
+                int location = index.findIndex("", Adapter::toData(condition.value));
+                //
+            } else {
+                auto[leftValue, rightValue] = Adapter::toDataRange(condition);
+                std::vector<int> locations;
+                // Problem: Handle equal or not equal
+                index.searchRange("", leftValue, rightValue, locations);
+                //
+            }
+        } else {
+            char *operatorString = Adapter::toOperatorString(condition.binaryOperator);
+            Attribute value = Adapter::toAttribute(condition.value);
+            recordManager.conditionSelect(tableNameString,
+                                          catalogManager.getAttrNo(tableNameString, attributeNameString),
+                                          operatorString, value, table, nullptr);
+            //
+            delete operatorString;
+        }
+    }
+    return result;
 }
