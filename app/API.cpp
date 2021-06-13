@@ -24,8 +24,9 @@ void API::handleDropTableQuery(QueryPointer<DropTableQuery> query) {
     }
 
     // Delete all indices of attributes in the table
-    for (const auto &attributeName:getAllIndexedAttributeName(query->tableName)) {
-        dropIndex(tableName, Adapter::unsafeCStyleString(attributeName));
+    tableInfo table = *catalogManager.getTableInfo(tableName);
+    for (const auto &attributeName:getAllIndexedAttributeName(table)) {
+        dropIndex(table, Adapter::unsafeCStyleString(attributeName));
     }
 
     recordManager.deleteTable(tableName);
@@ -73,18 +74,17 @@ void API::handleSelectQuery(QueryPointer<SelectQuery> query) {
     if (!catalogManager.checkTable(tableName)) {
         // Table doesn't exist
     }
-    if (!isConditionListValid(tableName, query->conditions)) {
+    tableInfo table = *catalogManager.getTableInfo(tableName);
+    if (!isConditionListValid(table, query->conditions)) {
         // Some attribute in the input doesn't exist, or the type doesn't match the actual type
     }
-
-    tableInfo table = *catalogManager.getTableInfo(tableName);
 
     std::vector<Tuple> tuples;
     if (query->conditions.empty()) {
         // Problem: Should return an array of tuples
         recordManager.nonconditionSelect(tableName, nullptr, table);
     } else {
-        auto locations = selectTuples(tableName, query->conditions);
+        auto locations = selectTuples(table, query->conditions);
         // Problem: RecordManager should provide a method to retrieve records by locations
     }
     Util::printTable(tuples, table);
@@ -95,7 +95,8 @@ void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
     if (!catalogManager.checkTable(tableName)) {
         // Table doesn't exist
     }
-    if (!isConditionListValid(tableName, query->conditions)) {
+    tableInfo table = *catalogManager.getTableInfo(tableName);
+    if (!isConditionListValid(table, query->conditions)) {
         // Some attribute in the input doesn't exist, or the type doesn't match the actual type
     }
 
@@ -103,12 +104,12 @@ void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
         // Problem: IndexManager should provide a method to delete all the records
         // Problem: RecordManager should provide a method to delete all the records
     } else {
-        auto locations = selectTuples(tableName, query->conditions);
+        auto locations = selectTuples(table, query->conditions);
         // (Retrieve tuples)
         std::vector<Tuple> tuples;
         // Delete all the selected records from all indices in the table
-        tableInfo table = *catalogManager.getTableInfo(tableName);
-        for (const auto &attributeName: getAllIndexedAttributeName(query->tableName)) {
+
+        for (const auto &attributeName: getAllIndexedAttributeName(table)) {
             Index index(query->tableName, Adapter::toAttribute(table, attributeName));
             int attributeIndex = catalogManager.getAttrNo(tableName, Adapter::unsafeCStyleString(attributeName));
             for (const auto &tuple : tuples)
