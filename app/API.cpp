@@ -92,11 +92,36 @@ void API::handleSelectQuery(QueryPointer<SelectQuery> query) {
     Util::printTable(tuples, table);
 }
 
-void API::handleInsertQuery(QueryPointer<InsertQuery> query) {
+void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
+    char *tableName = Adapter::unsafeCStyleString(query->tableName);
+    if (!catalogManager.checkTable(tableName)) {
+        // Table doesn't exist
+    }
+    if (!isConditionListValid(tableName, query->conditions)) {
+        // Some attribute in the input doesn't exist, or the type doesn't match the actual type
+    }
 
+    if (query->conditions.empty()) {
+        // Problem: IndexManager should provide a method to delete all the records
+        // Problem: RecordManager should provide a method to delete all the records
+    } else {
+        auto locations = selectTuples(tableName, query->conditions);
+        // (Retrieve tuples)
+        std::vector<Tuple> tuples;
+        // Delete all the selected records from all indices in the table
+        tableInfo table = *catalogManager.getTableInfo(tableName);
+        for (const auto &attributeName: getAllIndexedAttributeName(query->tableName)) {
+            Index index(query->tableName, Adapter::toAttribute(table, attributeName));
+            int attributeIndex = catalogManager.getAttrNo(tableName, Adapter::unsafeCStyleString(attributeName));
+            for (const auto &tuple : tuples)
+                index.deleteIndexByKey("", Adapter::toData(tuple.attr[attributeIndex]));
+        }
+
+        // Problem: RecordManager should provide a method to delete records by locations
+    }
 }
 
-void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
+void API::handleInsertQuery(QueryPointer<InsertQuery> query) {
 
 }
 
