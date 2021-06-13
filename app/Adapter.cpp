@@ -1,4 +1,5 @@
 #include "Adapter.h"
+#include "Util.h"
 
 char *Adapter::toCStyleString(const std::string &str) {
     char *result = new char[str.size() + 1];
@@ -19,7 +20,7 @@ AttributeType Adapter::toAttributeType(LiteralType type) {
 
 attrStruct Adapter::toAttrStruct(const Column &column) {
     attrStruct result{};
-    result.attrName = toCStyleString(column.name);    // Warning: Need to copy from std::string to char *
+    result.attrName = toCStyleString(column.name);
     result.attrType = toAttributeType(column.type);
     result.attrUnique = column.unique;
     if (auto maxLength = column.maxLength) result.attrlength = *maxLength;
@@ -30,16 +31,20 @@ attrStruct Adapter::toAttrStruct(const Column &column) {
 
 tableInfo Adapter::toTableInfo(const CreateTableQuery &query) {
     tableInfo result;
-    auto columnCount = query.columns.size();
+    char *tableName = toCStyleString(query.tableName);
+    char *primaryKeyName = toCStyleString(query.primaryKey);
+    std::vector<attrStruct> attributes;
+    for (const auto &column : query.columns) attributes.push_back(toAttrStruct(column));
 
-    auto *attributes = new attrStruct[columnCount];
-    for (int i = 0; i < columnCount; i++) attributes[i] = toAttrStruct(query.columns[i]);
+    result.setTableInfo(tableName, primaryKeyName, true, static_cast<int>(query.columns.size()), attributes.data());
 
-    result.setTableInfo(toCStyleString(query.tableName),
-                        toCStyleString(query.primaryKey),
-                        true,
-                        static_cast<int>(columnCount),
-                        attributes);
+    delete tableName;
+    delete primaryKeyName;
+    for (const auto &attribute : attributes) {
+        delete attribute.attrName;
+        delete attribute.indexname;
+    }
+
     return result;
 }
 
