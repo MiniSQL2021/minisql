@@ -17,12 +17,10 @@ void API::handleCreateTableQuery(QueryPointer<CreateTableQuery> query) {
     // Problem: Why bother pass name of table?
     recordManager.createTable(table.TableName, table);
     catalogManager.createTable(table);
-
-    // Problem: Delete char* strings in tableInfo and attrStruct inside?
 }
 
 void API::handleDropTableQuery(QueryPointer<DropTableQuery> query) {
-    char *tableName = Adapter::toCStyleString(query->tableName);
+    char *tableName = Adapter::unsafeCStyleString(query->tableName);
     if (!catalogManager.checkTable(tableName)) {
         // Table doesn't exist
     }
@@ -34,15 +32,12 @@ void API::handleDropTableQuery(QueryPointer<DropTableQuery> query) {
 
     recordManager.deleteTable(tableName);
     catalogManager.dropTable(tableName);
-
-    // Problem: Whose responsibility to delete char* strings?
-    delete tableName;
 }
 
 void API::handleCreateIndexQuery(QueryPointer<CreateIndexQuery> query) {
-    char *tableName = Adapter::toCStyleString(query->tableName);
-    char *columnName = Adapter::toCStyleString(query->columnName);
-    char *indexName = Adapter::toCStyleString(query->indexName);
+    char *tableName = Adapter::unsafeCStyleString(query->tableName);
+    char *columnName = Adapter::unsafeCStyleString(query->columnName);
+    char *indexName = Adapter::unsafeCStyleString(query->indexName);
     if (!catalogManager.checkTable(tableName)) {
         // Table doesn't exist
     }
@@ -64,14 +59,10 @@ void API::handleCreateIndexQuery(QueryPointer<CreateIndexQuery> query) {
 
     // Problem: Pass name of index to create index to catalog
     catalogManager.editIndex(tableName, columnName, 1); // '1' represents 'to create'
-
-    delete tableName;
-    delete columnName;
-    delete indexName;
 }
 
 void API::handleDropIndexQuery(QueryPointer<DropIndexQuery> query) {
-    char *indexName = Adapter::toCStyleString(query->indexName);
+    char *indexName = Adapter::unsafeCStyleString(query->indexName);
     // Problem: Pass name of index to 1) check if exists, 2) delete it
     if (catalogManager.checkIndex(indexName)) {
         // Index doesn't exists
@@ -80,7 +71,7 @@ void API::handleDropIndexQuery(QueryPointer<DropIndexQuery> query) {
 }
 
 void API::handleSelectQuery(QueryPointer<SelectQuery> query) {
-    char *tableName = Adapter::toCStyleString(query->tableName);
+    char *tableName = Adapter::unsafeCStyleString(query->tableName);
     if (!catalogManager.checkTable(tableName)) {
         // Table doesn't exist
     }
@@ -88,7 +79,6 @@ void API::handleSelectQuery(QueryPointer<SelectQuery> query) {
         // Some attribute in the input doesn't exist, or the type doesn't match the actual type
     }
 
-    // Problem: Why return pointer to tableInfo?
     tableInfo table = *catalogManager.getTableInfo(tableName);
 
     std::vector<Tuple> tuples;
@@ -152,16 +142,16 @@ void API::dropIndex(const std::string &indexName) {
                              0);  // '0' represents 'to delete'
 }
 
-bool API::isConditionListValid(char *tableName, const std::vector<ComparisonCondition> &conditions) {
+bool API::isConditionListValid(const std::string &tableName, const std::vector<ComparisonCondition> &conditions) {
     // Check 1) if some attribute name in the condition list doesn't exist
     //       2) if type of some value in the condition list doesn't match the actual type
-    return std::all_of(conditions.begin(), conditions.end(), [this, tableName](auto condition) {
-        char *attributeName = Adapter::toCStyleString(condition.columnName);
-        bool columnExists = catalogManager.checkAttr(tableName, attributeName);
+    char *tableNameString = Adapter::unsafeCStyleString(tableName);
+    return std::all_of(conditions.begin(), conditions.end(), [this, tableNameString](auto condition) {
+        char *attributeNameString = Adapter::unsafeCStyleString(condition.columnName);
+        bool columnExists = catalogManager.checkAttr(tableNameString, attributeNameString);
         // Problem: Why return a pointer to AttributeType?
-        AttributeType actualType = *catalogManager.getAttrType(tableName, attributeName);
+        AttributeType actualType = *catalogManager.getAttrType(tableNameString, attributeNameString);
         AttributeType inputType = Adapter::toAttributeType(condition.value.type());
-        delete attributeName;
         if (!columnExists || inputType != actualType) return false;
     });
 }
