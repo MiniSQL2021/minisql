@@ -17,57 +17,69 @@
 
 using namespace std;
 
-class CatalogManager
-{
+class CatalogManager {
 public:
-	CatalogManager(BufferManager);
-	~CatalogManager();
-	BufferManager buffer;
+    CatalogManager(BufferManager);
 
-	bool checkTable(char*);			
-	//参数：表名；检查table是否存在
-	bool checkIndex(char*);			
-	//参数：表名；检查table是否存在索引
-	//table_does_not_exist
-	bool checkIndex(char*, char*);		
-	//参数：表名，属性名；检查该属性上是否有Index
-	//table_does_not_exist
-	//attr_does_not_exist
-	string searchIndex(char*);			
-	//参数：IndexName；返回值：“表名 /n 属性名”
-	//index_does_not_exist
-	bool checkAttr(char*, char*);	   
-	//参数：表名，属性名；检查属性是否存在
-	//table_does_not_exist
-	bool checkUnique(char*, char*);	
-	//参数：表名，属性名；检查属性是否unique
-	//table_does_not_exist
-	//attr_does_not_exist
+    ~CatalogManager();
 
-	int getAttrNo(char*, char*);		
-	//参数：表名，属性名，返回这是第几个属性
-	//table_does_not_exist
-	//attr_does_not_exist
-	AttributeType getAttrType(char*, char*);	
-	//参数：表名，属性名；返回属性类型
-	//table_does_not_exist
-	//attr_does_not_exist
-	TableInfo getTableInfo(char*);    
-	//参数：表名；返回表信息
-	//table_does_not_exist
-	void dropTable(char*);				
-	//参数：表名；删除一个表
-	//table_does_not_exist
-	void createTable(TableInfo);		
-	//参数：TableInfo;
-	void createIndex(char* tableName, char* attrName, char* indexName);	
-	//table_does_not_exist
-	//attr_does_not_exist
-	//index_already_exist，
-	//attr_does_not_unique
-	void deleteIndex(char* indexName);	
-	//参数：indexName；删除index
-	//index_does_not_exist
+    BufferManager buffer;
+
+    bool checkTable(char *);
+
+    //参数：表名；检查table是否存在
+    bool checkIndex(char *);
+
+    //参数：表名；检查table是否存在索引
+    //table_does_not_exist
+    bool checkIndex(char *, char *);
+
+    //参数：表名，属性名；检查该属性上是否有Index
+    //table_does_not_exist
+    //attr_does_not_exist
+    string searchIndex(char *);
+
+    //参数：IndexName；返回值：“表名 /n 属性名”
+    //index_does_not_exist
+    bool checkAttr(char *, char *);
+
+    //参数：表名，属性名；检查属性是否存在
+    //table_does_not_exist
+    bool checkUnique(char *, char *);
+    //参数：表名，属性名；检查属性是否unique
+    //table_does_not_exist
+    //attr_does_not_exist
+
+    int getAttrNo(char *, char *);
+
+    //参数：表名，属性名，返回这是第几个属性
+    //table_does_not_exist
+    //attr_does_not_exist
+    AttributeType getAttrType(char *, char *);
+
+    //参数：表名，属性名；返回属性类型
+    //table_does_not_exist
+    //attr_does_not_exist
+    TableInfo getTableInfo(char *);
+
+    //参数：表名；返回表信息
+    //table_does_not_exist
+    void dropTable(char *);
+
+    //参数：表名；删除一个表
+    //table_does_not_exist
+    void createTable(TableInfo);
+
+    //参数：TableInfo;
+    void createIndex(char *tableName, char *attrName, char *indexName);
+
+    //table_does_not_exist
+    //attr_does_not_exist
+    //index_already_exist，
+    //attr_does_not_unique
+    void deleteIndex(char *indexName);
+    //参数：indexName；删除index
+    //index_does_not_exist
 
 };
 

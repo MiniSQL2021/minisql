@@ -10,26 +10,26 @@
 
 using namespace std;
 
-class Tuple
-{
+class Tuple {
 public:
-	Tuple();
-	~Tuple();
-	Tuple(const Tuple&);
+    Tuple();
 
-	Attribute attr[32];		//元组中的属性数组
-	int attrNum;			//元组中属性数
-	bool hasdeleted = false;
+    ~Tuple();
 
-	void insertAttr(int num, Attribute* attr);      //插入属性,并将字符串插入
-	
+    Tuple(const Tuple &);
 
-	char rowData[4096]="";				 //元组记录的格式化，用于存入page
+    Attribute attr[32];        //元组中的属性数组
+    int attrNum;            //元组中属性数
+    bool hasdeleted = false;
 
-	void writeRowData(char* pageRowData);	//写入rowdata；
-	void readRowData(char* RowData,TableInfo);	 //同时对上层与下层
-	void setTuple(int attrnum, char** rowdata, TableInfo tbif);
+    void insertAttr(int num, Attribute *attr);      //插入属性,并将字符串插入
+
+
+    char rowData[4096] = "";                 //元组记录的格式化，用于存入page
+
+    void writeRowData(char *pageRowData);    //写入rowdata；
+    void readRowData(char *RowData, TableInfo);     //同时对上层与下层
+    void setTuple(int attrnum, char **rowdata, TableInfo tbif);
 };
-
 
 #endif // !tuple_hpp
