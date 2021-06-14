@@ -1,3 +1,14 @@
+
+/*
+	需要接口函数：
+	const getCatalogPage（） 返回catalog page
+	getTablePage（char* 表名）返回该表的record
+	
+*/
+
+
+
+
 #ifndef PAGE_H
 #define PAGE_H
 
