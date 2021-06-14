@@ -7,7 +7,7 @@
 // TODO: Do performance optimization for each submodule's function invocations
 
 void API::handleCreateTableQuery(QueryPointer<CreateTableQuery> query) {
-    tableInfo table = Adapter::toTableInfo(*query);
+    TableInfo table = Adapter::toTableInfo(*query);
     if (catalogManager.checkTable(table.TableName)) {
         // Table already exists
     }
@@ -24,7 +24,7 @@ void API::handleDropTableQuery(QueryPointer<DropTableQuery> query) {
     }
 
     // Delete all indices of attributes in the table
-    tableInfo table = *catalogManager.getTableInfo(tableName);
+    TableInfo table = *catalogManager.getTableInfo(tableName);
     for (const auto &attributeName:getAllIndexedAttributeName(table)) {
         dropIndex(table, Adapter::unsafeCStyleString(attributeName));
     }
@@ -50,7 +50,7 @@ void API::handleCreateIndexQuery(QueryPointer<CreateIndexQuery> query) {
     if (catalogManager.checkIndex(tableName/*, attributeName*/)) {
         // Index already exists
     }
-    tableInfo table = *catalogManager.getTableInfo(tableName);
+    TableInfo table = *catalogManager.getTableInfo(tableName);
     Index index(query->tableName, Adapter::toAttribute(table, attributeName));
     // Problem: createIndex needs file path? type?
     index.createIndex("", 0);
@@ -73,7 +73,7 @@ void API::handleSelectQuery(QueryPointer<SelectQuery> query) {
     if (!catalogManager.checkTable(tableName)) {
         // Table doesn't exist
     }
-    tableInfo table = *catalogManager.getTableInfo(tableName);
+    TableInfo table = *catalogManager.getTableInfo(tableName);
     if (!isConditionListValid(table, query->conditions)) {
         // Some attribute in the input doesn't exist, or the type doesn't match the actual type
     }
@@ -94,7 +94,7 @@ void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
     if (!catalogManager.checkTable(tableName)) {
         // Table doesn't exist
     }
-    tableInfo table = *catalogManager.getTableInfo(tableName);
+    TableInfo table = *catalogManager.getTableInfo(tableName);
     if (!isConditionListValid(table, query->conditions)) {
         // Some attribute in the input doesn't exist, or the type doesn't match the actual type
     }
@@ -125,7 +125,7 @@ void API::handleInsertQuery(QueryPointer<InsertQuery> query) {
         // Table doesn't exist
     }
 
-    tableInfo table = *catalogManager.getTableInfo(tableName);
+    TableInfo table = *catalogManager.getTableInfo(tableName);
     // Check if valid
     if (query->values.size() != table.attrNum) {
         // The number of attributes doesn't match

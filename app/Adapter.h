@@ -4,7 +4,7 @@
 
 #include "Interpreter.hpp"
 #include "RecordManager.h"
-#include "CatalogManager.h"
+#include "Catalog_Manager.h"
 #include "Index.h"
 
 namespace Adapter {
@@ -16,13 +16,13 @@ namespace Adapter {
 
     attrStruct toAttrStruct(const Column &column);
 
-    tableInfo toTableInfo(const CreateTableQuery &query);
+    TableInfo toTableInfo(const CreateTableQuery &query);
 
     Attribute toAttribute(const Literal &literal);
 
-    Attribute toAttribute(tableInfo &table, const std::string &attributeName);
+    Attribute toAttribute(TableInfo &table, const std::string &attributeName);
 
-    Attribute toAttribute(tableInfo &table, int attributeIndex);
+    Attribute toAttribute(TableInfo &table, int attributeIndex);
 
     Data toData(const Literal &literal);
 

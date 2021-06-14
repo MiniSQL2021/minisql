@@ -36,8 +36,8 @@ attrStruct Adapter::toAttrStruct(const Column &column) {
     return result;
 }
 
-tableInfo Adapter::toTableInfo(const CreateTableQuery &query) {
-    tableInfo result;
+TableInfo Adapter::toTableInfo(const CreateTableQuery &query) {
+    TableInfo result;
     std::vector<attrStruct> attributes;
     for (const auto &column : query.columns) attributes.push_back(toAttrStruct(column));
 
@@ -69,7 +69,7 @@ Attribute Adapter::toAttribute(const Literal &literal) {
 }
 
 // Get info of an attribute
-Attribute Adapter::toAttribute(tableInfo &table, const std::string &attributeName) {
+Attribute Adapter::toAttribute(TableInfo &table, const std::string &attributeName) {
     Attribute result;
     int attributeIndex = table.searchAttr(unsafeCStyleString(attributeName));
     result.type = table.attrType[attributeIndex];
@@ -78,7 +78,7 @@ Attribute Adapter::toAttribute(tableInfo &table, const std::string &attributeNam
 }
 
 // Get info of an attribute by index
-Attribute Adapter::toAttribute(tableInfo &table, int attributeIndex) {
+Attribute Adapter::toAttribute(TableInfo &table, int attributeIndex) {
     Attribute result;
     result.type = table.attrType[attributeIndex];
     result.dataLength = table.attrLength[attributeIndex];

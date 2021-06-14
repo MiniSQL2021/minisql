@@ -2,7 +2,7 @@
 
 #include "Interpreter.hpp"
 #include "RecordManager.h"
-#include "CatalogManager.h"
+#include "Catalog_Manager.h"
 #include "Index.h"
 
 class API {
@@ -30,15 +30,15 @@ private:
     RecordManager recordManager;
     CatalogManager catalogManager;
 
-    static std::vector<std::string> getAllIndexedAttributeName(const tableInfo &table);
+    static std::vector<std::string> getAllIndexedAttributeName(const TableInfo &table);
 
-    void dropIndex(tableInfo &table, const std::string &attributeName);
+    void dropIndex(TableInfo &table, const std::string &attributeName);
 
     void dropIndex(const std::string &indexName);
 
-    static bool isConditionListValid(tableInfo &table, const std::vector<ComparisonCondition> &conditions);
+    static bool isConditionListValid(TableInfo &table, const std::vector<ComparisonCondition> &conditions);
 
-    bool isInsertingValueValid(tableInfo &table, const std::vector<Literal> &literals);
+    bool isInsertingValueValid(TableInfo &table, const std::vector<Literal> &literals);
 
-    std::vector<int> selectTuples(tableInfo &table, const std::vector<ComparisonCondition> &conditions);
+    std::vector<int> selectTuples(TableInfo &table, const std::vector<ComparisonCondition> &conditions);
 };

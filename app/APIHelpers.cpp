@@ -1,14 +1,14 @@
 #include "API.hpp"
 #include "Adapter.h"
 
-std::vector<std::string> API::getAllIndexedAttributeName(const tableInfo &table) {
+std::vector<std::string> API::getAllIndexedAttributeName(const TableInfo &table) {
     std::vector<std::string> result;
     for (int i = 0; i < table.attrNum; i++)
         if (table.hasIndex[i]) result.emplace_back(table.attrName[i]);
     return result;
 }
 
-void API::dropIndex(tableInfo &table, const std::string &attributeName) {
+void API::dropIndex(TableInfo &table, const std::string &attributeName) {
     // Assume the index exists
     Index index(table.TableName, Adapter::toAttribute(table, attributeName));
     // Problem: Path? Type?
@@ -32,7 +32,7 @@ void API::dropIndex(const std::string &indexName) {
 
 // Check 1) if some attribute name in the condition list doesn't exist
 //       2) if type of some value in the condition list doesn't match the actual type
-bool API::isConditionListValid(tableInfo &table, const std::vector<ComparisonCondition> &conditions) {
+bool API::isConditionListValid(TableInfo &table, const std::vector<ComparisonCondition> &conditions) {
     return std::all_of(conditions.begin(), conditions.end(), [table](auto condition) {
         try {
             int attributeIndex = table.searchAttr(Adapter::unsafeCStyleString(condition.columnName));
@@ -47,7 +47,7 @@ bool API::isConditionListValid(tableInfo &table, const std::vector<ComparisonCon
 
 // Check 1) if type of some value in the value list doesn't match the actual type
 //       2) if some value of unique attribute conflicts with existing values
-bool API::isInsertingValueValid(tableInfo &table, const std::vector<Literal> &values) {
+bool API::isInsertingValueValid(TableInfo &table, const std::vector<Literal> &values) {
     for (auto attributeIter = values.cbegin(); attributeIter < values.cend(); attributeIter++) {
         int attributeIndex = static_cast<int>(attributeIter - values.cbegin());
         if (Adapter::toAttributeType(attributeIter->type()) != table.attrType[attributeIndex])
@@ -60,7 +60,7 @@ bool API::isInsertingValueValid(tableInfo &table, const std::vector<Literal> &va
     return true;
 }
 
-std::vector<int> API::selectTuples(tableInfo &table, const std::vector<ComparisonCondition> &conditions) {
+std::vector<int> API::selectTuples(TableInfo &table, const std::vector<ComparisonCondition> &conditions) {
     // Problem: RecordManager::conditionSelect should returns array of locations
     // Problem: IndexManager should returns array of locations
     // Problem: Should get a series of arrays of locations of all the expected tuples,
