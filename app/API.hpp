@@ -1,13 +1,18 @@
 #pragma once
 
+#include <utility>
+
 #include "Interpreter.hpp"
-#include "RecordManager.h"
+#include "buffer_manager.h"
 #include "Catalog_Manager.h"
+#include "RecordManager.h"
 #include "Index.h"
 
 class API {
 public:
-    API() : interpreter(Interpreter()) {};
+    API(Interpreter interpreter, const BufferManager &bufferManager, const CatalogManager &catalogManager,
+        const RecordManager &recordManager) : interpreter(std::move(interpreter)), catalogManager(bufferManager),
+                                              recordManager(BufferManager()) {};
 
     void listen();
 
@@ -27,8 +32,8 @@ public:
 
 private:
     Interpreter interpreter;
-    RecordManager recordManager;
     CatalogManager catalogManager;
+    RecordManager recordManager;
 
     static std::vector<std::string> getAllIndexedAttributeName(const TableInfo &table);
 
