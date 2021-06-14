@@ -10,7 +10,7 @@ CatalogManager::~CatalogManager()
 }
 
 
-bool CatalogManager::checkTable(char* tableName)			//²ÎÊı£º±íÃû£»¼ì²étableÊÇ·ñ´æÔÚ
+bool CatalogManager::checkTable(char* tableName)			//å‚æ•°ï¼šè¡¨åï¼›æ£€æŸ¥tableæ˜¯å¦å­˜åœ¨
 {
 	CatalogPage cgpage;
 	int pgNum = buffer.getCatalogPageNum();
@@ -36,7 +36,7 @@ bool CatalogManager::checkTable(char* tableName)			//²ÎÊı£º±íÃû£»¼ì²étableÊÇ·ñ´æ
 }
 
 
-bool CatalogManager::checkIndex(char* tableName)			//²ÎÊı£º±íÃû£»¼ì²étableÊÇ·ñ´æÔÚË÷Òı
+bool CatalogManager::checkIndex(char* tableName)			//å‚æ•°ï¼šè¡¨åï¼›æ£€æŸ¥tableæ˜¯å¦å­˜åœ¨ç´¢å¼•
 {
 	CatalogPage cgpage;
 	int pgNum = buffer.getCatalogPageNum();
@@ -67,7 +67,7 @@ bool CatalogManager::checkIndex(char* tableName)			//²ÎÊı£º±íÃû£»¼ì²étableÊÇ·ñ´æ
 	return flag;
 	
 }
-bool CatalogManager::checkIndex(char* tableName, char* attrname)	//²ÎÊı£º±íÃû£¬ÊôĞÔÃû£»¼ì²é¸ÃÊôĞÔÉÏÊÇ·ñÓĞIndex
+bool CatalogManager::checkIndex(char* tableName, char* attrname)	//å‚æ•°ï¼šè¡¨åï¼Œå±æ€§åï¼›æ£€æŸ¥è¯¥å±æ€§ä¸Šæ˜¯å¦æœ‰Index
 {
 	CatalogPage cgpage;
 	int pgNum = buffer.getCatalogPageNum();
@@ -106,7 +106,7 @@ bool CatalogManager::checkIndex(char* tableName, char* attrname)	//²ÎÊı£º±íÃû£¬Ê
 	return flag;
 
 }
-string CatalogManager::searchIndex(char* indexname)			//²ÎÊı£ºIndexName£»·µ»ØËùÔÚµÄ±í
+string CatalogManager::searchIndex(char* indexname)			//å‚æ•°ï¼šIndexNameï¼›è¿”å›æ‰€åœ¨çš„è¡¨
 {
 	CatalogPage cgpage;
 	int pgNum = buffer.getCatalogPageNum();
@@ -141,7 +141,7 @@ string CatalogManager::searchIndex(char* indexname)			//²ÎÊı£ºIndexName£»·µ»ØËùÔ
 
 }
 
-bool CatalogManager::checkAttr(char* tableName, char* attrnm)	    //²ÎÊı£º±íÃû£¬ÊôĞÔÃû£»¼ì²éÊôĞÔÊÇ·ñ´æÔÚ
+bool CatalogManager::checkAttr(char* tableName, char* attrnm)	    //å‚æ•°ï¼šè¡¨åï¼Œå±æ€§åï¼›æ£€æŸ¥å±æ€§æ˜¯å¦å­˜åœ¨
 {
 	CatalogPage cgpage;
 	int pgNum = buffer.getCatalogPageNum();
@@ -171,7 +171,7 @@ bool CatalogManager::checkAttr(char* tableName, char* attrnm)	    //²ÎÊı£º±íÃû£¬
 	buffer.releasePage(pgdata);
 	return flag;
 }
-bool CatalogManager::checkUnique(char* tableName, char*)	//²ÎÊı£º±íÃû£¬ÊôĞÔÃû£»¼ì²éÊôĞÔÊÇ·ñunique
+bool CatalogManager::checkUnique(char* tableName, char*)	//å‚æ•°ï¼šè¡¨åï¼Œå±æ€§åï¼›æ£€æŸ¥å±æ€§æ˜¯å¦unique
 {
 	CatalogPage cgpage;
 	int pgNum = buffer.getCatalogPageNum();
@@ -247,7 +247,7 @@ int CatalogManager::getAttrNo(char* tableName, char* attrname)
 }
 
 
-AttributeType CatalogManager::getAttrType(char* tableName, char* attrname)	//²ÎÊı£º±íÃû£¬ÊôĞÔÃû£»·µ»ØÊôĞÔÀàĞÍ
+AttributeType CatalogManager::getAttrType(char* tableName, char* attrname)	//å‚æ•°ï¼šè¡¨åï¼Œå±æ€§åï¼›è¿”å›å±æ€§ç±»å‹
 {
 	CatalogPage cgpage;
 	int pgNum = buffer.getCatalogPageNum();
@@ -287,7 +287,7 @@ AttributeType CatalogManager::getAttrType(char* tableName, char* attrname)	//²ÎÊ
 }
 	
 
-TableInfo CatalogManager::getTableInfo(char* tableName)   //²ÎÊı£º±íÃû£»·µ»Ø±íĞÅÏ¢
+TableInfo CatalogManager::getTableInfo(char* tableName)   //å‚æ•°ï¼šè¡¨åï¼›è¿”å›è¡¨ä¿¡æ¯
 {
 	CatalogPage cgpage;
 	int pgNum = buffer.getCatalogPageNum();
@@ -318,7 +318,7 @@ TableInfo CatalogManager::getTableInfo(char* tableName)   //²ÎÊı£º±íÃû£»·µ»Ø±íĞÅ
 	
 }
 
-void CatalogManager::dropTable(char* tableName)				//²ÎÊı£º±íÃû£»É¾³ıÒ»¸ö±í£¬²¢É¾³ı±íµÄË÷Òı
+void CatalogManager::dropTable(char* tableName)				//å‚æ•°ï¼šè¡¨åï¼›åˆ é™¤ä¸€ä¸ªè¡¨ï¼Œå¹¶åˆ é™¤è¡¨çš„ç´¢å¼•
 {
 	CatalogPage cgpage;
 	int pgNum = buffer.getCatalogPageNum();
@@ -346,7 +346,7 @@ void CatalogManager::dropTable(char* tableName)				//²ÎÊı£º±íÃû£»É¾³ıÒ»¸ö±í£¬²¢É
 
 	
 }
-void CatalogManager::createTable(TableInfo tbif)		//²ÎÊı£ºTableInfo;ÈôÊ§°Ü´òÓ¡±¨´í
+void CatalogManager::createTable(TableInfo tbif)		//å‚æ•°ï¼šTableInfo;è‹¥å¤±è´¥æ‰“å°æŠ¥é”™
 {
 	CatalogPage cgpage;
 	int pgNum = buffer.getCatalogPageNum();
@@ -425,7 +425,7 @@ void CatalogManager::createIndex(char* tableName, char* attrName, char* indexNam
 	cgpage.updatePage(pgdata, n);
 	buffer.releasePage(pgdata);
 }
-void CatalogManager::deleteIndex(char* indexName)	//²ÎÊı£ºindexName£»É¾³ıindex£¬Ê§°ÜÔò±¨´í£ºindex_does_not_exist
+void CatalogManager::deleteIndex(char* indexName)	//å‚æ•°ï¼šindexNameï¼›åˆ é™¤indexï¼Œå¤±è´¥åˆ™æŠ¥é”™ï¼šindex_does_not_exist
 {
 	CatalogPage cgpage;
 	int pgNum = buffer.getCatalogPageNum();

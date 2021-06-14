@@ -20,7 +20,7 @@ Attribute::Attribute(const Attribute& attr)
 	strcpy_s(rowData, attr.rowData);
 }
 
-void Attribute::getRowData()			//´ÓattributeÀàÖĞµ¼Èëµ½rowDataÖĞ
+void Attribute::getRowData()			//ä»attributeç±»ä¸­å¯¼å…¥åˆ°rowDataä¸­
 {
 	assert(type != AttributeType::UNDEFINE);
 	switch (type)
@@ -36,7 +36,7 @@ void Attribute::getRowData()			//´ÓattributeÀàÖĞµ¼Èëµ½rowDataÖĞ
 		break;
 	}
 	case AttributeType::CHAR: {
-											//dataLengthÁíÍâ¸³Öµ
+											//dataLengthå¦å¤–èµ‹å€¼
 		strcpy_s(rowData, charData);
 		break;
 	}
@@ -45,7 +45,7 @@ void Attribute::getRowData()			//´ÓattributeÀàÖĞµ¼Èëµ½rowDataÖĞ
 	}
 }
 
-void Attribute::releaseRowData()		//´ÓrowDataµ¼³öµ½attributeÖĞ,²¢¸ødataLength¸³Öµ
+void Attribute::releaseRowData()		//ä»rowDataå¯¼å‡ºåˆ°attributeä¸­,å¹¶ç»™dataLengthèµ‹å€¼
 {
 	switch (type)
 	{
@@ -68,7 +68,7 @@ void Attribute::releaseRowData()		//´ÓrowDataµ¼³öµ½attributeÖĞ,²¢¸ødataLength¸³Ö
 		break;
 	}
 }
-int Attribute::compare(const Attribute& attr)  //±È½ÏÊı¾İ´óĞ¡£¬ÓÃÓÚËãÊõÔËËã·ûÖØÔØ
+int Attribute::compare(const Attribute& attr)  //æ¯”è¾ƒæ•°æ®å¤§å°ï¼Œç”¨äºç®—æœ¯è¿ç®—ç¬¦é‡è½½
 {
 	assert(type != AttributeType::UNDEFINE);
 	switch (type)

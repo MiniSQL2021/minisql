@@ -22,7 +22,7 @@ void RecordManager::deleteTable(char* tablename)
 {
 	buffer.dropTable(tablename);
 }
-void RecordManager::insertRecord(char* tbnm, Tuple tup, TableInfo tbif)	   //²ÎÊı£º±íÃû£¬rowdata£»Ïò±íÖĞ²åÈëÔª×é£¬²åÈëÊ§°ÜÔò±¨´í
+void RecordManager::insertRecord(char* tbnm, Tuple tup, TableInfo tbif)	   //å‚æ•°ï¼šè¡¨åï¼Œrowdataï¼›å‘è¡¨ä¸­æ’å…¥å…ƒç»„ï¼Œæ’å…¥å¤±è´¥åˆ™æŠ¥é”™
 {
 	tablePage tbpg;
 	int pgNum = buffer.getTablePageNum(tbnm);
@@ -82,7 +82,7 @@ void RecordManager::deleteRecord(char* tableName, int attrno, char* op, Attribut
 	}
 	buffer.releasePage(pgdata);
 }
-void RecordManager::conditionSelect(char* tableName,int attrno,char* op, Attribute attr,TableInfo tbif,Tuple* tup)//²ÎÊı£º±íÃû£¬ÊôĞÔÃû£¬ËãÊı±È½Ï·û£¬±È½ÏÖµ
+void RecordManager::conditionSelect(char* tableName,int attrno,char* op, Attribute attr,TableInfo tbif,Tuple* tup)//å‚æ•°ï¼šè¡¨åï¼Œå±æ€§åï¼Œç®—æ•°æ¯”è¾ƒç¬¦ï¼Œæ¯”è¾ƒå€¼
 {
 	tablePage tbpg;
 	int pgNum = buffer.getTablePageNum(tableName);
@@ -105,7 +105,7 @@ void RecordManager::conditionSelect(char* tableName,int attrno,char* op, Attribu
 	}
 	buffer.releasePage(pgdata);
 }
-void RecordManager::nonconditionSelect(char* tableName,Tuple* tup,TableInfo tbif)                      //²ÎÊı£º±íÃû£»´òÓ¡È«²¿Ôª×é
+void RecordManager::nonconditionSelect(char* tableName,Tuple* tup,TableInfo tbif)                      //å‚æ•°ï¼šè¡¨åï¼›æ‰“å°å…¨éƒ¨å…ƒç»„
 {
 	tablePage tbpg;
 	int pgNum = buffer.getTablePageNum(tableName);
@@ -128,7 +128,7 @@ void RecordManager::nonconditionSelect(char* tableName,Tuple* tup,TableInfo tbif
 	buffer.releasePage(pgdata);
 }
 
-void RecordManager::deleteRecord(char* tableName, vector<int> no)   //²ÎÊı£º±íÃû£¬ĞòºÅ
+void RecordManager::deleteRecord(char* tableName, vector<int> no)   //å‚æ•°ï¼šè¡¨åï¼Œåºå·
 {
 	int i;
 	tablePage tbpg;
@@ -153,7 +153,7 @@ void RecordManager::deleteAllrecord(char* tableName)
 
 }
 vector<int> RecordManager::conditionSelect(char* tableName, int attrno, char* op, Attribute attr, TableInfo tbif)
-//²ÎÊı£º±íÃû£¬ÊôĞÔĞòºÅ£¨ÓÃcatalog'µÄgetattrNo£©£¬ËãÊı±È½Ï·û£¬±È½ÏÖµ, tbif
+//å‚æ•°ï¼šè¡¨åï¼Œå±æ€§åºå·ï¼ˆç”¨catalog'çš„getattrNoï¼‰ï¼Œç®—æ•°æ¯”è¾ƒç¬¦ï¼Œæ¯”è¾ƒå€¼, tbif
 {
 	vector<int> no;
 	vector<int> temp;
@@ -174,7 +174,7 @@ vector<int> RecordManager::conditionSelect(char* tableName, int attrno, char* op
 	buffer.releasePage(pgdata);
 	return no;
 }
-vector<Tuple> RecordManager::nonconditionSelect(char* tableName, TableInfo tbif)                     //²ÎÊı£º±íÃû,´æ·ÅÊı×é£¬tableinfo£»·µ»ØÈ«²¿tuple
+vector<Tuple> RecordManager::nonconditionSelect(char* tableName, TableInfo tbif)                     //å‚æ•°ï¼šè¡¨å,å­˜æ”¾æ•°ç»„ï¼Œtableinfoï¼›è¿”å›å…¨éƒ¨tuple
 {
 	vector<Tuple> tup;
 	vector<Tuple> temp;

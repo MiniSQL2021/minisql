@@ -1,8 +1,8 @@
 
 /*
-	需要接口函数：
-	const getCatalogPage（） 返回catalog page
-	getTablePage（char* 表名）返回该表的record
+	闇�瑕佹帴鍙ｅ嚱鏁帮細
+	const getCatalogPage锛堬級 杩斿洖catalog page
+	getTablePage锛坈har* 琛ㄥ悕锛夎繑鍥炶琛ㄧ殑record
 	
 */
 

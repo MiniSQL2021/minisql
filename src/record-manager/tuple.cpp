@@ -25,7 +25,7 @@ void Tuple::insertAttr(int num, Attribute* at)
 	int i;
 	for (i = 0; i < attrNum; i++)
 	{
-		this->attr[i] = *(at + i);		//¿½±´¹¹Ôì
+		this->attr[i] = *(at + i);		//æ‹·è´æ„é€ 
 		strcat(rowData,attr[i].rowData);
 
 	}
@@ -93,7 +93,7 @@ void Tuple::readRowData(char* RowData, TableInfo tbif)
 }
 
 void Tuple::setTuple(int attrnum, char** rowdata,TableInfo tbif)  
-//²ÎÊı*rowdata£º£¨4×Ö½Ú attrType£©Êı¾İ
+//å‚æ•°*rowdataï¼šï¼ˆ4å­—èŠ‚ attrTypeï¼‰æ•°æ®
 {
 	attrNum = attrnum;
 	int i;

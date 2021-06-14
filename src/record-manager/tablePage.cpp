@@ -1,8 +1,8 @@
 /*
-¸ñÊ½£º
-	tupleÊıÄ¿ 4×Ö½Ú
-	tuple³¤¶È 4×Ö½Ú
-	tupleÊı×é£º tupleLength*tupleNum
+æ ¼å¼ï¼š
+	tupleæ•°ç›® 4å­—èŠ‚
+	tupleé•¿åº¦ 4å­—èŠ‚
+	tupleæ•°ç»„ï¼š tupleLength*tupleNum
 */
 
 
@@ -77,7 +77,7 @@ vector<Tuple> tablePage::searchTuple(vector<int> no)
 }
 
 
-vector<int> tablePage::conditionsearch(Attribute attr, char* operater,int attrno,int p)		//²ÎÊı£ºattr£¬ËãÊõÔËËã·û,int attrno;·µ»Øtuple±àºÅ
+vector<int> tablePage::conditionsearch(Attribute attr, char* operater,int attrno,int p)		//å‚æ•°ï¼šattrï¼Œç®—æœ¯è¿ç®—ç¬¦,int attrno;è¿”å›tupleç¼–å·
 {
 	int i;
 	vector<int> no;
