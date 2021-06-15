@@ -78,6 +78,7 @@ std::vector<int> API::selectTuples(TableInfo &table, const std::vector<Compariso
                 int location = index.findIndex(Adapter::getIndexFilePath(table.TableName, condition.columnName),
                                                Adapter::toData(condition.value));
                 updateLocationSet(locationSet, location, isFirstCondition);
+                if (locationSet.empty()) return {};
             } else {
                 auto[leftValue, rightValue] = Adapter::toDataRange(condition);
                 std::vector<int> locations;
@@ -85,14 +86,17 @@ std::vector<int> API::selectTuples(TableInfo &table, const std::vector<Compariso
                 index.searchRange(Adapter::getIndexFilePath(table.TableName, condition.columnName), leftValue,
                                   rightValue, locations);
                 updateLocationSet(locationSet, locations, isFirstCondition);
+                if (locationSet.empty()) return {};
             }
         } else {
             char *operatorString = Adapter::toOperatorString(condition.binaryOperator);
             Attribute value = Adapter::toAttribute(condition.value);
             auto locations = recordManager.conditionSelect(table.TableName, attributeIndex, operatorString, value,
                                                            table);
+            delete operatorString;
             updateLocationSet(locationSet, locations, isFirstCondition);
+            if (locationSet.empty()) return {};
         }
     }
-    return std::vector<int>(locationSet.cbegin(), locationSet.cend());
+    return {locationSet.cbegin(), locationSet.cend()};
 }
