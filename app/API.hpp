@@ -38,7 +38,7 @@ private:
 
     static std::vector<std::string> getAllIndexedAttributeName(const TableInfo &table);
 
-    void dropIndex(TableInfo &table, const std::string &attributeName);
+    static void dropIndex(TableInfo &table, const std::string &attributeName);
 
     static bool isConditionListValid(TableInfo &table, const std::vector<ComparisonCondition> &conditions);
 

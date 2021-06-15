@@ -14,8 +14,6 @@ void API::dropIndex(TableInfo &table, const std::string &attributeName) {
     Attribute attribute = Adapter::toAttribute(table, attributeName);
     Index index(table.TableName, attribute);
     index.dropIndex(Adapter::getIndexFilePath(table.TableName, attributeName), Adapter::toDataType(attribute.type));
-    catalogManager.editIndex(table.TableName, Adapter::unsafeCStyleString(attributeName),
-                             0);  // '0' represents 'to delete'
 }
 
 // Check 1) if some attribute name in the condition list doesn't exist
@@ -40,9 +38,8 @@ bool API::isInsertingValueValid(TableInfo &table, const std::vector<Literal> &va
         int attributeIndex = static_cast<int>(attributeIter - values.cbegin());
         if (Adapter::toAttributeType(attributeIter->type()) != table.attrType[attributeIndex])
             return false;
-        // Problem: Should pass value of the attribute to verify if it's not unique
         if (table.attrUnique[attributeIndex] &&
-            !recordManager.checkUnique(table.TableName, attributeIndex, Tuple(), table))
+            !recordManager.checkUnique(table.TableName, attributeIndex, Adapter::toAttribute(*attributeIter), table))
             return false;
     }
     return true;

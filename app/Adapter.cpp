@@ -65,6 +65,7 @@ Attribute Adapter::toAttribute(const Literal &literal) {
         strcpy(result.charData, stringValue->c_str());
         result.type = AttributeType::CHAR;
     }
+    result.getRowData();
     return result;
 }
 
@@ -161,13 +162,11 @@ char *Adapter::toOperatorString(BinaryOpearator op) {
     return dynamicCStyleString(str);
 }
 
-Tuple Adapter::toTuple(const std::vector<Literal> &literals) {
-    // Problem: insertAttr, rowData of Attribute?
-    //          Should provide proper ctor of Attribute and Tuple
+Tuple Adapter::toTuple(TableInfo &table, const std::vector<Literal> &literals) {
     std::vector<Attribute> attributes;
     for (const auto &literal : literals) attributes.push_back(toAttribute(literal));
     Tuple result;
-    result.insertAttr(static_cast<int>(attributes.size()), attributes.data());
+    result.setTuple(static_cast<int>(attributes.size()), attributes, table);
     return result;
 }
 

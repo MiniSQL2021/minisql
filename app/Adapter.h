@@ -32,7 +32,7 @@ namespace Adapter {
 
     char *toOperatorString(BinaryOpearator op);
 
-    Tuple toTuple(const std::vector<Literal> &literals);
+    Tuple toTuple(TableInfo &table, const std::vector<Literal> &literals);
 
     std::string getIndexFilePath(const std::string &tableName, const std::string &attributeName);
 

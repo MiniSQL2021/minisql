@@ -139,7 +139,7 @@ void API::handleInsertQuery(QueryPointer<InsertQuery> query) {
 
     // Problem: RecordManager should return a location after insertion
     int location;
-    recordManager.insertRecord(tableName, Adapter::toTuple(query->values), table);
+    recordManager.insertRecord(tableName, Adapter::toTuple(table, query->values), table);
 
     // Update indices
     for (auto attributeIter = query->values.cbegin(); attributeIter < query->values.cend(); attributeIter++) {
