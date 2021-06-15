@@ -12,7 +12,6 @@ void API::handleCreateTableQuery(QueryPointer<CreateTableQuery> query) {
         // Table already exists
     }
 
-    // Problem: Why bother pass name of table?
     recordManager.createTable(table.TableName, table);
     catalogManager.createTable(table);
 }
@@ -24,7 +23,7 @@ void API::handleDropTableQuery(QueryPointer<DropTableQuery> query) {
     }
 
     // Delete all indices of attributes in the table
-    TableInfo table = *catalogManager.getTableInfo(tableName);
+    TableInfo table = catalogManager.getTableInfo(tableName);
     for (const auto &attributeName:getAllIndexedAttributeName(table)) {
         dropIndex(table, Adapter::unsafeCStyleString(attributeName));
     }
@@ -50,13 +49,13 @@ void API::handleCreateIndexQuery(QueryPointer<CreateIndexQuery> query) {
     if (catalogManager.checkIndex(tableName/*, attributeName*/)) {
         // Index already exists
     }
-    TableInfo table = *catalogManager.getTableInfo(tableName);
-    Index index(query->tableName, Adapter::toAttribute(table, attributeName));
-    // Problem: createIndex needs file path? type?
-    index.createIndex("", 0);
+    TableInfo table = catalogManager.getTableInfo(tableName);
+    Attribute attribute = Adapter::toAttribute(table, attributeName);
+    Index index(query->tableName, attribute);
+    index.createIndex(Adapter::getIndexFilePath(query->tableName, query->columnName),
+                      Adapter::toDataType(attribute.type));
 
-    // Problem: Pass name of index to create index to catalog
-    catalogManager.editIndex(tableName, attributeName, 1); // '1' represents 'to create'
+    catalogManager.createIndex(tableName, attributeName, indexName);
 }
 
 void API::handleDropIndexQuery(QueryPointer<DropIndexQuery> query) {
@@ -73,15 +72,14 @@ void API::handleSelectQuery(QueryPointer<SelectQuery> query) {
     if (!catalogManager.checkTable(tableName)) {
         // Table doesn't exist
     }
-    TableInfo table = *catalogManager.getTableInfo(tableName);
+    TableInfo table = catalogManager.getTableInfo(tableName);
     if (!isConditionListValid(table, query->conditions)) {
         // Some attribute in the input doesn't exist, or the type doesn't match the actual type
     }
 
     std::vector<Tuple> tuples;
     if (query->conditions.empty()) {
-        // Problem: Should return an array of tuples
-        recordManager.nonconditionSelect(tableName, nullptr, table);
+        tuples = recordManager.nonconditionSelect(tableName, table);
     } else {
         auto locations = selectTuples(table, query->conditions);
         // Problem: RecordManager should provide a method to retrieve records by locations
@@ -94,14 +92,14 @@ void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
     if (!catalogManager.checkTable(tableName)) {
         // Table doesn't exist
     }
-    TableInfo table = *catalogManager.getTableInfo(tableName);
+    TableInfo table = catalogManager.getTableInfo(tableName);
     if (!isConditionListValid(table, query->conditions)) {
         // Some attribute in the input doesn't exist, or the type doesn't match the actual type
     }
 
     if (query->conditions.empty()) {
         // Problem: IndexManager should provide a method to delete all the records
-        // Problem: RecordManager should provide a method to delete all the records
+        recordManager.deleteAllrecord(tableName);
     } else {
         auto locations = selectTuples(table, query->conditions);
         // (Retrieve tuples)
@@ -134,15 +132,18 @@ void API::handleInsertQuery(QueryPointer<InsertQuery> query) {
         // Some attribute in the input doesn't match the actual type, or conflicts in uniqueness
     }
 
+    // Problem: RecordManager should return a location after insertion
+    int location;
     recordManager.insertRecord(tableName, Adapter::toTuple(query->values), table);
 
     // Update indices
     for (auto attributeIter = query->values.cbegin(); attributeIter < query->values.cend(); attributeIter++) {
         int attributeIndex = static_cast<int>(attributeIter - query->values.cbegin());
         if (table.hasIndex[attributeIndex]) {
-            Index index(query->tableName, Adapter::toAttribute(table, attributeIndex));
-            // Problem: What's block_id?
-            index.insertIndex("", Adapter::toData(*attributeIter), 0);
+            Attribute attribute = Adapter::toAttribute(table, attributeIndex);
+            Index index(query->tableName, attribute);
+            index.insertIndex(Adapter::getIndexFilePath(query->tableName, table.attrName[attributeIndex]),
+                              Adapter::toData(*attributeIter), location);
         }
     }
 }

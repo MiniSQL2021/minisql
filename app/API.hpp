@@ -1,6 +1,7 @@
 #pragma once
 
 #include <utility>
+#include <set>
 
 #include "Interpreter.hpp"
 #include "buffer_manager.h"
@@ -46,4 +47,6 @@ private:
     bool isInsertingValueValid(TableInfo &table, const std::vector<Literal> &literals);
 
     std::vector<int> selectTuples(TableInfo &table, const std::vector<ComparisonCondition> &conditions);
+
+    static std::set<int> intersect(const std::set<int> &destination, const std::vector<int> &source);
 };

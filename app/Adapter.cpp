@@ -87,31 +87,32 @@ Attribute Adapter::toAttribute(TableInfo &table, int attributeIndex) {
 
 Data Adapter::toData(const Literal &literal) {
     Data result;
-    // Problem: What does 'int type' represents?
     if (auto intValue = literal.intValue()) {
         result.datai = *intValue;
-        // result.type =
+        result.type = 0;
     } else if (auto floatValue = literal.floatValue()) {
         result.dataf = *floatValue;
-        // result.type =
+        result.type = 1;
     } else if (auto stringValue = literal.stringValue()) {
         result.datas = *stringValue;
-        // result.type =
+        result.type = 2;
     }
     return result;
 }
 
 Data Adapter::toData(const Attribute &attribute) {
     Data result;
-    // Problem: What does 'int type' represents?
     switch (attribute.type) {
         case AttributeType::INT:
             result.datai = attribute.intData;
+            result.type = 0;
             break;
         case AttributeType::FLOAT:
             result.dataf = attribute.floatData;
+            result.type = 1;
             break;
         case AttributeType::CHAR:
+            result.type = 2;
             result.datas = std::string(attribute.charData);
             break;
         case AttributeType::UNDEFINE:
@@ -168,4 +169,22 @@ Tuple Adapter::toTuple(const std::vector<Literal> &literals) {
     Tuple result;
     result.insertAttr(static_cast<int>(attributes.size()), attributes.data());
     return result;
+}
+
+std::string Adapter::getIndexFilePath(const string &tableName, const string &attributeName) {
+    return "INDEX_FILE_" + tableName + "_" + attributeName;
+}
+
+int Adapter::toDataType(AttributeType type) {
+    switch (type) {
+        case AttributeType::INT:
+            return 0;
+        case AttributeType::FLOAT:
+            return 1;
+        case AttributeType::CHAR:
+            return 2;
+        case AttributeType::UNDEFINE:
+            // Unreachable
+            return -1;
+    }
 }
