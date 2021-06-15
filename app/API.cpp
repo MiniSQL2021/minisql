@@ -45,8 +45,7 @@ void API::handleCreateIndexQuery(QueryPointer<CreateIndexQuery> query) {
     if (!catalogManager.checkUnique(tableName, attributeName)) {
         // Attribute is not unique
     }
-    // Problem: checkIndex's parameters represent what?
-    if (catalogManager.checkIndex(tableName/*, attributeName*/)) {
+    if (catalogManager.checkIndex(tableName, attributeName)) {
         // Index already exists
     }
     TableInfo table = catalogManager.getTableInfo(tableName);
@@ -59,21 +58,19 @@ void API::handleCreateIndexQuery(QueryPointer<CreateIndexQuery> query) {
 }
 
 void API::handleDropIndexQuery(QueryPointer<DropIndexQuery> query) {
-    char *indexName = Adapter::unsafeCStyleString(query->indexName);
-    // Problem: Pass name of index to 1) check if exists, 2) delete it
-    if (catalogManager.checkIndex(indexName)) {
+    try {
+        char *indexName = Adapter::unsafeCStyleString(query->indexName);
+        auto[tableName, attributeName] = catalogManager.searchIndex(indexName);
+
+        TableInfo table = catalogManager.getTableInfo(tableName);
+        auto attribute = Adapter::toAttribute(table, attributeName);
+        Index index(tableName, attribute);
+        index.dropIndex(Adapter::getIndexFilePath(tableName, attributeName), Adapter::toDataType(attribute.type));
+
+        catalogManager.deleteIndex(indexName);
+    } catch (...) { // Problem: Exception undefined
         // Index doesn't exists
     }
-
-    // Problem: Should get names of table and attribute
-    std::string tableName;
-    std::string attributeName;
-    TableInfo table = catalogManager.getTableInfo(Adapter::unsafeCStyleString(tableName));
-    auto attribute = Adapter::toAttribute(table, attributeName);
-    Index index(tableName, attribute);
-    index.dropIndex(Adapter::getIndexFilePath(tableName, attributeName), Adapter::toDataType(attribute.type));
-
-    catalogManager.deleteIndex(indexName);
 }
 
 void API::handleSelectQuery(QueryPointer<SelectQuery> query) {
@@ -107,7 +104,6 @@ void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
     }
 
     if (query->conditions.empty()) {
-        // Problem: IndexManager should provide a method to delete all the records
         recordManager.deleteAllrecord(tableName);
     } else {
         auto locations = selectTuples(table, query->conditions);
