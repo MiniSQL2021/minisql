@@ -14,10 +14,11 @@ struct IntervalBound {
 
     IntervalBound() = delete;
 
-    static auto negativeInfinity = IntervalBound<T>{IntervalBoundType::NegativeInfinity};
-    static auto positiveInfinity = IntervalBound<T>{IntervalBoundType::PositiveInfinity};
+    static IntervalBound<T> negativeInfinity() { return IntervalBound<T>(IntervalBoundType::NegativeInfinity); }
 
-    static IntervalBound<T> regular(T value, bool isClose) { return {value, isClose}; }
+    static IntervalBound<T> positiveInfinity() { return IntervalBound<T>(IntervalBoundType::PositiveInfinity); }
+
+    static IntervalBound<T> regular(const T &value, bool isClose) { return IntervalBound<T>{value, isClose}; }
 
     [[nodiscard]] constexpr bool isRegular() const { return type == IntervalBoundType::Regular; }
 
@@ -32,15 +33,15 @@ struct IntervalBound {
 private:
     explicit IntervalBound(IntervalBoundType type) : type(type), value(std::nullopt), isClose(false) {};
 
-    IntervalBound(T value, bool isClose) : type(IntervalBoundType::Regular), value(value), isClose(isClose) {};
+    IntervalBound(const T &value, bool isClose) : type(IntervalBoundType::Regular), value(value), isClose(isClose) {};
 };
 
 template<typename T>
 struct Interval {
-    const IntervalBound<T> lhs;
-    const IntervalBound<T> rhs;
+    const IntervalBound<T> &lhs;
+    const IntervalBound<T> &rhs;
 
-    Interval(IntervalBound<T> lhs, IntervalBound<T> rhs) : lhs(lhs), rhs(rhs) {};
+    Interval(const IntervalBound<T> &lhs, const IntervalBound<T> &rhs) : lhs(lhs), rhs(rhs) {};
 
     static std::optional<Interval<T>> intersect(const std::vector<Interval> &intervals);
 

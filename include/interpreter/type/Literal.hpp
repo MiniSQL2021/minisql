@@ -17,8 +17,7 @@ class Literal {
 
     template<typename T>
     [[nodiscard]] std::optional<T> getValue() const {
-        return std::holds_alternative<T>(value) ? std::optional<T>(std::get<T>(value))
-                                                : std::nullopt;
+        return std::holds_alternative<T>(value) ? std::optional<T>(std::get<T>(value)) : std::nullopt;
     }
 
 public:
@@ -37,7 +36,7 @@ public:
 
     [[nodiscard]] std::optional<int> intValue() const { return getValue<int>(); }
 
-    [[nodiscard]]std::optional<float> floatValue() const { return getValue<float>(); }
+    [[nodiscard]] std::optional<float> floatValue() const { return getValue<float>(); }
 
     [[nodiscard]] std::optional<std::string> stringValue() const { return getValue<std::string>(); }
 
@@ -56,5 +55,16 @@ public:
         }
         stream << ")";
         return stream.str();
+    }
+
+    constexpr bool operator<(const Literal &that) const {
+        switch (type()) {
+            case LiteralType::Int:
+                return this->intValue() < that.intValue();
+            case LiteralType::Float:
+                return this->floatValue() < that.floatValue();
+            case LiteralType::String:
+                return this->stringValue() < that.stringValue();
+        }
     }
 };
