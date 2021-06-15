@@ -11,9 +11,9 @@
 
 class API {
 public:
-    API(Interpreter interpreter, const BufferManager &bufferManager, const CatalogManager &catalogManager,
-        const RecordManager &recordManager) : interpreter(std::move(interpreter)), catalogManager(bufferManager),
-                                              recordManager(BufferManager()) {};
+    API(Interpreter &interpreter, BufferManager &bufferManager, CatalogManager &catalogManager,
+        RecordManager &recordManager) : interpreter(interpreter), catalogManager(catalogManager),
+                                        recordManager(recordManager) {};
 
     void listen();
 
@@ -32,9 +32,9 @@ public:
     void handleDeleteQuery(QueryPointer<DeleteQuery> query);
 
 private:
-    Interpreter interpreter;
-    CatalogManager catalogManager;
-    RecordManager recordManager;
+    Interpreter &interpreter;
+    CatalogManager &catalogManager;
+    RecordManager &recordManager;
 
     static std::vector<std::string> getAllIndexedAttributeName(const TableInfo &table);
 
