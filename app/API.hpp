@@ -40,13 +40,9 @@ private:
 
     void dropIndex(TableInfo &table, const std::string &attributeName);
 
-    void dropIndex(const std::string &indexName);
-
     static bool isConditionListValid(TableInfo &table, const std::vector<ComparisonCondition> &conditions);
 
     bool isInsertingValueValid(TableInfo &table, const std::vector<Literal> &literals);
 
     std::vector<int> selectTuples(TableInfo &table, const std::vector<ComparisonCondition> &conditions);
-
-    static std::set<int> intersect(const std::set<int> &destination, const std::vector<int> &source);
 };

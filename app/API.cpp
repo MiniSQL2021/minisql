@@ -64,7 +64,16 @@ void API::handleDropIndexQuery(QueryPointer<DropIndexQuery> query) {
     if (catalogManager.checkIndex(indexName)) {
         // Index doesn't exists
     }
-    dropIndex(indexName);
+
+    // Problem: Should get names of table and attribute
+    std::string tableName;
+    std::string attributeName;
+    TableInfo table = catalogManager.getTableInfo(Adapter::unsafeCStyleString(tableName));
+    auto attribute = Adapter::toAttribute(table, attributeName);
+    Index index(tableName, attribute);
+    index.dropIndex(Adapter::getIndexFilePath(tableName, attributeName), Adapter::toDataType(attribute.type));
+
+    catalogManager.deleteIndex(indexName);
 }
 
 void API::handleSelectQuery(QueryPointer<SelectQuery> query) {
@@ -82,7 +91,7 @@ void API::handleSelectQuery(QueryPointer<SelectQuery> query) {
         tuples = recordManager.nonconditionSelect(tableName, table);
     } else {
         auto locations = selectTuples(table, query->conditions);
-        // Problem: RecordManager should provide a method to retrieve records by locations
+        tuples = recordManager.searchTuple(locations);
     }
     Util::printTable(tuples, table);
 }
@@ -102,18 +111,18 @@ void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
         recordManager.deleteAllrecord(tableName);
     } else {
         auto locations = selectTuples(table, query->conditions);
-        // (Retrieve tuples)
-        std::vector<Tuple> tuples;
+        auto tuples = recordManager.searchTuple(locations);
 
         // Delete all the selected records from all indices in the table
         for (const auto &attributeName: getAllIndexedAttributeName(table)) {
             Index index(query->tableName, Adapter::toAttribute(table, attributeName));
             int attributeIndex = catalogManager.getAttrNo(tableName, Adapter::unsafeCStyleString(attributeName));
             for (const auto &tuple : tuples)
-                index.deleteIndexByKey("", Adapter::toData(tuple.attr[attributeIndex]));
+                index.deleteIndexByKey(Adapter::getIndexFilePath(query->tableName, attributeName),
+                                       Adapter::toData(tuple.attr[attributeIndex]));
         }
 
-        // Problem: RecordManager should provide a method to delete records by locations
+        recordManager.deleteRecord(tableName, locations);
     }
 }
 
@@ -123,7 +132,7 @@ void API::handleInsertQuery(QueryPointer<InsertQuery> query) {
         // Table doesn't exist
     }
 
-    TableInfo table = *catalogManager.getTableInfo(tableName);
+    TableInfo table = catalogManager.getTableInfo(tableName);
     // Check if valid
     if (query->values.size() != table.attrNum) {
         // The number of attributes doesn't match
