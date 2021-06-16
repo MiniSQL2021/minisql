@@ -19,11 +19,10 @@ void API::dropIndex(TableInfo &table, const std::string &attributeName) {
 // Check 1) if some attribute name in the condition list doesn't exist
 //       2) if type of some value in the condition list doesn't match the actual type
 bool API::isConditionListValid(TableInfo &table, const std::vector<ComparisonCondition> &conditions) {
-    return std::all_of(conditions.begin(), conditions.end(), [table](auto condition) {
+    return std::all_of(conditions.begin(), conditions.end(), [&](auto condition) {
         try {
             int attributeIndex = table.searchAttr(Adapter::unsafeCStyleString(condition.columnName));
-            if (Adapter::toAttributeType(condition.value.type()) != table.attrType[attributeIndex])
-                return false;
+            if (Adapter::toAttributeType(condition.value.type()) != table.attrType[attributeIndex]) return false;
             return true;
         } catch (...) {    // Problem: Exception undefined
             return false;
