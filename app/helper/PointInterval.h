@@ -14,4 +14,8 @@ struct PointInterval {
     static PointInterval<T> equal(const T &value) { return PointInterval<T>(value, PointIntervalType::Equal); }
 
     static PointInterval<T> notEqual(const T &value) { return PointInterval<T>(value, PointIntervalType::NotEqual); }
+
+    [[nodiscard]] constexpr bool isEqual() const { return type == PointIntervalType::Equal; }
+
+    [[nodiscard]] constexpr bool isNotEqual() const { return type == PointIntervalType::NotEqual; }
 };

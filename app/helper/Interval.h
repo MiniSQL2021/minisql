@@ -31,21 +31,13 @@ struct IntervalBound {
 
     [[nodiscard]] constexpr bool isRegular() const { return numberType == NumberType::Regular; }
 
-    [[nodiscard]] constexpr bool isNegativeInfinity() const {
-        return numberType == NumberType::NegativeInfinity;
-    }
+    [[nodiscard]] constexpr bool isNegativeInfinity() const { return numberType == NumberType::NegativeInfinity; }
 
-    [[nodiscard]] constexpr bool isPositiveInfinity() const {
-        return numberType == NumberType::PositiveInfinity;
-    }
+    [[nodiscard]] constexpr bool isPositiveInfinity() const { return numberType == NumberType::PositiveInfinity; }
 
-    [[nodiscard]] constexpr bool isOpen() const {
-        return type == BoundType::Open;
-    }
+    [[nodiscard]] constexpr bool isOpen() const { return type == BoundType::Open; }
 
-    [[nodiscard]] constexpr bool isClose() const {
-        return type == BoundType::Close;
-    }
+    [[nodiscard]] constexpr bool isClose() const { return type == BoundType::Close; }
 
     constexpr bool operator<(const IntervalBound<T> &that);
 
