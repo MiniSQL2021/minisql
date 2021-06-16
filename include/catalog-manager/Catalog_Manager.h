@@ -14,30 +14,24 @@
 #include"Page.h"
 #include"catalogPage.h"
 #include"buffer_manager.h"
+#include "exception.h"
 
 using namespace std;
 
 class CatalogManager {
 public:
-    CatalogManager(BufferManager);
-
-    ~CatalogManager();
-
-    BufferManager buffer;
+    CatalogManager(BufferManager &bufferManager) : buffer(bufferManager) {};
+    BufferManager &buffer;
 
     bool checkTable(char *);
 
     //参数：表名；检查table是否存在
-    bool checkIndex(char *);
-
-    //参数：表名；检查table是否存在索引
-    //table_does_not_exist
     bool checkIndex(char *, char *);
 
     //参数：表名，属性名；检查该属性上是否有Index
     //table_does_not_exist
     //attr_does_not_exist
-    std::pair<char *, char *> searchIndex(char *);
+    pair<char *, char *> searchIndex(char *);
 
     //参数：IndexName；返回值：“表名 /n 属性名”
     //index_does_not_exist
@@ -61,9 +55,10 @@ public:
     //table_does_not_exist
     //attr_does_not_exist
     TableInfo getTableInfo(char *);
-
     //参数：表名；返回表信息
     //table_does_not_exist
+
+
     void dropTable(char *);
 
     //参数：表名；删除一个表
@@ -81,6 +76,10 @@ public:
     //参数：indexName；删除index
     //index_does_not_exist
 
+
+    int getCatalogPageNum();
+
+    char *getCatalogPage(int pageID);
 };
 
 #endif // !Catalog_Manager

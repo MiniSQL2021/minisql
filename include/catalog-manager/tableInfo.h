@@ -7,6 +7,7 @@
 #include<cstdio>
 #include <string>
 #include"Attribute.h"
+#include"exception.h"
 
 using namespace std;
 

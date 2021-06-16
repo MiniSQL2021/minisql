@@ -16,7 +16,7 @@ private:
     //指向父节点指针
     TreeNode *parent;
     //存放key容器
-    std::vector <T> keys;
+    std::vector<T> keys;
     //指向子结点的指针容器
     std::vector<TreeNode *> childs;
     std::vector<int> index_in_records;
@@ -36,7 +36,9 @@ public:
 
     bool isRoot();
 
-    bool findKey(T key, int &index);
+    bool findKey1(T key, int &index);
+
+    bool findKey2(T key, int &index);
 
     TreeNode *splitNode(T &key);
 
@@ -50,17 +52,16 @@ public:
 
     bool findRange(int index, T &key, std::vector<int> &index_in_records);
 
-};
+    bool findRange1(int index, T &key, std::vector<int> &index_in_records);
 
+    bool findRange2(int index, std::vector<int> &index_in_records);
+
+};
 
 //创建一个TreeNode，如果是叶子节点，Leaf=True
 template<typename T>
 inline TreeNode<T>::TreeNode(int in_degree, bool Leaf):
-        num(0),
-        parent(NULL),
-        nextLeafNode(NULL),
-        isLeaf(Leaf),
-        degree(in_degree) {
+        num(0), parent(NULL), nextLeafNode(NULL), isLeaf(Leaf), degree(in_degree) {
     for (int i = 0; i < degree + 1; i++) {
         childs.push_back(NULL);
         keys.push_back(T());
@@ -75,7 +76,6 @@ template<typename T>
 inline TreeNode<T>::~TreeNode() {
 }
 
-
 //判断是否为根节点
 template<typename T>
 inline bool TreeNode<T>::isRoot() {
@@ -88,7 +88,7 @@ inline bool TreeNode<T>::isRoot() {
 
 //在Node中查找key值，利用index带回树中的位置
 template<typename T>
-inline bool TreeNode<T>::findKey(T key, int &index) {
+inline bool TreeNode<T>::findKey1(T key, int &index) {
     if (num == 0) { //结点内key数量为0
         index = 0;
         return false;
@@ -147,6 +147,66 @@ inline bool TreeNode<T>::findKey(T key, int &index) {
 
 }
 
+//在Node中查找key值，利用index带回树中的位置
+template<typename T>
+inline bool TreeNode<T>::findKey2(T key, int &index) {
+    if (num == 0) { //结点内key数量为0
+        index = 0;
+        return false;
+    } else {
+        //判断key值是否超过本结点内最大值(key不在本结点内)
+        if (keys[num - 1] < key) {
+            index = num;
+            return false;
+            //判断key值是否小于本结点内最小值(key不在本结点内)
+        } else if (keys[0] > key) {
+            index = 0;
+            return false;
+        } else if (num <= 20) {
+            //结点内key数量较少时直接线性遍历搜索即可
+            for (int i = 0; i < num; i++) {
+                if (keys[i] == key) {
+                    index = i;
+                    return true;
+                } else if (keys[i] < key)
+                    continue;
+                else if (keys[i] > key) {
+                    index = i - 1;
+                    return false;
+                }
+            }
+        } else if (num > 20) {
+            //结点内key数量过多时采用二分搜索
+            int left = 0, right = num - 1, pos = 0;
+
+            while (right > left + 1) {
+                pos = (right + left) / 2;
+                if (keys[pos] == key) {
+                    index = pos;
+                    return true;
+                } else if (keys[pos] < key) {
+                    left = pos;
+                } else if (keys[pos] > key) {
+                    right = pos;
+                }
+            }
+
+            if (keys[right] <= key) {
+                index = right;
+                return (keys[right] == key);
+            } else if (keys[left] <= key) {
+                index = left;
+                return (keys[left] == key);
+            } else if (keys[left] > key) {
+                index = left--;
+                return false;
+            }
+        }//二分搜索结束
+    }
+
+    return false;
+
+}
 
 //结点分裂
 template<typename T>
@@ -236,7 +296,7 @@ inline int TreeNode<T>::addKey(T &key, int index_in_record) {
         return 0;
     } else {
         int index = 0;
-        bool a = findKey(key, idnex_in_record);
+        bool a = findKey(key, index_in_record);
         if (a) {
             throw addKey_already_in();
         } else {
@@ -294,7 +354,6 @@ inline TreeNode<T> *TreeNode<T>::nextLeaf() {
     return nextLeafNode;
 }
 
-
 //查找起始index到等于key停止，返回一个装有index_in_record的数组：return_index_in_records
 template<typename T>
 inline bool TreeNode<T>::findRange(int index, T &key, std::vector<int> &return_index_in_records) {
@@ -308,6 +367,12 @@ inline bool TreeNode<T>::findRange(int index, T &key, std::vector<int> &return_i
         return false;
 }
 
+template<typename T>
+inline bool TreeNode<T>::findRange2(int index, std::vector<int> &return_index_in_records) {
+    int i;
+    for (i = index; i < num; i++) {
+        return_index_in_records.push_back(index_in_records[i]);
+    }
+    return true;
 
-
-
+}

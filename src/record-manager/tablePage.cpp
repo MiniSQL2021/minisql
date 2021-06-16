@@ -5,41 +5,38 @@
 	tuple数组： tupleLength*tupleNum
 */
 
-
 #include"tablePage.h"
 
 tablePage::tablePage() {};
 
 tablePage::~tablePage() {};
 
-void tablePage::insertTuple(char *pagedata, Tuple tup, int k) {
+int tablePage::insertTuple(char *pagedata, Tuple tup, int k) {
+    int p = k * tupleLength;
+    int asw = 0;
     if (k == -1) {
         tp[tupleNum] = tup;
         tupleNum++;
         strncat(pagedata, tup.rowData, tupleLength);
+        asw = tupleNum;
     } else {
         tp[k] = tup;
-        memcpy(pagedata + k * tupleLength, tup.rowData, tupleLength);
+        memcpy(pagedata + p, tup.rowData, tupleLength);
+        asw = k + 1;
     }
-
+    return asw;
 }
 
-void tablePage::deleteTuple(int *no) {
+void tablePage::deleteTuple(char *pagedata, vector<int> no) {
     int i, j = 0, flag = 0;
-    for (i = 0; i < tupleNum; i++) {
-        j = 0;
-        flag = 0;
-        while (*no) {
-            if (*(no + j) == i) { flag = 1; }
-            j++;
-        }
-        if (flag) {
-            for (j = i; j < tupleNum; j++) {
-                *(tp + j) = *(tp + j + 1);
-            }
-        }
+    int asw = 0;
+    char null[4096] = "";
+    bool f = true;
+    memcpy(null, &f, 1);
+    for (i = 0; i < no.size(); i++) {
+        memcpy((tp + no[i])->rowData, null, tupleLength);
     }
-
+    writeTablePage(pagedata);
 }
 
 vector<Tuple> tablePage::nonconditionsearch() {

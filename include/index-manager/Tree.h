@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <algorithm>
 #include <map>
 #include <iostream>
 #include <sstream>
@@ -11,7 +12,6 @@
 #include "buffer_manager.h"
 
 extern BufferManager buffer_manager;
-
 
 template<typename T>
 class Tree {
@@ -30,7 +30,6 @@ private:
     int key_size;
     int degree;
 
-
     //初始化B+树，并分配内存空间
     bool initialization();
 
@@ -41,7 +40,12 @@ private:
     bool adjustAfterDelete(TreeNode pNode);
 
     //用于查找某key值所处的叶结点位置
-    bool findToLeaf(TreeNode pNode, T key, TreeNode &return_node, int &return_index);
+    bool findToLeaf1(TreeNode pNode, T key, TreeNode &return_node, int &return_index);
+
+    //用于查找某key值所处的叶结点位置
+    bool findToLeaf2(TreeNode pNode, T key, TreeNode &return_node, int &return_index);
+
+    bool findMin(TreeNode root, T &key, TreeNode &return_node, int &return_index);
 
     //获取文件大小
     void getFile(std::string file_path);
@@ -81,6 +85,10 @@ public:
     //功能：返回范围搜索结果，将index_in_record放入index_in_records容器中
     void searchRange(T &key1, T &key2, std::vector<int> &index_in_records, int flag);
 
+    void searchRange1(T &key, std::vector<int> &index_in_records, int flag);
+
+    void searchRange2(T &key, std::vector<int> &index_in_records, int flag);
+
     //从磁盘读取所有数据
     void readFromDiskAll();
 
@@ -90,20 +98,12 @@ public:
     //在磁盘中读取某一块的数据
     void readFromDisk(char *p, char *end);
 
-
 };
-
 
 //New Tree
 template<typename T>
 inline Tree<T>::Tree(std::string in_name, int key_size, int in_degree):
-        file_name(in_name),
-        key_num(0),
-        level(0),
-        node_num(0),
-        root(NULL),
-        leafHead(NULL),
-        key_size(key_size),
+        file_name(in_name), key_num(0), level(0), node_num(0), root(NULL), leafHead(NULL), key_size(key_size),
         degree(in_degree) {
     //初始化并读取数据
     initialization();
@@ -117,7 +117,6 @@ inline Tree<T>::~Tree() {
     root = NULL;
     level = 0;
 }
-
 
 template<typename T>
 inline int Tree<T>::searchKey(T &key) {
@@ -212,7 +211,6 @@ inline bool Tree<T>::deleteKey(T &key) {
 
     return false;
 }
-
 
 template<typename T>
 inline bool Tree<T>::initialization() {
@@ -466,9 +464,9 @@ inline bool Tree<T>::adjustAfterDelete(TreeNode pNode) {
 }
 
 template<typename T>
-inline bool Tree<T>::findToLeaf(TreeNode pNode, T key, TreeNode &return_node, int &return_index) {
+inline bool Tree<T>::findToLeaf1(TreeNode pNode, T key, TreeNode &return_node, int &return_index) {
     int index = 0;
-    if (pNode->findKey(key, index)) {
+    if (pNode->findKey1(key, index)) {
         //如果是叶节点
         if (pNode->isLeaf) {
             return_node = pNode;
@@ -497,9 +495,54 @@ inline bool Tree<T>::findToLeaf(TreeNode pNode, T key, TreeNode &return_node, in
             findToLeaf(pNode->childs[index], return_node, return_index);
         }
 
-
     }
     return false;
+}
+
+template<typename T>
+inline bool Tree<T>::findToLeaf2(TreeNode pNode, T key, TreeNode &return_node, int &return_index) {
+    int index = 0;
+    if (pNode->findKey2(key, index)) {
+        //如果是叶节点
+        if (pNode->isLeaf) {
+            return_node = pNode;
+            return_index = index;
+            return true;
+        } else {
+            //此结点不是叶结点，递归查找它的下一层
+            pNode = pNode->childs[index + 1];
+            while (!pNode->isLeaf) {
+                pNode = pNode->childs[0];
+            }
+            return_node = pNode;
+            return_index = index;
+            return true;
+        }
+    }
+        //该结点内没有的话
+    else {
+        //如果是已经到了叶节点还没有
+        if (pNode->isLeaf) {
+            return_node = pNode;
+            return_index = index;
+            return false;
+        } else {
+            //递归寻找下一层
+            findToLeaf(pNode->childs[index], return_node, return_index);
+        }
+    }
+    return false;
+}
+
+template<typename T>
+inline bool Tree<T>::findMin(TreeNode root, T &key, TreeNode &return_node, int &return_index) {
+    return_node = root;
+    while (return_node->!isLeaf) {
+        return_node = return_node->childs[0]
+    }
+    key = return_node->keys[0];
+    return_index = 0;
+    return true;
 }
 
 template<typename T>
@@ -525,7 +568,6 @@ inline int Tree<T>::getBlockNum(std::string table_name) {
     return block_num;
 }
 
-
 template<typename T>
 inline void Tree<T>::dropTree(TreeNode tree_root) {
     if (!tree_root) {
@@ -544,14 +586,17 @@ inline void Tree<T>::dropTree(TreeNode tree_root) {
 
 template<typename T>
 inline void Tree<T>::searchRange(T &key1, T &key2, std::vector<int> &index_in_records, int flag) {
+
+    T temp_key1 = key1;
+    T temp_key2 = key2;
     //空树
     if (!root) {
         return;
     } else {
         int index1, index2;
         TreeNode pNode1, pNode2;
-        findToLeaf(root, key1, pNode1, index1);
-        findToLeaf(root, key2, pNode2, index2);
+        findToLeaf1(root, key1, pNode1, index1);
+        findToLeaf2(root, key2, pNode2, index2);
         bool finished = false;
         unsigned int index;
 
@@ -580,6 +625,97 @@ inline void Tree<T>::searchRange(T &key1, T &key2, std::vector<int> &index_in_re
         }
     }
 
+    if (flag == 0) {
+        if (temp_key1 == key1) {
+            index_in_records.erase(index_in_records.begin());
+        }
+        if (temp_key2 == key2) {
+            index_in_records.erase(index_in_records.end());
+        }
+    } else if (flag == 1) {
+        if (temp_key2 == key2) {
+            index_in_records.erase(index_in_records.end());
+        }
+    } else if (flag == 2) {
+        if (temp_key1 == key1) {
+            index_in_records.erase(index_in_records.begin());
+        }
+    }
+
+    std::sort(index_in_records.begin(), index_in_records.end());
+    index_in_records.erase(unique(index_in_records.begin(), index_in_records.end()), index_in_records.end());
+    return;
+
+}
+
+template<typename T>
+inline void Tree<T>::searchRange1(T &key2, std::vector<int> &index_in_records, int flag) {
+    T key_temp = key2;
+    T key1;
+    //空树
+    if (!root) {
+        return;
+    } else {
+        int index1, index2;
+        TreeNode pNode1, pNode2;
+        findMin(root, key1, pNode1, index1);
+        findToLeaf2(root, key2, pNode2, index2);
+        bool finished = false;
+        unsigned int index;
+
+        TreeNode pNode = pNode1;
+        index = index1;
+        do {
+            finished = pNode->findRange(index, key2, index_in_records);
+            index = 0;
+            if (pNode->nextLeafNode == NULL)
+                break;
+            else
+                pNode = pNode->nextLeaf();
+        } while (!finished);
+    }
+
+    if (flag == 0) {
+        if (key_temp == key2) {
+            index_in_records.erase(index_in_records.end());
+        }
+    }
+
+    std::sort(index_in_records.begin(), index_in_records.end());
+    index_in_records.erase(unique(index_in_records.begin(), index_in_records.end()), index_in_records.end());
+    return;
+}
+
+template<typename T>
+inline void Tree<T>::searchRange2(T &key, std::vector<int> &index_in_records, int flag) {
+    T key_temp = key;
+    //空树
+    if (!root) {
+        return;
+    } else {
+        int index1;
+        TreeNode pNode1;
+        findToLeaf1(root, key, pNode1, index1);
+        bool finished = false;
+        unsigned int index;
+        TreeNode pNode = pNode1;
+        index = index1;
+        do {
+            finished = pNode->findRange2(index, , index_in_records);
+            index = 0;
+            if (pNode->nextLeafNode == NULL)
+                break;
+            else
+                pNode = pNode->nextLeaf();
+        } while (!finished);
+
+    }
+
+    if (flag == 0) {
+        if (key_temp == key) {
+            index_in_records.erase(index_in_records.begin());
+        }
+    }
     std::sort(index_in_records.begin(), index_in_records.end());
     index_in_records.erase(unique(index_in_records.begin(), index_in_records.end()), index_in_records.end());
     return;

@@ -34,41 +34,41 @@ TableInfo::TableInfo() {
 }
 
 TableInfo::TableInfo(const TableInfo &tbif) {
-    strcpy_s(primaryKey, tbif.primaryKey);
-    strcpy_s(TableName, tbif.TableName);
+    strcpy(primaryKey, tbif.primaryKey);
+    strcpy(TableName, tbif.TableName);
     memcpy(&hasPrimaryKey, &tbif.hasPrimaryKey, 1);
     memcpy(&attrNum, &tbif.attrNum, 4);
 
     int i;
     for (i = 0; i < attrNum; i++) {
-        strcpy_s(attrName[i], tbif.attrName[i]);
+        strcpy(attrName[i], tbif.attrName[i]);
         memcpy(attrType + i, tbif.attrType + i, 4);
         memcpy(attrUnique + i, tbif.attrUnique + i, 1);
         memcpy(hasIndex + i, tbif.hasIndex + i, 1);
-        strcpy_s(indexName[i], tbif.indexName[i]);
+        strcpy(indexName[i], tbif.indexName[i]);
         attrLength[i] = tbif.attrLength[i];
     }
 
     memcpy(&dataLength, &tbif.dataLength, 4);
-    strcpy_s(rowData, tbif.rowData);
+    strcpy(rowData, tbif.rowData);
 }
 
 TableInfo::~TableInfo() {};
 
 void TableInfo::setTableInfo(char *tbn, char *pn, bool hp, int an, attrStruct *atrs) {
-    strcpy_s(TableName, tbn);
-    strcpy_s(primaryKey, pn);
+    strcpy(TableName, tbn);
+    strcpy(primaryKey, pn);
     hasPrimaryKey = hp;
     attrNum = an;
     dataLength = 69 + 72 * attrNum;
 
     int i;
     for (i = 0; i < attrNum; i++) {
-        strcpy_s(attrName[i], (atrs + i)->attrName);
+        strcpy(attrName[i], (atrs + i)->attrName);
         memcpy(attrType + i, &(atrs + i)->attrType, 4);
         memcpy(attrUnique + i, &(atrs + i)->attrUnique, 1);
         memcpy(hasIndex + i, &(atrs + i)->hasIndex, 1);
-        strcpy_s(indexName[i], (atrs + i)->indexname);
+        strcpy(indexName[i], (atrs + i)->indexname);
         attrLength[i] = (atrs + i)->attrlength;
     }
     insertRowData();
@@ -82,7 +82,7 @@ int TableInfo::searchAttr(char *attrname) {
         }
     }
     if (i >= attrNum) {
-        throw attr_does_not_exist;                //attr does not exist
+        throw attr_does_not_exist();                //attr does not exist
     }
 }
 

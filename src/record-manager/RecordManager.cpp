@@ -1,148 +1,122 @@
 #include"RecordManager.h"
-#include"CatalogManager.h"
-
-RecordManager::RecordManager() {};
-
-RecordManager::~RecordManager() {};
 
 void RecordManager::createTable(char *tablename, TableInfo tbif) {
-    buffer.createTablePage(tablename);
-    char *pgdata = buffer.getTablePage(tablename, 0);
-    int num = 0, length = 0;
-    int j;
+    int j, length = 0;
     for (j = 0; j < tbif.attrNum; j++) {
         length += tbif.attrLength[j];
     }
-    memcpy(pgdata, &num, 4);
-    memcpy(pgdata + 4, &length, 4);
-    buffer.releasePage(pgdata);
+
+    string str = "./database/data/";
+    str += tablename;
+    FILE *f = fopen(str.c_str(), "w");
+    int n[2] = {0, length};
+    fwrite(n, 4, 2, f);
+    fclose(f);
 }
 
 void RecordManager::deleteTable(char *tablename) {
-    buffer.dropTable(tablename);
+    string table_name = tablename;
+    table_name = "./database/data/" + table_name;
+    remove(table_name.c_str());
 }
 
-void RecordManager::insertRecord(char *tbnm, Tuple tup, TableInfo tbif)       //参数：表名，rowdata；向表中插入元组，插入失败则报错
+int RecordManager::insertRecord(char *tbnm, Tuple tup, TableInfo tbif)       //参数：表名，rowdata；向表中插入元组，插入失败则报错
 {
-    tablePage tbpg;
-    int pgNum = buffer.getTablePageNum(tbnm);
-    int i, k, j;
-    char *pgdata;
+    tablePage *tbpg = new tablePage;
+    int pgNum = getPageNum(tbnm);
+    int i, k, j, asw = 0, p = 0;
+    char *pgdata = '\0';
     int MaxPgNUM = 0;
     for (i = 0; i < pgNum; i++) {
-        pgdata = buffer.getTablePage(tbnm, i);
-        tbpg.readTablePage(pgdata, tbif);
-        MaxPgNUM = 4096 / tbpg.tupleLength;
-        k = tbpg.checkdelete();
-        if (tbpg.tupleNum < MaxPgNUM || k != -1) {
-            tbpg.insertTuple(pgdata, tup, k);
+        pgdata = buffer.getPage(tbnm, i);
+        tbpg->readTablePage(pgdata, tbif);
+        MaxPgNUM = 4096 / tbpg->tupleLength;
+        k = tbpg->checkdelete();
+        if (tbpg->tupleNum < MaxPgNUM || k != -1) {
+            p = tbpg->insertTuple(pgdata, tup, k);
+
         }
+        asw += tbpg->tupleNum;
     }
     if (i == pgNum) {
+        p = 1;
         int m = 0;
         int tplength = 0;
         for (j = 0; j < tbif.attrNum; j++) {
             tplength += tbif.attrLength[j];
         }
-        pgdata = buffer.addTablePage(tbnm);
+        pgdata = buffer.getPage(tbnm, i);
         memcpy(pgdata, &m, 4);
         memcpy(pgdata + 4, &tplength, 4);
-        tbpg.readTablePage(pgdata, tbif);
-        tbpg.insertTuple(pgdata, tup, -1);
+        tbpg->readTablePage(pgdata, tbif);
+        tbpg->insertTuple(pgdata, tup, -1);
     }
-    buffer.releasePage(pgdata);
+    int b = buffer.getPageId(tbnm, i);
+    buffer.modifyPage(b);
+    delete tbpg;
+    return asw + p;
 }
 
-void RecordManager::deleteRecord(char *tableName, int attrno, char *op, Attribute attr, TableInfo tbif) {
-    tablePage tbpg;
-    int pgNum = buffer.getTablePageNum(tableName);
+void RecordManager::deleteRecord(char *tableName, vector<int> no, TableInfo tbif)   //参数：表名，序号
+{
+    tablePage *tbpg = new tablePage;
+    vector<int> nm;
+    int pgNum = getPageNum(tableName);
     char *pgdata;
-    int i, j, n = -1, p = 0;
-    int t[200][1024] = {0};
-    int count = 0;
-    char null[4096] = "";
+    int i, j = 0;
+    int p = 0, size = 0;
     for (i = 0; i < pgNum; i++) {
-        pgdata = buffer.getTablePage(tableName, i);
-        tbpg.readTablePage(pgdata, tbif);
-        tbpg.conditionsearch(attr, op, attrno, t[i]);
-        j = 0;
-        while (t[i][j] != 0) {
-            tbpg.tp[(t[i][j])].hasdeleted = true;
-            memcpy(tbpg.tp[(t[i][j])].rowData + 1, null, 4095);
+        pgdata = buffer.getPage(tableName, i);
+        tbpg->readTablePage(pgdata, tbif);
+
+        size += tbpg->tupleNum;
+        while (size > no[j]) {
+            nm.push_back(no[j] - p);
             j++;
         }
+        p = size;
 
-    }
-    buffer.releasePage(pgdata);
-}
-
-void RecordManager::conditionSelect(char *tableName, int attrno, char *op, Attribute attr, TableInfo tbif,
-                                    Tuple *tup)//参数：表名，属性名，算数比较符，比较值
-{
-    tablePage tbpg;
-    int pgNum = buffer.getTablePageNum(tableName);
-    char *pgdata;
-    int i, j, n = -1, p = 0;
-    int t[200][1024] = {0};
-    int count = 0;
-    for (i = 0; i < pgNum; i++) {
-        pgdata = buffer.getTablePage(tableName, i);
-        tbpg.readTablePage(pgdata, tbif);
-        tbpg.conditionsearch(attr, op, attrno, t[i]);
-        j = 0;
-        while (t[i][j] != 0) {
-            *(tup + count) = tbpg.tp[(t[i][j])];
-            j++;
-        }
-
-    }
-    buffer.releasePage(pgdata);
-}
-
-void RecordManager::nonconditionSelect(char *tableName, Tuple *tup, TableInfo tbif)                      //参数：表名；打印全部元组
-{
-    tablePage tbpg;
-    int pgNum = buffer.getTablePageNum(tableName);
-    char *pgdata;
-    int i, j, n = -1, p
-    0;
-    int t[200][1024] = {0};
-    int count = 0;
-    for (i = 0; i < pgNum; i++) {
-        pgdata = buffer.getTablePage(tableName, i);
-        tbpg.readTablePage(pgdata, tbif);
-        tbpg.nonconditionsearch(t[i]);
-        j = 0;
-        while (t[i][j] != 0) {
-            *(tup + count) = tbpg.tp[(t[i][j])];
-            j++;
+        nm.clear();
+        if (nm[0]) {
+            tbpg->deleteTuple(pgdata, nm);
+            int b = buffer.getPageId(tableName, i);
+            buffer.modifyPage(b);
         }
     }
-    buffer.releasePage(pgdata);
+    delete tbpg;
 }
 
-void RecordManager::deleteRecord(char *tableName, vector<int> no)   //参数：表名，序号
-{
-    int i;
-    tablePage tbpg;
-    int pgNum = buffer.getTablePageNum(tableName);
+void RecordManager::deleteAllRecord(char *tableName, TableInfo tbif) {
+    deleteTable(tableName);
+    createTable(tableName, tbif);
+}
+
+vector<Tuple> RecordManager::searchTuple(char *tableName, TableInfo tbif, vector<int> no) {
+    tablePage *tbpg = new tablePage;
+    vector<int> nm;
+    vector<Tuple> tup;
+    vector<Tuple> temp;
+    int pgNum = getPageNum(tableName);
     char *pgdata;
-    int i, j;
-    int p = 0;
+    int i, j = 0;
+    int p = 0, size = 0;
     for (i = 0; i < pgNum; i++) {
-        pgdata = buffer.getTablePage(tableName, i);
-        tbpg.readTablePage(pgdata, tbif);
+        pgdata = buffer.getPage(tableName, i);
+        tbpg->readTablePage(pgdata, tbif);
 
-        temp = tbpg.conditionsearch(attr, op, attrno, p);
-        no.insert(no.end(), temp.begin(), temp.end());
-        p += tbpg.tupleNum;
+        size += tbpg->tupleNum;
+        while (size > no[j]) {
+            nm.push_back(no[j] - p);
+            j++;
+        }
+        p = size;
+        temp = tbpg->searchTuple(nm);
+        tup.insert(tup.end(), temp.begin(), temp.end());
+        nm.clear();
+        temp.clear();
     }
-    buffer.releasePage(pgdata);
-
-}
-
-void RecordManager::deleteAllrecord(char *tableName) {
-
+    return tup;
+    delete tbpg;
 }
 
 vector<int> RecordManager::conditionSelect(char *tableName, int attrno, char *op, Attribute attr, TableInfo tbif)
@@ -150,62 +124,72 @@ vector<int> RecordManager::conditionSelect(char *tableName, int attrno, char *op
 {
     vector<int> no;
     vector<int> temp;
-    tablePage tbpg;
-    int pgNum = buffer.getTablePageNum(tableName);
+    tablePage *tbpg = new tablePage;
+    int pgNum = getPageNum(tableName);
     char *pgdata;
     int i, j;
     int p = 0;
     for (i = 0; i < pgNum; i++) {
-        pgdata = buffer.getTablePage(tableName, i);
-        tbpg.readTablePage(pgdata, tbif);
+        pgdata = buffer.getPage(tableName, i);
+        tbpg->readTablePage(pgdata, tbif);
 
-        temp = tbpg.conditionsearch(attr, op, attrno, p);
+        temp = tbpg->conditionsearch(attr, op, attrno, p);
         no.insert(no.end(), temp.begin(), temp.end());
-        p += tbpg.tupleNum;
+        p += tbpg->tupleNum;
     }
-    buffer.releasePage(pgdata);
+    delete tbpg;
     return no;
 }
 
-vector<Tuple>
-RecordManager::nonconditionSelect(char *tableName, TableInfo tbif)                     //参数：表名,存放数组，tableinfo；返回全部tuple
+vector<Tuple> RecordManager::nonConditionSelect(char *tableName,
+                                                TableInfo tbif)                        //参数：表名,存放数组，tableinfo；返回全部tuple
 {
     vector<Tuple> tup;
     vector<Tuple> temp;
-    tablePage tbpg;
-    int pgNum = buffer.getTablePageNum(tableName);
+    tablePage *tbpg = new tablePage;
+    int pgNum = getPageNum(tableName);
     char *pgdata;
-    int i, j, n = -1;
-    int t[200][1024] = {0};
+    int i, j;
     int count = 0;
     for (i = 0; i < pgNum; i++) {
-        pgdata = buffer.getTablePage(tableName, i);
-        tbpg.readTablePage(pgdata, tbif);
-        temp = (tbpg.nonconditionsearch());
+        pgdata = buffer.getPage(tableName, i);
+        tbpg->readTablePage(pgdata, tbif);
+        temp = (tbpg->nonconditionsearch());
         tup.insert(tup.end(), temp.begin(), temp.end());
     }
-    buffer.releasePage(pgdata);
+    delete tbpg;
+    return tup;
 }
 
-bool RecordManager::checkUnique(char *tableName, int attrno, Tuple tup, TableInfo tbif) {
-    tablePage tbpg;
-    int pgNum = buffer.getTablePageNum(tableName);
+bool RecordManager::checkUnique(char *tableName, int attrno, Attribute attr, TableInfo tbif) {
+    tablePage *tbpg = new tablePage;
+    int pgNum = getPageNum(tableName);
     char *pgdata;
     int i, j, n = -1, p = 0;
-    int t[200][1024] = {0};
-    Attribute attr = tup.attr[attrno];
     char op[3] = "==";
     bool flag = true;
     for (i = 0; i < pgNum; i++) {
-        pgdata = buffer.getTablePage(tableName, i);
-        tbpg.readTablePage(pgdata, tbif);
-        tbpg.conditionsearch(attr, op, attrno, t[i]);
-        j = 0;
-        while (t[i][j] != 0) {
-            flag = false;
-        }
+        pgdata = buffer.getPage(tableName, i);
+        tbpg->readTablePage(pgdata, tbif);
 
+        for (j = 0; j < tbpg->tupleNum; j++) {
+            if (tbpg->tp[j].attr[attrno] == attr) {
+                flag = false;
+            }
+        }
     }
-    buffer.releasePage(pgdata);
+    delete tbpg;
     return flag;
+}
+
+int RecordManager::getPageNum(char *tableName) {
+    string name;
+    name = tableName;
+    char *p;
+    int block_num = -1;
+    do {
+        p = buffer.getPage(name, block_num + 1);
+        block_num++;
+    } while (p[0] != '\0');
+    return block_num;
 }

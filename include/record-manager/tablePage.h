@@ -9,6 +9,7 @@
 #include"catalogPage.h"
 #include"tuple.h"
 #include<vector>
+#include "exception.h"
 
 using namespace std;
 
@@ -30,9 +31,9 @@ public:
 
     vector<Tuple> searchTuple(vector<int>);
 
-    void insertTuple(char *, Tuple tup, int k);
+    int insertTuple(char *, Tuple tup, int k);
 
-    void deleteTuple(int *);
+    void deleteTuple(char *, vector<int>);
 
     int checkdelete();
 

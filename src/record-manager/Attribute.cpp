@@ -14,8 +14,8 @@ Attribute::Attribute(const Attribute &attr) {
     this->type = attr.type;
     this->intData = attr.intData;
     this->floatData = attr.floatData;
-    strcpy_s(charData, attr.charData);
-    strcpy_s(rowData, attr.rowData);
+    strcpy(charData, attr.charData);
+    strcpy(rowData, attr.rowData);
 }
 
 void Attribute::getRowData()            //从attribute类中导入到rowData中
@@ -34,7 +34,7 @@ void Attribute::getRowData()            //从attribute类中导入到rowData中
         }
         case AttributeType::CHAR: {
             //dataLength另外赋值
-            strcpy_s(rowData, charData);
+            strcpy(rowData, charData);
             break;
         }
         default:
@@ -57,7 +57,7 @@ void Attribute::releaseRowData()        //从rowData导出到attribute中,并给
         }
         case AttributeType::CHAR: {
             dataLength = sizeof(rowData);
-            strcpy_s(charData, rowData);
+            strcpy(charData, rowData);
             break;
         }
         default:
