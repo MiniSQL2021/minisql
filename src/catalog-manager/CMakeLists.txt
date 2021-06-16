@@ -1,4 +1,4 @@
-add_library(catalog-manager Catalog_Manager.cpp catalogPage.cpp)
+add_library(catalog-manager Catalog_Manager.cpp catalogPage.cpp Attribute.cpp tableInfo.cpp)
 
 target_include_directories(catalog-manager PUBLIC ${CMAKE_SOURCE_DIR}/include/catalog-manager)
 target_include_directories(catalog-manager PUBLIC ${CMAKE_SOURCE_DIR}/include/record-manager)
