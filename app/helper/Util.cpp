@@ -4,6 +4,10 @@ void Util::printTable(std::vector<Tuple> tuples, TableInfo table) {
     // TODO: Table formatted output
 }
 
+void Util::printError(const string &message) {
+    std::cout << "ERROR: " << message << "." << std::endl;
+}
+
 std::set<int> Util::intersect(const std::set<int> &a, const std::vector<int> &b) {
     std::set<int> result;
     std::vector<int> sortedB = b;
