@@ -29,7 +29,7 @@ combineRangeAndPoint(const PointSet &equals, const PointSet &notEquals, const Ra
     if (equals.size() > 1 || (equals.size() == 1 && notEquals.contains(*equals.begin()))) return std::nullopt;
     if (intervals.empty()) {
         if (equals.size() == 1)
-            return ConditionList{PointCondition::equal(*equals.begin())};    // notEquals take no effect
+            return {PointCondition::equal(*equals.begin())};    // notEquals take no effect
         else {
             ConditionList result;
             for (const auto &value : notEquals) result.push_back(PointCondition::notEqual(value));
@@ -40,7 +40,12 @@ combineRangeAndPoint(const PointSet &equals, const PointSet &notEquals, const Ra
             if (!equals.empty() && !range->contains(*equals.begin()))
                 return std::nullopt;    // equal is out of the range
             else {
-                ConditionList result{*range};
+                ConditionList result;
+                if (auto singleValue = range->toSingleValue()) {
+                    // Interval only contains one single value
+                    if (notEquals.contains(*singleValue)) return std::nullopt;
+                    else return {PointCondition::equal(*singleValue)};
+                } else result.push_back(*range);
                 for (const auto &value : notEquals)
                     if (range->contains(value))    // Only when notEqual falls in the range will it take effect
                         result.push_back(PointCondition::notEqual(value));
