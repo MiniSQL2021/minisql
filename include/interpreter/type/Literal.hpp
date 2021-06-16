@@ -57,14 +57,15 @@ public:
         return stream.str();
     }
 
-    constexpr bool operator<(const Literal &that) const {
-        switch (type()) {
-            case LiteralType::Int:
-                return this->intValue() < that.intValue();
-            case LiteralType::Float:
-                return this->floatValue() < that.floatValue();
-            case LiteralType::String:
-                return this->stringValue() < that.stringValue();
-        }
-    }
+    constexpr bool operator==(const Literal &that) const { return this->value == that.value; }
+
+    constexpr bool operator!=(const Literal &that) const { return this->value != that.value; }
+
+    constexpr bool operator<(const Literal &that) const { return this->value < that.value; }
+
+    constexpr bool operator>(const Literal &that) const { return this->value > that.value; }
+
+    constexpr bool operator<=(const Literal &that) const { return this->value <= that.value; }
+
+    constexpr bool operator>=(const Literal &that) const { return this->value <= that.value; }
 };
