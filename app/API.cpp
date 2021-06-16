@@ -54,15 +54,11 @@ void API::handleCreateIndexQuery(QueryPointer<CreateIndexQuery> query) {
     }
     TableInfo table = catalogManager.getTableInfo(tableName);
     Attribute attribute = Adapter::toAttribute(table, attributeName);
-    Index index(query->tableName, attribute);
-    index.createIndex(Adapter::getIndexFilePath(query->tableName, query->columnName),
-                      Adapter::toDataType(attribute.type));
 
-    //Get all tuples and send to IndexManager
-    auto tuples = recordManager.nonConditionSelect(tableName, table);
-    for (const auto &tuple : tuples) {
-        // TODO
-    }
+    Index index(query->tableName, attribute);
+    index.createIndexWithDatas(Adapter::getIndexFilePath(query->tableName, query->columnName),
+                               Adapter::toDataType(attribute.type), table.searchAttr(attributeName),
+                               recordManager.nonConditionSelect(tableName, table));
 
     catalogManager.createIndex(tableName, attributeName, indexName);
 }
