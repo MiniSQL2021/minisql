@@ -4,7 +4,6 @@
 
 // TODO: Exception handling
 // TODO: Measure duration of each operations
-// TODO: Do performance optimization for each submodule's function invocations
 
 void API::handleCreateTableQuery(QueryPointer<CreateTableQuery> query) {
     TableInfo table = Adapter::toTableInfo(*query);
@@ -54,6 +53,12 @@ void API::handleCreateIndexQuery(QueryPointer<CreateIndexQuery> query) {
     index.createIndex(Adapter::getIndexFilePath(query->tableName, query->columnName),
                       Adapter::toDataType(attribute.type));
 
+    //Get all tuples and send to IndexManager
+    auto tuples = recordManager.nonConditionSelect(tableName, table);
+    for (const auto &tuple : tuples) {
+        // TODO
+    }
+
     catalogManager.createIndex(tableName, attributeName, indexName);
 }
 
@@ -68,7 +73,7 @@ void API::handleDropIndexQuery(QueryPointer<DropIndexQuery> query) {
         index.dropIndex(Adapter::getIndexFilePath(tableName, attributeName), Adapter::toDataType(attribute.type));
 
         catalogManager.deleteIndex(indexName);
-    } catch (...) { // Problem: Exception undefined
+    } catch (...) {
         // Index doesn't exists
     }
 }
@@ -85,10 +90,10 @@ void API::handleSelectQuery(QueryPointer<SelectQuery> query) {
 
     std::vector<Tuple> tuples;
     if (query->conditions.empty()) {
-        tuples = recordManager.nonconditionSelect(tableName, table);
+        tuples = recordManager.nonConditionSelect(tableName, table);
     } else {
         auto locations = selectTuples(table, query->conditions);
-        tuples = recordManager.searchTuple(locations);
+        tuples = recordManager.searchTuple(tableName, table, locations);
     }
     Util::printTable(tuples, table);
 }
@@ -104,10 +109,10 @@ void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
     }
 
     if (query->conditions.empty()) {
-        recordManager.deleteAllrecord(tableName);
+        recordManager.deleteAllRecord(tableName, table);
     } else {
         auto locations = selectTuples(table, query->conditions);
-        auto tuples = recordManager.searchTuple(locations);
+        auto tuples = recordManager.searchTuple(tableName, table, locations);
 
         // Delete all the selected records from all indices in the table
         for (const auto &attributeName: getAllIndexedAttributeName(table)) {
@@ -118,7 +123,7 @@ void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
                                        Adapter::toData(tuple.attr[attributeIndex]));
         }
 
-        recordManager.deleteRecord(tableName, locations);
+        recordManager.deleteRecord(tableName, locations, table);
     }
 }
 
@@ -137,9 +142,7 @@ void API::handleInsertQuery(QueryPointer<InsertQuery> query) {
         // Some attribute in the input doesn't match the actual type, or conflicts in uniqueness
     }
 
-    // Problem: RecordManager should return a location after insertion
-    int location;
-    recordManager.insertRecord(tableName, Adapter::toTuple(table, query->values), table);
+    int location = recordManager.insertRecord(tableName, Adapter::toTuple(table, query->values), table);
 
     // Update indices
     for (auto attributeIter = query->values.cbegin(); attributeIter < query->values.cend(); attributeIter++) {

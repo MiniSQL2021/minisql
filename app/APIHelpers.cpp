@@ -24,7 +24,7 @@ bool API::isConditionListValid(TableInfo &table, const std::vector<ComparisonCon
             int attributeIndex = table.searchAttr(Adapter::unsafeCStyleString(condition.columnName));
             if (Adapter::toAttributeType(condition.value.type()) != table.attrType[attributeIndex]) return false;
             return true;
-        } catch (...) {    // Problem: Exception undefined
+        } catch (const attr_does_not_exist &error) {
             return false;
         }
     });
@@ -116,17 +116,15 @@ std::vector<int> API::selectTuples(TableInfo &table, const std::vector<Compariso
 }
 
 std::vector<int> API::searchWithIndex(Index &index, const std::string &filePath, const RangeCondition &condition) {
-    std::vector<int> result;
     if (condition.lhs.isRegular() && condition.rhs.isRegular()) {
         int flag = (condition.rhs.isClose() << 1) + condition.lhs.isClose();
-        index.searchRange(filePath, Adapter::toData(*condition.lhs.value), Adapter::toData(*condition.rhs.value), flag,
-                          result);
+        return index.searchRange(filePath, Adapter::toData(*condition.lhs.value), Adapter::toData(*condition.rhs.value),
+                                 flag);
     } else if (condition.lhs.isNegativeInfinity() && condition.rhs.isRegular()) {
-        index.searchRange1(filePath, Adapter::toData(*condition.rhs.value), condition.rhs.isClose(), result);
+        return index.searchRange1(filePath, Adapter::toData(*condition.rhs.value), condition.rhs.isClose());
     } else if (condition.lhs.isRegular() && condition.rhs.isPositiveInfinity()) {
-        index.searchRange2(filePath, Adapter::toData(*condition.lhs.value), condition.lhs.isClose(), result);
+        return index.searchRange2(filePath, Adapter::toData(*condition.lhs.value), condition.lhs.isClose());
     }
-    return result;
 }
 
 std::vector<int> API::searchWithRecord(TableInfo &table, int attributeIndex, const RangeCondition &condition) {

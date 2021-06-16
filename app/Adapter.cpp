@@ -126,7 +126,6 @@ std::tuple<Data, Data> Adapter::toDataRange(const ComparisonCondition &condition
     switch (condition.binaryOperator) {
         case BinaryOpearator::LessThan:
         case BinaryOpearator::LessThanOrEqual:
-            // Problem: Another data appears empty?
             return make_tuple(Data(), toData(condition.value));
         case BinaryOpearator::GreaterThan:
         case BinaryOpearator::GreaterThanOrEqual:
