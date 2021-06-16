@@ -6,7 +6,6 @@
 #include "buffer_manager.h"
 #include "Tree.h"
 
-
 struct Data {
     int type;
     int datai;
@@ -52,11 +51,17 @@ public :
     //异常：
     void deleteIndexByKey(std::string file_path, Data data);
 
+    void clearIndex(std::string file_path, int type);
+
     //输入：Index文件名(路径)，索引的key1(包含类型)，索引的key2(包含类型)，返回的index_in_records数组
     //输出：void
     //功能：范围查找，返回一定范围内的index_in_record
     //异常：
-    void searchRange(std::string file_path, Data data1, Data data2, std::vector<int> &index_in_records);
+    void searchRange(std::string file_path, Data data1, Data data2, int flag, std::vector<int> &index_in_records);
+
+    void searchRange1(std::string file_path, Data data, int flag, std::vector<int> &index_in_records);
+
+    void searchRange2(std::string file_path, Data data, int flag, std::vector<int> &index_in_records);
 
 private:
     typedef std::map<std::string, Tree<int> *> intMap;
@@ -70,7 +75,6 @@ private:
     intMap indexIntMap;
     stringMap indexStringMap;
     floatMap indexFloatMap;
-
 
     //计算B+树适合的degree
     int getDegree(int type);

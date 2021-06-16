@@ -29,7 +29,7 @@ public:
 
     void writeRowData(char *pageRowData);    //写入rowdata；
     void readRowData(char *RowData, TableInfo);     //同时对上层与下层
-    void setTuple(int attrnum, char **rowdata, TableInfo tbif);
+    void setTuple(int attrnum, std::vector<Attribute>, TableInfo tbif);
 };
 
 #endif // !tuple_hpp

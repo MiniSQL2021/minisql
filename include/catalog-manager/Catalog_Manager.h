@@ -37,7 +37,7 @@ public:
     //参数：表名，属性名；检查该属性上是否有Index
     //table_does_not_exist
     //attr_does_not_exist
-    string searchIndex(char *);
+    std::pair<char *, char *> searchIndex(char *);
 
     //参数：IndexName；返回值：“表名 /n 属性名”
     //index_does_not_exist

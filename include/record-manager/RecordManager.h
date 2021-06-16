@@ -36,9 +36,9 @@ public:
 
     //参数：表名，属性序号（用catalog'的getattrNo），算数比较符，比较值, tbif
     vector<Tuple> nonconditionSelect(char *, TableInfo tbif);                       //参数：表名,存放数组，tableinfo；返回全部tuple
-    vector<Tuple> searchTuple(vector<Tuple>);
+    vector<Tuple> searchTuple(const vector<int> &);
 
-    bool checkUnique(char *tablename, char *attr,
+    bool checkUnique(char *tablename, int attrno, Attribute attr,
                      TableInfo tbif);                            //参数：attrno由catalog中的checkattrno得到
 
 };
