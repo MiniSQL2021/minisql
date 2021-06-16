@@ -4,7 +4,7 @@ if [ "$#" -ne 1 ] || ! [ -r "$1" ]; then
   exit 1
 fi
 
-x=$(file -bi $1 | grep 'utf' | wc -l)
+x=$(file -I $1 | grep 'utf' | wc -l)
 if [ $x -eq 1 ]; then
   echo "$1 already converted"
 else
