@@ -1,6 +1,5 @@
 #pragma once
 
-#include <utility>
 #include <set>
 
 #include "Interpreter.hpp"
@@ -8,6 +7,7 @@
 #include "Catalog_Manager.h"
 #include "RecordManager.h"
 #include "Index.h"
+#include "Condition.h"
 
 class API {
 public:
@@ -43,6 +43,14 @@ private:
     static bool isConditionListValid(TableInfo &table, const std::vector<ComparisonCondition> &conditions);
 
     bool isInsertingValueValid(TableInfo &table, const std::vector<Literal> &literals);
+
+    static std::vector<int> searchWithIndex(Index &index, const std::string &filePath, const RangeCondition &condition);
+
+    std::vector<int> searchGreaterThanWithRecord(TableInfo &table, int attributeIndex, const LiteralIntervalBound &lhs);
+
+    std::vector<int> searchLessThanWithRecord(TableInfo &table, int attributeIndex, const LiteralIntervalBound &rhs);
+
+    std::vector<int> searchWithRecord(TableInfo &table, int attributeIndex, const RangeCondition &condition);
 
     std::vector<int> selectTuples(TableInfo &table, const std::vector<ComparisonCondition> &conditions);
 };

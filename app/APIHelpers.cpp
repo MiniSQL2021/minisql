@@ -45,55 +45,112 @@ bool API::isInsertingValueValid(TableInfo &table, const std::vector<Literal> &va
     return true;
 }
 
-void updateLocationSet(std::set<int> &set, int location, bool &isFirstCondition) {
+void intersectWithSet(std::set<int> &set, const std::vector<int> &locations, bool &isFirstCondition) {
     if (isFirstCondition) {
         isFirstCondition = false;
-        set = {location};
-    } else
-        set = Util::intersect(set, {location});
+        set = std::set<int>(locations.cbegin(), locations.cend());
+    } else set = Util::intersect(set, locations);
 }
 
-void updateLocationSet(std::set<int> &set, const std::vector<int> &locations, bool &isFirstCondition) {
+void intersectWithSet(std::set<int> &set, int location, bool &isFirstCondition) {
     if (isFirstCondition) {
         isFirstCondition = false;
-        set = {locations.cbegin(), locations.cend()};
-    } else
-        set = Util::intersect(set, locations);
+        set = std::set<int>{location};
+    } else if (!set.contains(location)) set.clear();
+}
+
+void removeFromSet(std::set<int> &set, int location, bool &isFirstCondition) {
+    if (isFirstCondition) {
+        isFirstCondition = false;
+        set = std::set<int>{};
+    } else set.erase(location);
 }
 
 std::vector<int> API::selectTuples(TableInfo &table, const std::vector<ComparisonCondition> &conditions) {
-    std::set<int> locationSet;
+    std::set<int> set;
     bool isFirstCondition = true;
 
-    for (const auto &condition: conditions) {
-        int attributeIndex = table.searchAttr(Adapter::unsafeCStyleString(condition.columnName));
+    auto conditionListMap = combineConditions(conditions);
+
+    for (const auto &[name, conditionList]: conditionListMap) {
+        if (!conditionList) return {};
+        int attributeIndex = table.searchAttr(Adapter::unsafeCStyleString(name));
 
         if (table.hasIndex[attributeIndex]) {
-            Index index(table.TableName, Adapter::toAttribute(table, condition.columnName));
-            if (condition.binaryOperator == BinaryOpearator::Equal ||
-                condition.binaryOperator == BinaryOpearator::NotEqual) {
-                int location = index.findIndex(Adapter::getIndexFilePath(table.TableName, condition.columnName),
-                                               Adapter::toData(condition.value));
-                updateLocationSet(locationSet, location, isFirstCondition);
-                if (locationSet.empty()) return {};
-            } else {
-                auto[leftValue, rightValue] = Adapter::toDataRange(condition);
-                std::vector<int> locations;
-                // Problem: Handle equal or not equal
-                index.searchRange(Adapter::getIndexFilePath(table.TableName, condition.columnName), leftValue,
-                                  rightValue, locations);
-                updateLocationSet(locationSet, locations, isFirstCondition);
-                if (locationSet.empty()) return {};
+
+            Index index(table.TableName, Adapter::toAttribute(table, name));
+            auto filePath = Adapter::getIndexFilePath(table.TableName, name);
+
+            for (const auto &condition : *conditionList) {
+                if (auto pointCondition = std::get_if<PointCondition>(&condition)) {
+                    int location = index.findIndex(filePath, Adapter::toData(pointCondition->value));
+
+                    if (pointCondition->isEqual()) intersectWithSet(set, location, isFirstCondition);
+                    else removeFromSet(set, location, isFirstCondition);
+                } else if (auto rangeCondition = std::get_if<RangeCondition>(&condition)) {
+                    auto locations = searchWithIndex(index, filePath, *rangeCondition);
+                    intersectWithSet(set, locations, isFirstCondition);
+                }
+                if (set.empty()) return {};
             }
+
         } else {
-            char *operatorString = Adapter::toOperatorString(condition.binaryOperator);
-            Attribute value = Adapter::toAttribute(condition.value);
-            auto locations = recordManager.conditionSelect(table.TableName, attributeIndex, operatorString, value,
-                                                           table);
-            delete operatorString;
-            updateLocationSet(locationSet, locations, isFirstCondition);
-            if (locationSet.empty()) return {};
+
+            for (const auto &condition : *conditionList) {
+                if (auto pointCondition = std::get_if<PointCondition>(&condition)) {
+                    std::string operatorString = pointCondition->isEqual() ? "==" : "!=";
+                    auto locations = recordManager.conditionSelect(table.TableName, attributeIndex,
+                                                                   Adapter::unsafeCStyleString(operatorString),
+                                                                   Adapter::toAttribute(pointCondition->value), table);
+                    intersectWithSet(set, locations, isFirstCondition);
+                } else if (auto rangeCondition = std::get_if<RangeCondition>(&condition)) {
+                    auto locations = searchWithRecord(table, attributeIndex, *rangeCondition);
+                    intersectWithSet(set, locations, isFirstCondition);
+                }
+                if (set.empty()) return {};
+            }
+
         }
     }
-    return {locationSet.cbegin(), locationSet.cend()};
+
+    return {set.cbegin(), set.cend()};
+}
+
+std::vector<int> API::searchWithIndex(Index &index, const std::string &filePath, const RangeCondition &condition) {
+    std::vector<int> result;
+    if (condition.lhs.isRegular() && condition.rhs.isRegular()) {
+        int flag = (condition.rhs.isClose() << 1) + condition.lhs.isClose();
+        index.searchRange(filePath, Adapter::toData(*condition.lhs.value), Adapter::toData(*condition.rhs.value), flag,
+                          result);
+    } else if (condition.lhs.isNegativeInfinity() && condition.rhs.isRegular()) {
+        index.searchRange1(filePath, Adapter::toData(*condition.rhs.value), condition.rhs.isClose(), result);
+    } else if (condition.lhs.isRegular() && condition.rhs.isPositiveInfinity()) {
+        index.searchRange2(filePath, Adapter::toData(*condition.lhs.value), condition.lhs.isClose(), result);
+    }
+    return result;
+}
+
+std::vector<int> API::searchWithRecord(TableInfo &table, int attributeIndex, const RangeCondition &condition) {
+    if (condition.lhs.isRegular() && condition.rhs.isRegular()) {
+        auto set = Util::intersect(searchLessThanWithRecord(table, attributeIndex, condition.rhs),
+                                   searchGreaterThanWithRecord(table, attributeIndex, condition.lhs));
+        return {set.cbegin(), set.cend()};
+    } else if (condition.lhs.isNegativeInfinity() && condition.rhs.isRegular()) {
+        return searchLessThanWithRecord(table, attributeIndex, condition.rhs);
+    } else if (condition.lhs.isRegular() && condition.rhs.isPositiveInfinity()) {
+        return searchGreaterThanWithRecord(table, attributeIndex, condition.lhs);
+    }
+}
+
+std::vector<int> API::searchLessThanWithRecord(TableInfo &table, int attributeIndex, const LiteralIntervalBound &rhs) {
+    std::string operatorString = rhs.isClose() ? "<=" : "<";
+    return recordManager.conditionSelect(table.TableName, attributeIndex, Adapter::unsafeCStyleString(operatorString),
+                                         Adapter::toAttribute(*rhs.value), table);
+}
+
+std::vector<int>
+API::searchGreaterThanWithRecord(TableInfo &table, int attributeIndex, const LiteralIntervalBound &lhs) {
+    std::string operatorString = lhs.isClose() ? ">=" : ">";
+    return recordManager.conditionSelect(table.TableName, attributeIndex, Adapter::unsafeCStyleString(operatorString),
+                                         Adapter::toAttribute(*lhs.value), table);
 }
