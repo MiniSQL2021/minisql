@@ -5,6 +5,7 @@
 #include <map>
 #include "buffer_manager.h"
 #include "Tree.h"
+#include"tuple.h"
 
 struct Data {
     int type;
@@ -26,6 +27,8 @@ public :
     //功能：创建索引文件及B+树
     //异常：
     void createIndex(std::string file_path, int type);
+
+    void createIndexWithDatas(std::string file_path, int type, int n, vector<Tuple> datasTuple);
 
     //输入：Index文件名(路径)，索引的key的类型
     //输出：void
