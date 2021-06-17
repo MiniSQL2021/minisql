@@ -4,8 +4,10 @@ FetchContent_Declare(
         GIT_TAG v2.13.1)
 FetchContent_MakeAvailable(Catch2)
 
-add_executable(Catch2_tests test.cpp)
+add_executable(catch-test test.cpp)
 
-target_compile_features(Catch2_tests PRIVATE cxx_std_20)
+target_include_directories(catch-test PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
-target_link_libraries(Catch2_tests PRIVATE api interpreter Catch2::Catch2)
+target_compile_features(catch-test PRIVATE cxx_std_20)
+
+target_link_libraries(catch-test PRIVATE api-util Catch2::Catch2)
