@@ -7,7 +7,7 @@
 - `include` folder contains header files of all modules. These header files are meant to be shared across modules.
 - `src` folder contains source files of modules. Each module is placed in a subfolder and targets a library, with its
   own `CMakeLists.txt`.
-- `app` folder contains source files of main executable and the `API` module.
+- `app` folder contains source files of main executable.
 - `test` folder contains source files of tests.
 - `cmake` folder contains CMake config for building external packages.
 - `script` folder contains utility scripts.
@@ -16,6 +16,10 @@
 
 - [API](docs/API.md)
 - [Interpreter](docs/Interpreter.md)
+- Catalog Manager
+- Record Manager
+- Index Manager
+- Buffer Manager
 
 ## Build
 
