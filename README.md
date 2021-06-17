@@ -42,6 +42,13 @@ test:
 This project which serves as a coursework of _Database System Principle_ fully belongs
 to [@frothywater](http://github.com/frothywater) and his teammates.
 
+## Dependencies
+
+- [Catch2](https://github.com/catchorg/Catch2): A modern, C++-native, header-only, test framework for unit-tests, TDD
+  and BDD
+- [ANTLR4](https://github.com/antlr/antlr4): ANother Tool for Language Recognition
+- [Tabulate](https://github.com/p-ranav/tabulate): Table Maker for Modern C++
+
 ## License
 
 GNU GPLv3.
