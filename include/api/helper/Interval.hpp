@@ -119,7 +119,7 @@ private:
 
     std::optional<Interval<T>> intersect(const Interval<T> &that) const {
         // Lhs of this should be less than that
-        if (!this->lhsLessThan(that)) return that.intersect(*this);
+        if (that.lhsLessThan(*this)) return that.intersect(*this);
 
         if (this->rhs < that.lhs) return std::nullopt;                          // No overlap
         if (this->rhs == that.lhs) {
