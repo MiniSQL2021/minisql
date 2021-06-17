@@ -1,9 +1,11 @@
+#include <chrono>
+
 #include "Interpreter.hpp"
-#include "Queries.hpp"
-#include "QueryParser.hpp"
-#include "SQLLexer.h"
-#include "SQLParser.h"
-#include "SyntaxErrorListener.hpp"
+#include "query/Queries.hpp"
+#include "parser/QueryParser.hpp"
+#include "parser/SyntaxErrorListener.hpp"
+#include "antlr/SQLLexer.h"
+#include "antlr/SQLParser.h"
 
 template<typename Derived, typename Base, typename Del>
 std::unique_ptr<Derived, Del> dynamic_unique_ptr_cast(std::unique_ptr<Base, Del> &p);
@@ -71,7 +73,17 @@ void Interpreter::parse(std::istream &stream) {
     SQLParser::QueryContext *tree;
     while (!parser.isMatchedEOF()) {
         tree = parser.query();
-        handleQuery(QueryParser::parse(tree));
+        auto result = QueryParser::parse(tree);
+
+        auto start = std::chrono::steady_clock::now();
+        handleQuery(std::move(result));
+        auto end = std::chrono::steady_clock::now();
+
+        // If query is handled without exception, print duration of the operation
+        auto durationInMilliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+        std::cout << "(" << std::setprecision(2) << std::fixed
+                  << static_cast<double>(durationInMilliseconds.count()) / 1000.0
+                  << " sec)" << std::endl;
     }
 }
 

@@ -5,8 +5,8 @@
 #include "../../catalog-manager/Catalog_Manager.h"
 #include "../../record-manager/RecordManager.h"
 
-namespace Util {
-    void printTable(std::vector<Tuple> tuples, TableInfo table);
+namespace API_Util {
+    void printTable(const std::vector<Tuple> &tuples, const TableInfo &table);
 
     void printError(const std::string &message);
 

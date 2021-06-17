@@ -2,12 +2,10 @@
 #include "Adapter.hpp"
 #include "API_Util.hpp"
 
-// TODO: Measure duration of each operations
-
-void API::handleCreateTableQuery(QueryPointer <CreateTableQuery> query) {
+void API::handleCreateTableQuery(QueryPointer<CreateTableQuery> query) {
     TableInfo table = Adapter::toTableInfo(*query);
     if (catalogManager.checkTable(table.TableName)) {
-        Util::printError("Table already exists");
+        API_Util::printError("Table already exists");
         return;
     }
 
@@ -15,10 +13,10 @@ void API::handleCreateTableQuery(QueryPointer <CreateTableQuery> query) {
     catalogManager.createTable(table);
 }
 
-void API::handleDropTableQuery(QueryPointer <DropTableQuery> query) {
+void API::handleDropTableQuery(QueryPointer<DropTableQuery> query) {
     char *tableName = Adapter::unsafeCStyleString(query->tableName);
     if (!catalogManager.checkTable(tableName)) {
-        Util::printError("Table doesn't exist");
+        API_Util::printError("Table doesn't exist");
         return;
     }
 
@@ -32,24 +30,24 @@ void API::handleDropTableQuery(QueryPointer <DropTableQuery> query) {
     catalogManager.dropTable(tableName);
 }
 
-void API::handleCreateIndexQuery(QueryPointer <CreateIndexQuery> query) {
+void API::handleCreateIndexQuery(QueryPointer<CreateIndexQuery> query) {
     char *tableName = Adapter::unsafeCStyleString(query->tableName);
     char *attributeName = Adapter::unsafeCStyleString(query->columnName);
     char *indexName = Adapter::unsafeCStyleString(query->indexName);
     if (!catalogManager.checkTable(tableName)) {
-        Util::printError("Table doesn't exist");
+        API_Util::printError("Table doesn't exist");
         return;
     }
     if (!catalogManager.checkAttr(tableName, attributeName)) {
-        Util::printError("Attribute doesn't exist");
+        API_Util::printError("Attribute doesn't exist");
         return;
     }
     if (!catalogManager.checkUnique(tableName, attributeName)) {
-        Util::printError("Attribute is not unique");
+        API_Util::printError("Attribute is not unique");
         return;
     }
     if (catalogManager.checkIndex(tableName, attributeName)) {
-        Util::printError("Index already exists");
+        API_Util::printError("Index already exists");
         return;
     }
     TableInfo table = catalogManager.getTableInfo(tableName);
@@ -63,7 +61,7 @@ void API::handleCreateIndexQuery(QueryPointer <CreateIndexQuery> query) {
     catalogManager.createIndex(tableName, attributeName, indexName);
 }
 
-void API::handleDropIndexQuery(QueryPointer <DropIndexQuery> query) {
+void API::handleDropIndexQuery(QueryPointer<DropIndexQuery> query) {
     try {
         char *indexName = Adapter::unsafeCStyleString(query->indexName);
         auto[tableName, attributeName] = catalogManager.searchIndex(indexName);
@@ -75,41 +73,41 @@ void API::handleDropIndexQuery(QueryPointer <DropIndexQuery> query) {
 
         catalogManager.deleteIndex(indexName);
     } catch (const index_does_not_exist &error) {
-        Util::printError("Index doesn't exists");
+        API_Util::printError("Index doesn't exists");
     }
 }
 
-void API::handleSelectQuery(QueryPointer <SelectQuery> query) {
+void API::handleSelectQuery(QueryPointer<SelectQuery> query) {
     char *tableName = Adapter::unsafeCStyleString(query->tableName);
     if (!catalogManager.checkTable(tableName)) {
-        Util::printError("Table doesn't exist");
+        API_Util::printError("Table doesn't exist");
         return;
     }
     TableInfo table = catalogManager.getTableInfo(tableName);
     if (!isConditionListValid(table, query->conditions)) {
-        Util::printError("Some attribute in the input doesn't exist, or the type doesn't match the actual type");
+        API_Util::printError("Some attribute in the input doesn't exist, or the type doesn't match the actual type");
         return;
     }
 
-    std::vector <Tuple> tuples;
+    std::vector<Tuple> tuples;
     if (query->conditions.empty()) {
         tuples = recordManager.nonConditionSelect(tableName, table);
     } else {
         auto locations = selectTuples(table, query->conditions);
         tuples = recordManager.searchTuple(tableName, table, locations);
     }
-    Util::printTable(tuples, table);
+    API_Util::printTable(tuples, table);
 }
 
-void API::handleDeleteQuery(QueryPointer <DeleteQuery> query) {
+void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
     char *tableName = Adapter::unsafeCStyleString(query->tableName);
     if (!catalogManager.checkTable(tableName)) {
-        Util::printError("Table doesn't exist");
+        API_Util::printError("Table doesn't exist");
         return;
     }
     TableInfo table = catalogManager.getTableInfo(tableName);
     if (!isConditionListValid(table, query->conditions)) {
-        Util::printError("Some attribute in the input doesn't exist, or the type doesn't match the actual type");
+        API_Util::printError("Some attribute in the input doesn't exist, or the type doesn't match the actual type");
         return;
     }
 
@@ -132,21 +130,21 @@ void API::handleDeleteQuery(QueryPointer <DeleteQuery> query) {
     }
 }
 
-void API::handleInsertQuery(QueryPointer <InsertQuery> query) {
+void API::handleInsertQuery(QueryPointer<InsertQuery> query) {
     char *tableName = Adapter::unsafeCStyleString(query->tableName);
     if (!catalogManager.checkTable(tableName)) {
-        Util::printError("Table doesn't exist");
+        API_Util::printError("Table doesn't exist");
         return;
     }
 
     TableInfo table = catalogManager.getTableInfo(tableName);
     // Check if valid
     if (query->values.size() != table.attrNum) {
-        Util::printError("The number of attributes doesn't match");
+        API_Util::printError("The number of attributes doesn't match");
         return;
     }
     if (!isInsertingValueValid(table, query->values)) {
-        Util::printError("Some attribute in the input doesn't match the actual type, or conflicts in uniqueness");
+        API_Util::printError("Some attribute in the input doesn't match the actual type, or conflicts in uniqueness");
         return;
     }
 
@@ -164,7 +162,8 @@ void API::handleInsertQuery(QueryPointer <InsertQuery> query) {
     }
 }
 
-void API::listen() {
+// For convenience to testing
+void API::registerEvents() {
     interpreter.onCreateTableQuery([this](auto query) { handleCreateTableQuery(std::move(query)); });
     interpreter.onDropTableQuery([this](auto query) { handleDropTableQuery(std::move(query)); });
     interpreter.onCreateIndexQuery([this](auto query) { handleCreateIndexQuery(std::move(query)); });
@@ -172,5 +171,10 @@ void API::listen() {
     interpreter.onSelectQuery([this](auto query) { handleSelectQuery(std::move(query)); });
     interpreter.onInsertQuery([this](auto query) { handleInsertQuery(std::move(query)); });
     interpreter.onDeleteQuery([this](auto query) { handleDeleteQuery(std::move(query)); });
+}
+
+// Register events and listen on stdin
+void API::listen() {
+    registerEvents();
     interpreter.listen();
 }

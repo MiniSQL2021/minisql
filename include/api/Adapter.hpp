@@ -37,4 +37,6 @@ namespace Adapter {
     std::string getIndexFilePath(const std::string &tableName, const std::string &attributeName);
 
     int toDataType(AttributeType type);
+
+    std::string toString(Attribute attribute);
 }

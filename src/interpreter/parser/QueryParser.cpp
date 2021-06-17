@@ -1,7 +1,7 @@
 #include <memory>
 
-#include "QueryParser.hpp"
-#include "Query.hpp"
+#include "parser/QueryParser.hpp"
+#include "query/Query.hpp"
 
 std::unique_ptr<Query> QueryParser::parse(SQLParser::QueryContext *ctx) {
     if (ctx->statement()) {

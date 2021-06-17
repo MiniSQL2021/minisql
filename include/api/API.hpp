@@ -16,11 +16,14 @@
 
 class API {
 public:
-    API(Interpreter &interpreter, BufferManager &bufferManager, CatalogManager &catalogManager,
-        RecordManager &recordManager) : interpreter(interpreter), catalogManager(catalogManager),
-                                        recordManager(recordManager) {};
+    API(Interpreter &interpreter, CatalogManager &catalogManager, RecordManager &recordManager) :
+            interpreter(interpreter), catalogManager(catalogManager), recordManager(recordManager) {};
 
     void listen();
+
+    void registerEvents();
+
+    void directlyInput(const std::string &query);
 
     void handleCreateTableQuery(QueryPointer<CreateTableQuery> query);
 

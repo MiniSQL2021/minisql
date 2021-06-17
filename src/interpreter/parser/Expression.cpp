@@ -1,6 +1,6 @@
-#include "Column.hpp"
-#include "ComparisonCondition.hpp"
-#include "QueryParser.hpp"
+#include "type/Column.hpp"
+#include "type/ComparisonCondition.hpp"
+#include "parser/QueryParser.hpp"
 
 Column QueryParser::parseColumnElement(SQLParser::ColumnElementContext *ctx) {
     std::string columnName = parseIdentifier(ctx->columnName);

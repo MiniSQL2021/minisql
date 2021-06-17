@@ -10,6 +10,7 @@ add_library(interpreter Interpreter.cpp
         util/Util.cpp)
 
 target_include_directories(interpreter PRIVATE ${CMAKE_SOURCE_DIR}/include/interpreter)
+target_include_directories(interpreter PRIVATE ${CMAKE_SOURCE_DIR}/include/interpreter/antlr)
 target_include_directories(interpreter PRIVATE ${ANTLR4_INCLUDE_DIRS})
 
 target_link_libraries(interpreter PRIVATE antlr4_static)
