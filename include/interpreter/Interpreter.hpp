@@ -27,6 +27,8 @@ public:
 
     void onDeleteQuery(QueryHandler<DeleteQuery> handler) { deleteQueryHandler = std::move(handler); }
 
+    void parse(std::istream &stream);
+
 private:
     QueryHandler<CreateTableQuery> createTableQueryHandler;
     QueryHandler<DropTableQuery> dropTableQueryHandler;
@@ -35,8 +37,6 @@ private:
     QueryHandler<SelectQuery> selectQueryHandler;
     QueryHandler<InsertQuery> insertQueryHandler;
     QueryHandler<DeleteQuery> deleteQueryHandler;
-
-    void parse(std::istream &stream);
 
     void handleQuery(std::unique_ptr<Query> query);
 
