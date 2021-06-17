@@ -48,7 +48,7 @@ void intersectWithSet(std::set<int> &set, const std::vector<int> &locations, boo
     if (isFirstCondition) {
         isFirstCondition = false;
         set = std::set<int>(locations.cbegin(), locations.cend());
-    } else set = Util::intersect(set, locations);
+    } else set = API_Util::intersect(set, locations);
 }
 
 void intersectWithSet(std::set<int> &set, int location, bool &isFirstCondition) {
@@ -129,8 +129,8 @@ std::vector<int> API::searchWithIndex(Index &index, const std::string &filePath,
 
 std::vector<int> API::searchWithRecord(TableInfo &table, int attributeIndex, const RangeCondition &condition) {
     if (condition.lhs.isRegular() && condition.rhs.isRegular()) {
-        auto set = Util::intersect(searchLessThanWithRecord(table, attributeIndex, condition.rhs),
-                                   searchGreaterThanWithRecord(table, attributeIndex, condition.lhs));
+        auto set = API_Util::intersect(searchLessThanWithRecord(table, attributeIndex, condition.rhs),
+                                       searchGreaterThanWithRecord(table, attributeIndex, condition.lhs));
         return {set.cbegin(), set.cend()};
     } else if (condition.lhs.isNegativeInfinity() && condition.rhs.isRegular()) {
         return searchLessThanWithRecord(table, attributeIndex, condition.rhs);

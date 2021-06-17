@@ -38,7 +38,7 @@ attrStruct Adapter::toAttrStruct(const Column &column) {
 
 TableInfo Adapter::toTableInfo(const CreateTableQuery &query) {
     TableInfo result;
-    std::vector <attrStruct> attributes;
+    std::vector<attrStruct> attributes;
     for (const auto &column : query.columns) attributes.push_back(toAttrStruct(column));
 
     result.setTableInfo(Adapter::unsafeCStyleString(query.tableName), Adapter::unsafeCStyleString(query.primaryKey),
@@ -122,7 +122,7 @@ Data Adapter::toData(const Attribute &attribute) {
     return result;
 }
 
-std::tuple <Data, Data> Adapter::toDataRange(const ComparisonCondition &condition) {
+std::tuple<Data, Data> Adapter::toDataRange(const ComparisonCondition &condition) {
     switch (condition.binaryOperator) {
         case BinaryOpearator::LessThan:
         case BinaryOpearator::LessThanOrEqual:
@@ -161,8 +161,8 @@ char *Adapter::toOperatorString(BinaryOpearator op) {
     return dynamicCStyleString(str);
 }
 
-Tuple Adapter::toTuple(TableInfo &table, const std::vector <Literal> &literals) {
-    std::vector <Attribute> attributes;
+Tuple Adapter::toTuple(TableInfo &table, const std::vector<Literal> &literals) {
+    std::vector<Attribute> attributes;
     for (const auto &literal : literals) attributes.push_back(toAttribute(literal));
     Tuple result;
     result.setTuple(static_cast<int>(attributes.size()), attributes, table);
@@ -184,5 +184,18 @@ int Adapter::toDataType(AttributeType type) {
         case AttributeType::UNDEFINE:
             // Unreachable
             return -1;
+    }
+}
+
+std::string Adapter::toString(Attribute attribute) {
+    switch (attribute.type) {
+        case AttributeType::INT:
+            return std::to_string(attribute.intData);
+        case AttributeType::FLOAT:
+            return std::to_string(attribute.floatData);
+        case AttributeType::CHAR:
+            return std::string(attribute.charData);
+        case AttributeType::UNDEFINE:
+            return "";
     }
 }

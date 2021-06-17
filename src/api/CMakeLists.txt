@@ -1,5 +1,5 @@
 add_library(api API.cpp Adapter.cpp APIHelpers.cpp
-        helper/Util.cpp helper/Condition.cpp
+        helper/API_Util.cpp helper/Condition.cpp
         ${CMAKE_SOURCE_DIR}/include/api/helper/Interval.hpp)
 
 add_library(api-util helper/Condition.cpp ${CMAKE_SOURCE_DIR}/include/api/helper/Interval.hpp)
