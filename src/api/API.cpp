@@ -2,8 +2,6 @@
 #include "Adapter.hpp"
 #include "API_Util.hpp"
 
-// TODO: Measure duration of each operations
-
 void API::handleCreateTableQuery(QueryPointer<CreateTableQuery> query) {
     TableInfo table = Adapter::toTableInfo(*query);
     if (catalogManager.checkTable(table.TableName)) {
