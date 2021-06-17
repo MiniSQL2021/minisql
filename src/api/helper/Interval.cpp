@@ -4,27 +4,26 @@
 #include "Interval.hpp"
 
 template<typename T>
-constexpr bool IntervalBound<T>::operator<(const IntervalBound <T> &that) {
+constexpr bool IntervalBound<T>::operator<(const IntervalBound<T> &that) {
     return (this->isNegativeInfinity() && !that.isNegativeInfinity()) ||
            (!this->isPositiveInfinity() && that.isPositiveInfinity()) ||
            (this->isRegular() && that.isRegular() && this->value < that.value);
 }
 
 template<typename T>
-constexpr bool IntervalBound<T>::operator==(const IntervalBound <T> &that) {
+constexpr bool IntervalBound<T>::operator==(const IntervalBound<T> &that) {
     return this->numberType == that.numberType && this->value == that.value;
 }
 
 template<typename T>
-constexpr bool Interval<T>::lhsLessThan(const Interval <T> &that) {
+constexpr bool Interval<T>::lhsLessThan(const Interval<T> &that) const {
     return this->lhs < that.lhs ||
            (this->lhs.isRegular() && that.rhs.isRegular() && this->lhs.value == that.lhs.value && this->lhs.isClose() &&
             that.lhs.isOpen());
 }
 
-template<typename T> constexpr std::optional<Interval < T>>
-
-Interval<T>::intersect(const Interval <T> &that) const {
+template<typename T>
+constexpr std::optional<Interval<T>> Interval<T>::intersect(const Interval<T> &that) {
     // Lhs of this should be less than that
     if (!this->lhsLessThan(that)) return that.intersect(this);
 
@@ -44,52 +43,21 @@ Interval<T>::intersect(const Interval <T> &that) const {
     return that;                                                            // Contain
 }
 
-template<typename T> std::optional<Interval < T>>
+template<typename T>
+std::optional<Interval<T>> Interval<T>::intersect(const std::vector<Interval<T>> &intervals) {
+    if (intervals.empty()) return std::nullopt;
 
-Interval<T>::intersect(const std::vector<Interval < T>>
+    auto sortedIntervals = intervals;
+    std::sort(sortedIntervals.begin(), sortedIntervals.end(),
+              [](Interval<T> a, Interval<T> b) { return a.lhsLessThan(b); });
 
-&intervals) {
-if (intervals.
-
-empty()
-
-) return
-std::nullopt;
-
-auto sortedIntervals = intervals;
-std::sort(sortedIntervals
-.
-
-begin(), sortedIntervals
-
-.
-
-end(),
-
-[](
-Interval <T> a, Interval<T>
-b) {
-return a.
-lhsLessThan(b);
-});
-
-auto result = sortedIntervals.front();
-for (
-auto intervalIter = sortedIntervals.cbegin() + 1;
-intervalIter<sortedIntervals.
-
-cend();
-
-intervalIter++) {
-if (
-auto intersectResult = result.intersect(*intervalIter)
-)
-result = intersectResult;
-else return
-std::nullopt;
-}
-return
-result;
+    auto result = sortedIntervals.front();
+    for (auto intervalIter = sortedIntervals.cbegin() + 1; intervalIter < sortedIntervals.cend(); intervalIter++) {
+        if (auto intersectResult = result.intersect(*intervalIter))
+            result = intersectResult;
+        else return std::nullopt;
+    }
+    return result;
 }
 
 template<typename T>
