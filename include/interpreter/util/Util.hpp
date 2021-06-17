@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Queries.hpp"
-#include "Literal.hpp"
-#include "BinaryOperator.hpp"
+#include "../query/Queries.hpp"
+#include "../type/Literal.hpp"
+#include "../type/BinaryOperator.hpp"
 
 namespace util {
     std::string literalTypeString(const LiteralType &type);

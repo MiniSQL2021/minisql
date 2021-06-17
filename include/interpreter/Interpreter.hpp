@@ -1,12 +1,13 @@
 #pragma once
 
-#include "Queries.hpp"
+#include "query/Queries.hpp"
+#include "type/BinaryOperator.hpp"
+#include "type/Column.hpp"
+#include "type/ComparisonCondition.hpp"
+#include "type/Literal.hpp"
 
-template<typename T>
-using QueryPointer = std::unique_ptr<T, std::default_delete<Query>>;
-template<typename T>
-using QueryHandler = std::function<void(QueryPointer<T>)>;
-
+template<typename T> using QueryPointer = std::unique_ptr<T, std::default_delete<Query>>;
+template<typename T> using QueryHandler = std::function<void(QueryPointer<T>)>;
 
 class Interpreter {
 public:

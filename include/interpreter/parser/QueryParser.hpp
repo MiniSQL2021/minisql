@@ -2,11 +2,11 @@
 
 #include <string>
 
-#include "Column.hpp"
-#include "ComparisonCondition.hpp"
-#include "Queries.hpp"
-#include "Query.hpp"
-#include "SQLParser.h"
+#include "../type/Column.hpp"
+#include "../type/ComparisonCondition.hpp"
+#include "../query/Queries.hpp"
+#include "../query/Query.hpp"
+#include "../antlr/SQLParser.h"
 
 struct QueryParser {
     static std::unique_ptr<Query> parse(SQLParser::QueryContext *ctx);
