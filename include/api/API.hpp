@@ -21,6 +21,10 @@ public:
 
     void listen();
 
+    void registerEvents();
+
+    void directlyInput(const std::string &query);
+
     void handleCreateTableQuery(QueryPointer<CreateTableQuery> query);
 
     void handleDropTableQuery(QueryPointer<DropTableQuery> query);

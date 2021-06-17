@@ -2,8 +2,8 @@
 #include "Adapter.hpp"
 #include "API_Util.hpp"
 
-std::vector <std::string> API::getAllIndexedAttributeName(const TableInfo &table) {
-    std::vector <std::string> result;
+std::vector<std::string> API::getAllIndexedAttributeName(const TableInfo &table) {
+    std::vector<std::string> result;
     for (int i = 0; i < table.attrNum; i++)
         if (table.hasIndex[i]) result.emplace_back(table.attrName[i]);
     return result;
@@ -18,7 +18,7 @@ void API::dropIndex(TableInfo &table, const std::string &attributeName) {
 
 // Check 1) if some attribute name in the condition list doesn't exist
 //       2) if type of some value in the condition list doesn't match the actual type
-bool API::isConditionListValid(TableInfo &table, const std::vector <ComparisonCondition> &conditions) {
+bool API::isConditionListValid(TableInfo &table, const std::vector<ComparisonCondition> &conditions) {
     return std::all_of(conditions.begin(), conditions.end(), [&](auto condition) {
         try {
             int attributeIndex = table.searchAttr(Adapter::unsafeCStyleString(condition.columnName));
@@ -32,7 +32,7 @@ bool API::isConditionListValid(TableInfo &table, const std::vector <ComparisonCo
 
 // Check 1) if type of some value in the value list doesn't match the actual type
 //       2) if some value of unique attribute conflicts with existing values
-bool API::isInsertingValueValid(TableInfo &table, const std::vector <Literal> &values) {
+bool API::isInsertingValueValid(TableInfo &table, const std::vector<Literal> &values) {
     for (auto attributeIter = values.cbegin(); attributeIter < values.cend(); attributeIter++) {
         int attributeIndex = static_cast<int>(attributeIter - values.cbegin());
         if (Adapter::toAttributeType(attributeIter->type()) != table.attrType[attributeIndex])
@@ -54,18 +54,18 @@ void intersectWithSet(std::set<int> &set, const std::vector<int> &locations, boo
 void intersectWithSet(std::set<int> &set, int location, bool &isFirstCondition) {
     if (isFirstCondition) {
         isFirstCondition = false;
-        set = std::set < int > {location};
+        set = std::set<int>{location};
     } else if (!set.contains(location)) set.clear();
 }
 
 void removeFromSet(std::set<int> &set, int location, bool &isFirstCondition) {
     if (isFirstCondition) {
         isFirstCondition = false;
-        set = std::set < int > {};
+        set = std::set<int>{};
     } else set.erase(location);
 }
 
-std::vector<int> API::selectTuples(TableInfo &table, const std::vector <ComparisonCondition> &conditions) {
+std::vector<int> API::selectTuples(TableInfo &table, const std::vector<ComparisonCondition> &conditions) {
     std::set<int> set;
     bool isFirstCondition = true;
 
@@ -150,4 +150,10 @@ API::searchGreaterThanWithRecord(TableInfo &table, int attributeIndex, const Lit
     std::string operatorString = lhs.isClose() ? ">=" : ">";
     return recordManager.conditionSelect(table.TableName, attributeIndex, Adapter::unsafeCStyleString(operatorString),
                                          Adapter::toAttribute(*lhs.value), table);
+}
+
+// For testing
+void API::directlyInput(const std::string &query) {
+    std::stringstream ss(query);
+    interpreter.parse(ss);
 }
