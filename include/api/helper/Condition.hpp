@@ -5,10 +5,10 @@
 #include <vector>
 #include <variant>
 
-#include "Interval.h"
-#include "PointInterval.h"
-#include "Literal.hpp"
-#include "ComparisonCondition.hpp"
+#include "Interval.hpp"
+#include "PointInterval.hpp"
+
+#include "../../interpreter/Interpreter.hpp"
 
 using LiteralIntervalBound = IntervalBound<Literal>;
 

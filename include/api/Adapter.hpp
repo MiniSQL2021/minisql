@@ -2,10 +2,10 @@
 
 #include <string>
 
-#include "Interpreter.hpp"
-#include "RecordManager.h"
-#include "Catalog_Manager.h"
-#include "Index.h"
+#include "../interpreter/Interpreter.hpp"
+#include "../catalog-manager/Catalog_Manager.h"
+#include "../record-manager/RecordManager.h"
+#include "../index-manager/Index.h"
 
 namespace Adapter {
     char *unsafeCStyleString(const std::string &str);

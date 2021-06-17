@@ -2,8 +2,8 @@
 
 #include <set>
 
-#include "Catalog_Manager.h"
-#include "RecordManager.h"
+#include "../../catalog-manager/Catalog_Manager.h"
+#include "../../record-manager/RecordManager.h"
 
 namespace Util {
     void printTable(std::vector<Tuple> tuples, TableInfo table);

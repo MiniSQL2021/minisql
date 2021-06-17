@@ -2,7 +2,7 @@
 
 #include <optional>
 
-#include "PointInterval.h"
+#include "PointInterval.hpp"
 
 enum class NumberType {
     Regular, NegativeInfinity, PositiveInfinity

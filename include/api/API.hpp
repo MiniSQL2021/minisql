@@ -2,12 +2,17 @@
 
 #include <set>
 
-#include "Interpreter.hpp"
-#include "buffer_manager.h"
-#include "Catalog_Manager.h"
-#include "RecordManager.h"
-#include "Index.h"
-#include "Condition.h"
+#include "../interpreter/Interpreter.hpp"
+#include "../buffer-manager/buffer_manager.h"
+#include "../catalog-manager/Catalog_Manager.h"
+#include "../record-manager/RecordManager.h"
+#include "../index-manager/Index.h"
+
+#include "helper/API_Util.hpp"
+#include "helper/Condition.hpp"
+#include "helper/Interval.hpp"
+#include "helper/PointInterval.hpp"
+#include "Adapter.hpp"
 
 class API {
 public:

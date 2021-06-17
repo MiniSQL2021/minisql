@@ -1,10 +1,10 @@
 #include "API.hpp"
-#include "Adapter.h"
-#include "Util.h"
+#include "Adapter.hpp"
+#include "API_Util.hpp"
 
 // TODO: Measure duration of each operations
 
-void API::handleCreateTableQuery(QueryPointer<CreateTableQuery> query) {
+void API::handleCreateTableQuery(QueryPointer <CreateTableQuery> query) {
     TableInfo table = Adapter::toTableInfo(*query);
     if (catalogManager.checkTable(table.TableName)) {
         Util::printError("Table already exists");
@@ -15,7 +15,7 @@ void API::handleCreateTableQuery(QueryPointer<CreateTableQuery> query) {
     catalogManager.createTable(table);
 }
 
-void API::handleDropTableQuery(QueryPointer<DropTableQuery> query) {
+void API::handleDropTableQuery(QueryPointer <DropTableQuery> query) {
     char *tableName = Adapter::unsafeCStyleString(query->tableName);
     if (!catalogManager.checkTable(tableName)) {
         Util::printError("Table doesn't exist");
@@ -32,7 +32,7 @@ void API::handleDropTableQuery(QueryPointer<DropTableQuery> query) {
     catalogManager.dropTable(tableName);
 }
 
-void API::handleCreateIndexQuery(QueryPointer<CreateIndexQuery> query) {
+void API::handleCreateIndexQuery(QueryPointer <CreateIndexQuery> query) {
     char *tableName = Adapter::unsafeCStyleString(query->tableName);
     char *attributeName = Adapter::unsafeCStyleString(query->columnName);
     char *indexName = Adapter::unsafeCStyleString(query->indexName);
@@ -63,7 +63,7 @@ void API::handleCreateIndexQuery(QueryPointer<CreateIndexQuery> query) {
     catalogManager.createIndex(tableName, attributeName, indexName);
 }
 
-void API::handleDropIndexQuery(QueryPointer<DropIndexQuery> query) {
+void API::handleDropIndexQuery(QueryPointer <DropIndexQuery> query) {
     try {
         char *indexName = Adapter::unsafeCStyleString(query->indexName);
         auto[tableName, attributeName] = catalogManager.searchIndex(indexName);
@@ -79,7 +79,7 @@ void API::handleDropIndexQuery(QueryPointer<DropIndexQuery> query) {
     }
 }
 
-void API::handleSelectQuery(QueryPointer<SelectQuery> query) {
+void API::handleSelectQuery(QueryPointer <SelectQuery> query) {
     char *tableName = Adapter::unsafeCStyleString(query->tableName);
     if (!catalogManager.checkTable(tableName)) {
         Util::printError("Table doesn't exist");
@@ -91,7 +91,7 @@ void API::handleSelectQuery(QueryPointer<SelectQuery> query) {
         return;
     }
 
-    std::vector<Tuple> tuples;
+    std::vector <Tuple> tuples;
     if (query->conditions.empty()) {
         tuples = recordManager.nonConditionSelect(tableName, table);
     } else {
@@ -101,7 +101,7 @@ void API::handleSelectQuery(QueryPointer<SelectQuery> query) {
     Util::printTable(tuples, table);
 }
 
-void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
+void API::handleDeleteQuery(QueryPointer <DeleteQuery> query) {
     char *tableName = Adapter::unsafeCStyleString(query->tableName);
     if (!catalogManager.checkTable(tableName)) {
         Util::printError("Table doesn't exist");
@@ -132,7 +132,7 @@ void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
     }
 }
 
-void API::handleInsertQuery(QueryPointer<InsertQuery> query) {
+void API::handleInsertQuery(QueryPointer <InsertQuery> query) {
     char *tableName = Adapter::unsafeCStyleString(query->tableName);
     if (!catalogManager.checkTable(tableName)) {
         Util::printError("Table doesn't exist");
