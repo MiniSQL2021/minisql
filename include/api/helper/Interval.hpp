@@ -53,12 +53,12 @@ struct Interval {
 
     static std::optional<Interval<T>> intersect(const std::vector<Interval<T>> &intervals);
 
-    constexpr std::optional<T> toSingleValue() const;
+    std::optional<T> toSingleValue() const;
 
-    constexpr bool contains(const T &value) const;
+    bool contains(const T &value) const;
 
 private:
-    constexpr bool lhsLessThan(const Interval<T> &that);
+    bool lhsLessThan(const Interval<T> &that) const;
 
-    constexpr std::optional<Interval<T>> intersect(const Interval<T> &that) const;
+    std::optional<Interval<T>> intersect(const Interval<T> &that) const;
 };

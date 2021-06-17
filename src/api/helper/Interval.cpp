@@ -16,14 +16,14 @@ constexpr bool IntervalBound<T>::operator==(const IntervalBound<T> &that) {
 }
 
 template<typename T>
-constexpr bool Interval<T>::lhsLessThan(const Interval<T> &that) const {
+bool Interval<T>::lhsLessThan(const Interval<T> &that) const {
     return this->lhs < that.lhs ||
            (this->lhs.isRegular() && that.rhs.isRegular() && this->lhs.value == that.lhs.value && this->lhs.isClose() &&
             that.lhs.isOpen());
 }
 
 template<typename T>
-constexpr std::optional<Interval<T>> Interval<T>::intersect(const Interval<T> &that) {
+std::optional<Interval<T>> Interval<T>::intersect(const Interval<T> &that) const {
     // Lhs of this should be less than that
     if (!this->lhsLessThan(that)) return that.intersect(this);
 
@@ -51,7 +51,7 @@ std::optional<Interval<T>> Interval<T>::intersect(const std::vector<Interval<T>>
     std::sort(sortedIntervals.begin(), sortedIntervals.end(),
               [](Interval<T> a, Interval<T> b) { return a.lhsLessThan(b); });
 
-    auto result = sortedIntervals.front();
+    auto result = *sortedIntervals.cbegin();
     for (auto intervalIter = sortedIntervals.cbegin() + 1; intervalIter < sortedIntervals.cend(); intervalIter++) {
         if (auto intersectResult = result.intersect(*intervalIter))
             result = intersectResult;
@@ -61,13 +61,13 @@ std::optional<Interval<T>> Interval<T>::intersect(const std::vector<Interval<T>>
 }
 
 template<typename T>
-constexpr std::optional<T> Interval<T>::toSingleValue() const {
+std::optional<T> Interval<T>::toSingleValue() const {
     if (lhs == rhs && lhs.isClose() && rhs.isClose()) return lhs.value;
     else return std::nullopt;
 }
 
 template<typename T>
-constexpr bool Interval<T>::contains(const T &value) const {
+bool Interval<T>::contains(const T &value) const {
     bool greaterThanLhs = lhs.isNegativeInfinity() || (lhs.isRegular() && lhs.isClose() && lhs.value <= value) ||
                           (lhs.isRegular() && lhs.isOpen() && lhs.value < value);
     bool lessThanRhs = rhs.isPositiveInfinity() || (rhs.isRegular() && rhs.isClose() && value <= rhs.value) ||
