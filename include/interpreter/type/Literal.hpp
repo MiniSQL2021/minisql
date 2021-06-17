@@ -13,7 +13,7 @@ enum class LiteralType {
 };
 
 class Literal {
-    const LiteralVariant value;
+    LiteralVariant value;
 
     template<typename T>
     [[nodiscard]] std::optional<T> getValue() const {
@@ -26,6 +26,18 @@ public:
     explicit Literal(float value) : value(value) {};
 
     explicit Literal(std::string value) : value(std::move(value)) {};
+
+    // Copy ctor
+    Literal(const Literal &other) = default;
+
+    // Copy assignment
+    Literal &operator=(const Literal &other) = default;
+
+    // Move ctor
+    Literal(Literal &&other) noexcept = default;
+
+    // Move assignment
+    Literal &operator=(Literal &&other) noexcept = default;
 
     [[nodiscard]] LiteralType type() const {
         if (std::holds_alternative<int>(value)) return LiteralType::Int;
