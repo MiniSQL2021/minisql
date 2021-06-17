@@ -1,9 +1,9 @@
 #include <iostream>
 
-#include "Util.hpp"
-#include "Queries.hpp"
-#include "Literal.hpp"
-#include "BinaryOperator.hpp"
+#include "util/Util.hpp"
+#include "query/Queries.hpp"
+#include "type/Literal.hpp"
+#include "type/BinaryOperator.hpp"
 
 std::string util::literalTypeString(const LiteralType &type) {
     switch (type) {

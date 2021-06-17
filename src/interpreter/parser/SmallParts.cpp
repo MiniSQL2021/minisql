@@ -1,8 +1,8 @@
 #include <utility>
 
-#include "BinaryOperator.hpp"
-#include "Literal.hpp"
-#include "QueryParser.hpp"
+#include "type/BinaryOperator.hpp"
+#include "type/Literal.hpp"
+#include "parser/QueryParser.hpp"
 
 std::string QueryParser::parseIdentifier(SQLParser::IdentifierContext *ctx) {
     if (ctx->IDENTIFIER()) return ctx->IDENTIFIER()->getText();

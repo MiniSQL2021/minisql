@@ -1,5 +1,5 @@
-#include "Queries.hpp"
-#include "QueryParser.hpp"
+#include "query/Queries.hpp"
+#include "parser/QueryParser.hpp"
 
 std::unique_ptr<CreateTableQuery>
 QueryParser::parseCreateTableStatement(SQLParser::CreateTableStatementContext *ctx) {

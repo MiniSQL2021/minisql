@@ -1,9 +1,9 @@
 #include "Interpreter.hpp"
-#include "Queries.hpp"
-#include "QueryParser.hpp"
-#include "SQLLexer.h"
-#include "SQLParser.h"
-#include "SyntaxErrorListener.hpp"
+#include "query/Queries.hpp"
+#include "parser/QueryParser.hpp"
+#include "parser/SyntaxErrorListener.hpp"
+#include "antlr/SQLLexer.h"
+#include "antlr/SQLParser.h"
 
 template<typename Derived, typename Base, typename Del>
 std::unique_ptr<Derived, Del> dynamic_unique_ptr_cast(std::unique_ptr<Base, Del> &p);
