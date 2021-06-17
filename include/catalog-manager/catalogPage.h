@@ -6,6 +6,7 @@ catalogPage格式 ：不定长、单个数据定长
 */
 
 #ifndef pageData_hpp
+#define pageData_hpp
 
 #include<string>
 #include<iostream>
