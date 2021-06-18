@@ -2,18 +2,20 @@
 #include "Adapter.hpp"
 #include "API_Util.hpp"
 
-std::vector<std::string> API::getAllIndexedAttributeName(const TableInfo &table) {
-    std::vector<std::string> result;
+std::vector<int> API::getAllIndexedAttributeIndex(const TableInfo &table) {
+    std::vector<int> result;
     for (int i = 0; i < table.attrNum; i++)
-        if (table.hasIndex[i]) result.emplace_back(table.attrName[i]);
+        if (table.hasIndex[i]) result.push_back(i);
     return result;
 }
 
-void API::dropIndex(TableInfo &table, const std::string &attributeName) {
+void API::dropIndex(TableInfo &table, int attributeIndex) {
     // Assume the index exists
-    Attribute attribute = Adapter::toAttribute(table, attributeName);
+    auto attribute = Adapter::toAttribute(table, attributeIndex);
+    auto attributeName = table.attrName[attributeIndex];
     Index index(table.TableName, attribute);
-    index.dropIndex(Adapter::getIndexFilePath(table.TableName, attributeName), Adapter::toDataType(attribute.type));
+    index.dropIndex(Adapter::getIndexFilePath(table.TableName, attributeName),
+                    Adapter::toDataType(attribute.type));
 }
 
 // Check 1) if some attribute name in the condition list doesn't exist
@@ -38,11 +40,14 @@ bool API::isInsertingValueValid(TableInfo &table, const std::vector<Literal> &va
         if (Adapter::toAttributeType(attributeIter->type()) != table.attrType[attributeIndex])
             return false;
         if (table.attrUnique[attributeIndex] &&
-            !recordManager.checkUnique(table.TableName, attributeIndex, Adapter::toAttribute(*attributeIter), table))
+            !recordManager.checkUnique(table.TableName, attributeIndex,
+                                       Adapter::toAttribute(*attributeIter), table))
             return false;
     }
     return true;
 }
+
+// MARK: Local helper functions
 
 void intersectWithSet(std::set<int> &set, const std::vector<int> &locations, bool &isFirstCondition) {
     if (isFirstCondition) {
@@ -72,12 +77,12 @@ std::vector<int> API::selectTuples(TableInfo &table, const std::vector<Compariso
     auto conditionListMap = combineConditions(conditions);
 
     for (const auto &[name, conditionList]: conditionListMap) {
-        if (!conditionList) return {};
+        if (!conditionList) return {};    // Empty range
         int attributeIndex = table.searchAttr(Adapter::unsafeCStyleString(name));
 
         if (table.hasIndex[attributeIndex]) {
 
-            Index index(table.TableName, Adapter::toAttribute(table, name));
+            Index index(table.TableName, Adapter::toAttribute(table, attributeIndex));
             auto filePath = Adapter::getIndexFilePath(table.TableName, name);
 
             for (const auto &condition : *conditionList) {
@@ -98,9 +103,10 @@ std::vector<int> API::selectTuples(TableInfo &table, const std::vector<Compariso
             for (const auto &condition : *conditionList) {
                 if (auto pointCondition = std::get_if<PointCondition>(&condition)) {
                     std::string operatorString = pointCondition->isEqual() ? "==" : "!=";
-                    auto locations = recordManager.conditionSelect(table.TableName, attributeIndex,
-                                                                   Adapter::unsafeCStyleString(operatorString),
-                                                                   Adapter::toAttribute(pointCondition->value), table);
+                    auto locations = recordManager.conditionSelect(
+                            table.TableName, attributeIndex,
+                            Adapter::unsafeCStyleString(operatorString),
+                            Adapter::toAttribute(pointCondition->value), table);
                     intersectWithSet(set, locations, isFirstCondition);
                 } else if (auto rangeCondition = std::get_if<RangeCondition>(&condition)) {
                     auto locations = searchWithRecord(table, attributeIndex, *rangeCondition);
@@ -117,13 +123,15 @@ std::vector<int> API::selectTuples(TableInfo &table, const std::vector<Compariso
 
 std::vector<int> API::searchWithIndex(Index &index, const std::string &filePath, const RangeCondition &condition) {
     if (condition.lhs.isRegular() && condition.rhs.isRegular()) {
-        int flag = (condition.rhs.isClose() << 1) + condition.lhs.isClose();
-        return index.searchRange(filePath, Adapter::toData(*condition.lhs.value), Adapter::toData(*condition.rhs.value),
-                                 flag);
+        return index.searchRange(filePath,
+                                 Adapter::toData(*condition.lhs.value), Adapter::toData(*condition.rhs.value),
+                                 (condition.rhs.isClose() << 1) + condition.lhs.isClose());
     } else if (condition.lhs.isNegativeInfinity() && condition.rhs.isRegular()) {
-        return index.searchRange1(filePath, Adapter::toData(*condition.rhs.value), condition.rhs.isClose());
+        return index.searchRange1(filePath,
+                                  Adapter::toData(*condition.rhs.value), condition.rhs.isClose());
     } else if (condition.lhs.isRegular() && condition.rhs.isPositiveInfinity()) {
-        return index.searchRange2(filePath, Adapter::toData(*condition.lhs.value), condition.lhs.isClose());
+        return index.searchRange2(filePath,
+                                  Adapter::toData(*condition.lhs.value), condition.lhs.isClose());
     }
 }
 

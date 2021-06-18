@@ -27,7 +27,7 @@ AttributeType Adapter::toAttributeType(LiteralType type) {
 
 attrStruct Adapter::toAttrStruct(const Column &column) {
     attrStruct result{};
-    result.attrName = dynamicCStyleString(column.name);
+    result.attrName = dynamicCStyleString(column.name);                     // Warning: allocate char *
     result.attrType = toAttributeType(column.type);
     result.attrUnique = column.unique;
     if (auto maxLength = column.maxLength) result.attrlength = *maxLength;
@@ -44,10 +44,7 @@ TableInfo Adapter::toTableInfo(const CreateTableQuery &query) {
     result.setTableInfo(Adapter::unsafeCStyleString(query.tableName), Adapter::unsafeCStyleString(query.primaryKey),
                         true, static_cast<int>(query.columns.size()), attributes.data());
 
-    for (const auto &attribute : attributes) {
-        delete attribute.attrName;
-        delete attribute.indexname;
-    }
+    for (const auto &attribute : attributes) delete attribute.attrName;     // Deallocate char *
 
     return result;
 }
@@ -71,11 +68,7 @@ Attribute Adapter::toAttribute(const Literal &literal) {
 
 // Get info of an attribute
 Attribute Adapter::toAttribute(TableInfo &table, const std::string &attributeName) {
-    Attribute result;
-    int attributeIndex = table.searchAttr(unsafeCStyleString(attributeName));
-    result.type = table.attrType[attributeIndex];
-    result.dataLength = table.attrLength[attributeIndex];
-    return result;
+    return toAttribute(table, table.searchAttr(unsafeCStyleString(attributeName)));
 }
 
 // Get info of an attribute by index
@@ -113,52 +106,13 @@ Data Adapter::toData(const Attribute &attribute) {
             result.type = 1;
             break;
         case AttributeType::CHAR:
-            result.type = 2;
             result.datas = std::string(attribute.charData);
+            result.type = 2;
             break;
         case AttributeType::UNDEFINE:
             break;
     }
     return result;
-}
-
-std::tuple<Data, Data> Adapter::toDataRange(const ComparisonCondition &condition) {
-    switch (condition.binaryOperator) {
-        case BinaryOpearator::LessThan:
-        case BinaryOpearator::LessThanOrEqual:
-            return make_tuple(Data(), toData(condition.value));
-        case BinaryOpearator::GreaterThan:
-        case BinaryOpearator::GreaterThanOrEqual:
-            return make_tuple(toData(condition.value), Data());
-        default:
-            // Assert unreachable branch
-            return make_tuple(Data(), Data());
-    }
-}
-
-char *Adapter::toOperatorString(BinaryOpearator op) {
-    std::string str;
-    switch (op) {
-        case BinaryOpearator::Equal:
-            str = "==";
-            break;
-        case BinaryOpearator::NotEqual:
-            str = "!=";
-            break;
-        case BinaryOpearator::LessThan:
-            str = "<";
-            break;
-        case BinaryOpearator::GreaterThan:
-            str = ">";
-            break;
-        case BinaryOpearator::LessThanOrEqual:
-            str = "<=";
-            break;
-        case BinaryOpearator::GreaterThanOrEqual:
-            str = ">=";
-            break;
-    }
-    return dynamicCStyleString(str);
 }
 
 Tuple Adapter::toTuple(TableInfo &table, const std::vector<Literal> &literals) {
@@ -184,18 +138,5 @@ int Adapter::toDataType(AttributeType type) {
         case AttributeType::UNDEFINE:
             // Unreachable
             return -1;
-    }
-}
-
-std::string Adapter::toString(Attribute attribute) {
-    switch (attribute.type) {
-        case AttributeType::INT:
-            return std::to_string(attribute.intData);
-        case AttributeType::FLOAT:
-            return std::to_string(attribute.floatData);
-        case AttributeType::CHAR:
-            return std::string(attribute.charData);
-        case AttributeType::UNDEFINE:
-            return "";
     }
 }

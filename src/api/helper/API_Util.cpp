@@ -1,8 +1,20 @@
 #include "API_Util.hpp"
-#include "Adapter.hpp"
-#include "helper/tabulate.hpp"
+#include "tabulate/table.hpp"
 
 using TableRow = std::vector<variant<std::string, const char *, tabulate::Table>>;
+
+std::string toString(Attribute attribute) {
+    switch (attribute.type) {
+        case AttributeType::INT:
+            return std::to_string(attribute.intData);
+        case AttributeType::FLOAT:
+            return std::to_string(attribute.floatData);
+        case AttributeType::CHAR:
+            return std::string(attribute.charData);
+        case AttributeType::UNDEFINE:
+            return "";
+    }
+}
 
 void API_Util::printTable(const std::vector<Tuple> &tuples, const TableInfo &table) {
     tabulate::Table output;
@@ -15,7 +27,7 @@ void API_Util::printTable(const std::vector<Tuple> &tuples, const TableInfo &tab
     for (const auto &tuple:tuples) {
         TableRow row;
         row.reserve(table.attrNum);
-        for (int i = 0; i < table.attrNum; i++) row.push_back(Adapter::toString(tuple.attr[i]));
+        for (int i = 0; i < table.attrNum; i++) row.push_back(toString(tuple.attr[i]));
         output.add_row(row);
     }
 
