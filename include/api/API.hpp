@@ -7,6 +7,7 @@
 #include "../catalog-manager/Catalog_Manager.h"
 #include "../record-manager/RecordManager.h"
 #include "../index-manager/Index.h"
+//#include "../index-manager/IndexMock.h"
 
 #include "helper/API_Util.hpp"
 #include "helper/Condition.hpp"
@@ -16,8 +17,15 @@
 
 class API {
 public:
-    API(Interpreter &interpreter, CatalogManager &catalogManager, RecordManager &recordManager) :
-            interpreter(interpreter), catalogManager(catalogManager), recordManager(recordManager) {};
+    API(Interpreter &interpreter, CatalogManager &catalogManager, RecordManager &recordManager,
+        BufferManager &bufferManager) :
+            interpreter(interpreter), catalogManager(catalogManager),
+            recordManager(recordManager), bufferManager(bufferManager) {};
+
+    Interpreter &interpreter;
+    CatalogManager &catalogManager;
+    RecordManager &recordManager;
+    BufferManager &bufferManager;
 
     void listen();
 
@@ -40,19 +48,16 @@ public:
     void handleDeleteQuery(QueryPointer<DeleteQuery> query);
 
 private:
-    Interpreter &interpreter;
-    CatalogManager &catalogManager;
-    RecordManager &recordManager;
 
-    static std::vector<int> getAllIndexedAttributeIndex(const TableInfo &table);
+    std::vector<int> getAllIndexedAttributeIndex(const TableInfo &table);
 
-    static void dropIndex(TableInfo &table, int attributeIndex);
+    void dropIndex(TableInfo &table, int attributeIndex);
 
-    static bool isConditionListValid(TableInfo &table, const std::vector<ComparisonCondition> &conditions);
+    bool isConditionListValid(TableInfo &table, const std::vector<ComparisonCondition> &conditions);
 
     bool isInsertingValueValid(TableInfo &table, const std::vector<Literal> &literals);
 
-    static std::vector<int> searchWithIndex(Index &index, const std::string &filePath, const RangeCondition &condition);
+    std::vector<int> searchWithIndex(Index &index, const std::string &filePath, const RangeCondition &condition);
 
     std::vector<int> searchGreaterThanWithRecord(TableInfo &table, int attributeIndex, const LiteralIntervalBound &lhs);
 

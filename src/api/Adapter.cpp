@@ -32,6 +32,7 @@ attrStruct Adapter::toAttrStruct(const Column &column) {
     result.attrUnique = column.unique;
     if (auto maxLength = column.maxLength) result.attrlength = *maxLength;
     result.hasIndex = false;
+    result.indexname = dynamicCStyleString("");
 
     return result;
 }
@@ -44,7 +45,10 @@ TableInfo Adapter::toTableInfo(const CreateTableQuery &query) {
     result.setTableInfo(Adapter::unsafeCStyleString(query.tableName), Adapter::unsafeCStyleString(query.primaryKey),
                         true, static_cast<int>(query.columns.size()), attributes.data());
 
-    for (const auto &attribute : attributes) delete attribute.attrName;     // Deallocate char *
+    for (const auto &attribute : attributes) {                              // Deallocate char *
+        delete attribute.attrName;
+        delete attribute.indexname;
+    }
 
     return result;
 }
@@ -117,6 +121,7 @@ Data Adapter::toData(const Attribute &attribute) {
 
 Tuple Adapter::toTuple(TableInfo &table, const std::vector<Literal> &literals) {
     std::vector<Attribute> attributes;
+    attributes.reserve(literals.size());
     for (const auto &literal : literals) attributes.push_back(toAttribute(literal));
     Tuple result;
     result.setTuple(static_cast<int>(attributes.size()), attributes, table);

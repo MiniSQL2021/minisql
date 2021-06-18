@@ -13,7 +13,7 @@ void API::dropIndex(TableInfo &table, int attributeIndex) {
     // Assume the index exists
     auto attribute = Adapter::toAttribute(table, attributeIndex);
     auto attributeName = table.attrName[attributeIndex];
-    Index index(table.TableName, attribute);
+    Index index(table.TableName, table, bufferManager);
     index.dropIndex(Adapter::getIndexFilePath(table.TableName, attributeName),
                     Adapter::toDataType(attribute.type));
 }
@@ -82,7 +82,7 @@ std::vector<int> API::selectTuples(TableInfo &table, const std::vector<Compariso
 
         if (table.hasIndex[attributeIndex]) {
 
-            Index index(table.TableName, Adapter::toAttribute(table, attributeIndex));
+            Index index(table.TableName, table, bufferManager);
             auto filePath = Adapter::getIndexFilePath(table.TableName, name);
 
             for (const auto &condition : *conditionList) {

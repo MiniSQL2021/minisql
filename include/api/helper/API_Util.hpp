@@ -10,7 +10,7 @@ namespace API_Util {
 
     void printError(const std::string &message);
 
-    static std::set<int> intersect(const std::set<int> &a, const std::vector<int> &b);
+    std::set<int> intersect(const std::set<int> &a, const std::vector<int> &b);
 
-    static std::set<int> intersect(const std::vector<int> &a, const std::vector<int> &b);
+    std::set<int> intersect(const std::vector<int> &a, const std::vector<int> &b);
 }

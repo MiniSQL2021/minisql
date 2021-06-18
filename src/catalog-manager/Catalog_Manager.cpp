@@ -283,7 +283,7 @@ void CatalogManager::createTable(TableInfo tbif)        //参数：TableInfo;若
             continue;
         } else {
             cgpage->tableNum++;
-            *(cgpage->tbif + cgpage->tableNum) = tbif;
+            cgpage->tbif[cgpage->tableNum - 1] = tbif;
             cgpage->writePage(pgdata);
             b = buffer.getPageId(tbif.TableName, i);
             buffer.modifyPage(b);
@@ -295,7 +295,7 @@ void CatalogManager::createTable(TableInfo tbif)        //参数：TableInfo;若
         memcpy(pgdata, &k, 4);
         cgpage->readPage(pgdata);
         cgpage->tableNum++;
-        *(cgpage->tbif + cgpage->tableNum) = tbif;
+        cgpage->tbif[cgpage->tableNum - 1] = tbif;
         cgpage->writePage(pgdata);
         b = buffer.getPageId(tbif.TableName, i);
         buffer.modifyPage(b);
@@ -377,16 +377,17 @@ void CatalogManager::deleteIndex(char *indexName)    //参数：indexName；删�
 }
 
 int CatalogManager::getCatalogPageNum() {
-    string name = "catalog";
+    string name = "./database/catalog/catalog";
     char *p;
     int block_num = -1;
     do {
         p = buffer.getPage(name, block_num + 1);
         block_num++;
     } while (p[0] != '\0');
+    if (block_num == 0) block_num = 1;
     return block_num;
 }
 
 char *CatalogManager::getCatalogPage(int pageID) {
-    return buffer.getPage("catalog", pageID);
+    return buffer.getPage("./database/catalog/catalog", pageID);
 }

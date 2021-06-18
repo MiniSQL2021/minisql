@@ -1,4 +1,4 @@
-add_library(buffer-manager BufferManager.cpp)
+add_library(buffer-manager buffer_manager.cpp Page.cpp)
 
 target_include_directories(buffer-manager PRIVATE ${CMAKE_SOURCE_DIR}/include/buffer-manager)
 
