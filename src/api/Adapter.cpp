@@ -44,10 +44,7 @@ TableInfo Adapter::toTableInfo(const CreateTableQuery &query) {
     result.setTableInfo(Adapter::unsafeCStyleString(query.tableName), Adapter::unsafeCStyleString(query.primaryKey),
                         true, static_cast<int>(query.columns.size()), attributes.data());
 
-    for (const auto &attribute : attributes) {
-        delete attribute.attrName;
-        delete attribute.indexname;
-    }
+    for (const auto &attribute : attributes) delete attribute.attrName;
 
     return result;
 }
@@ -130,31 +127,6 @@ std::tuple<Data, Data> Adapter::toDataRange(const ComparisonCondition &condition
             // Assert unreachable branch
             return make_tuple(Data(), Data());
     }
-}
-
-char *Adapter::toOperatorString(BinaryOpearator op) {
-    std::string str;
-    switch (op) {
-        case BinaryOpearator::Equal:
-            str = "==";
-            break;
-        case BinaryOpearator::NotEqual:
-            str = "!=";
-            break;
-        case BinaryOpearator::LessThan:
-            str = "<";
-            break;
-        case BinaryOpearator::GreaterThan:
-            str = ">";
-            break;
-        case BinaryOpearator::LessThanOrEqual:
-            str = "<=";
-            break;
-        case BinaryOpearator::GreaterThanOrEqual:
-            str = ">=";
-            break;
-    }
-    return dynamicCStyleString(str);
 }
 
 Tuple Adapter::toTuple(TableInfo &table, const std::vector<Literal> &literals) {
