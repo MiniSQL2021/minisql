@@ -27,7 +27,7 @@ AttributeType Adapter::toAttributeType(LiteralType type) {
 
 attrStruct Adapter::toAttrStruct(const Column &column) {
     attrStruct result{};
-    result.attrName = dynamicCStyleString(column.name);
+    result.attrName = dynamicCStyleString(column.name);                     // Warning: allocate char *
     result.attrType = toAttributeType(column.type);
     result.attrUnique = column.unique;
     if (auto maxLength = column.maxLength) result.attrlength = *maxLength;
@@ -44,7 +44,7 @@ TableInfo Adapter::toTableInfo(const CreateTableQuery &query) {
     result.setTableInfo(Adapter::unsafeCStyleString(query.tableName), Adapter::unsafeCStyleString(query.primaryKey),
                         true, static_cast<int>(query.columns.size()), attributes.data());
 
-    for (const auto &attribute : attributes) delete attribute.attrName;
+    for (const auto &attribute : attributes) delete attribute.attrName;     // Deallocate char *
 
     return result;
 }
@@ -106,27 +106,13 @@ Data Adapter::toData(const Attribute &attribute) {
             result.type = 1;
             break;
         case AttributeType::CHAR:
-            result.type = 2;
             result.datas = std::string(attribute.charData);
+            result.type = 2;
             break;
         case AttributeType::UNDEFINE:
             break;
     }
     return result;
-}
-
-std::tuple<Data, Data> Adapter::toDataRange(const ComparisonCondition &condition) {
-    switch (condition.binaryOperator) {
-        case BinaryOpearator::LessThan:
-        case BinaryOpearator::LessThanOrEqual:
-            return make_tuple(Data(), toData(condition.value));
-        case BinaryOpearator::GreaterThan:
-        case BinaryOpearator::GreaterThanOrEqual:
-            return make_tuple(toData(condition.value), Data());
-        default:
-            // Assert unreachable branch
-            return make_tuple(Data(), Data());
-    }
 }
 
 Tuple Adapter::toTuple(TableInfo &table, const std::vector<Literal> &literals) {

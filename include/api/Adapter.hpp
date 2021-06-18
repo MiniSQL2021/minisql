@@ -28,10 +28,6 @@ namespace Adapter {
 
     Data toData(const Attribute &attribute);
 
-    std::tuple<Data, Data> toDataRange(const ComparisonCondition &condition);
-
-    char *toOperatorString(BinaryOpearator op);
-
     Tuple toTuple(TableInfo &table, const std::vector<Literal> &literals);
 
     std::string getIndexFilePath(const std::string &tableName, const std::string &attributeName);
