@@ -21,9 +21,9 @@ void API::handleDropTableQuery(QueryPointer<DropTableQuery> query) {
     }
 
     // Delete all indices of attributes in the table
-    TableInfo table = catalogManager.getTableInfo(tableName);
-    for (const auto &attributeName:getAllIndexedAttributeName(table)) {
-        dropIndex(table, Adapter::unsafeCStyleString(attributeName));
+    auto table = catalogManager.getTableInfo(tableName);
+    for (const auto &attributeIndex:getAllIndexedAttributeIndex(table)) {
+        dropIndex(table, attributeIndex);
     }
 
     recordManager.deleteTable(tableName);
@@ -113,9 +113,9 @@ void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
 
     if (query->conditions.empty()) {
         // Delete all the records from all the indices in the table
-        for (const auto &attributeName: getAllIndexedAttributeName(table)) {
-            auto attributeIndex = table.searchAttr(Adapter::unsafeCStyleString(attributeName));
+        for (const auto &attributeIndex: getAllIndexedAttributeIndex(table)) {
             auto attribute = Adapter::toAttribute(table, attributeIndex);
+            auto attributeName = table.attrName[attributeIndex];
             Index index(query->tableName, attribute);
             index.clearIndex(Adapter::getIndexFilePath(query->tableName, attributeName),
                              Adapter::toDataType(attribute.type));
@@ -135,10 +135,10 @@ void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
         auto locations = selectTuples(table, query->conditions);
         auto tuples = recordManager.searchTuple(tableName, table, locations);
 
-        // Delete all the selected records from all indices in the table
-        for (const auto &attributeName: getAllIndexedAttributeName(table)) {
-            Index index(query->tableName, Adapter::toAttribute(table, attributeName));
-            int attributeIndex = catalogManager.getAttrNo(tableName, Adapter::unsafeCStyleString(attributeName));
+        // Delete all the selected records from all the indices in the table
+        for (const auto &attributeIndex: getAllIndexedAttributeIndex(table)) {
+            auto attributeName = table.attrName[attributeIndex];
+            Index index(query->tableName, Adapter::toAttribute(table, attributeIndex));
             for (const auto &tuple : tuples)
                 index.deleteIndexByKey(Adapter::getIndexFilePath(query->tableName, attributeName),
                                        Adapter::toData(tuple.attr[attributeIndex]));

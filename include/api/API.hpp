@@ -44,9 +44,9 @@ private:
     CatalogManager &catalogManager;
     RecordManager &recordManager;
 
-    static std::vector<std::string> getAllIndexedAttributeName(const TableInfo &table);
+    static std::vector<int> getAllIndexedAttributeIndex(const TableInfo &table);
 
-    static void dropIndex(TableInfo &table, const std::string &attributeName);
+    static void dropIndex(TableInfo &table, int attributeIndex);
 
     static bool isConditionListValid(TableInfo &table, const std::vector<ComparisonCondition> &conditions);
 

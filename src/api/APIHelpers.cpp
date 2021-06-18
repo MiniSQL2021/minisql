@@ -2,18 +2,20 @@
 #include "Adapter.hpp"
 #include "API_Util.hpp"
 
-std::vector<std::string> API::getAllIndexedAttributeName(const TableInfo &table) {
-    std::vector<std::string> result;
+std::vector<int> API::getAllIndexedAttributeIndex(const TableInfo &table) {
+    std::vector<int> result;
     for (int i = 0; i < table.attrNum; i++)
-        if (table.hasIndex[i]) result.emplace_back(table.attrName[i]);
+        if (table.hasIndex[i]) result.push_back(i);
     return result;
 }
 
-void API::dropIndex(TableInfo &table, const std::string &attributeName) {
+void API::dropIndex(TableInfo &table, int attributeIndex) {
     // Assume the index exists
-    Attribute attribute = Adapter::toAttribute(table, attributeName);
+    auto attribute = Adapter::toAttribute(table, attributeIndex);
+    auto attributeName = table.attrName[attributeIndex];
     Index index(table.TableName, attribute);
-    index.dropIndex(Adapter::getIndexFilePath(table.TableName, attributeName), Adapter::toDataType(attribute.type));
+    index.dropIndex(Adapter::getIndexFilePath(table.TableName, attributeName),
+                    Adapter::toDataType(attribute.type));
 }
 
 // Check 1) if some attribute name in the condition list doesn't exist
