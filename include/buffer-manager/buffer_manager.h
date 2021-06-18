@@ -1,8 +1,10 @@
-﻿#ifndef BUFFER_MANAGER_H
+#ifndef BUFFER_MANAGER_H
 #define BUFFER_MANAGER_H
 
 #include"Page.h"
+#include<stdio.h>
 #include<iostream>
+#include<fstream>
 #include<vector>
 
 class BufferManager {
@@ -11,47 +13,41 @@ private:
     int frame_size;
     int current_pos;    // used for LRU
 
+    void init(int size);
 
+    int getAnEmptyPageId();
+
+    // load the block with the file_name to the page_id page
+    // failed to open, return false
+    // else, return true
+    bool loadDiskBlock(int page_id, std::string file_name, int block_id);
 
 public:
-    BufferManager();
-
-    BufferManager(int size);
+    BufferManager(int size = MAX_BLOCK);
 
     ~BufferManager();
 
+    // return the pointer of the page
     char *getPage(std::string file_name, int block_id);
 
+    // mark the modified page
     void modifyPage(int page_id);
 
     void pinPage(int page_id);
 
+    // unpin a page
+    // if pinned_count is 0, return fasle
+    // else, return true
     bool unpinPage(int page_id);
 
+    // write the page to disk
     void flushPage(int page_id, std::string file_name, int block_id);
 
+    // return file_name's block_id th block's page_id
     int getPageId(std::string file_name, int block_id);
 
-    int getAnEmptyPageId();
-
-    bool loadDiskBlock(int page_id, std::string file_name, int block_id);
-
-    //null
-    int getCatalogPageNum();
-
-    char *getCatalogPage(int pageID);
-
-    int getTablePageNum(char *tableName);
-
-    char *getTablePage(char *tablename, int tableID);
-
-    char *createTablePage(char *tableName);    //buffer新建文件，设置pageNum为1，并返回pagedata指针
-    char *addTablePage(char *tablename);        //buffer设置pageNum++，并返回pagedata指针
-    char *addCatalogPage();            //buffer设置pageNum++，并返回pagedata指针
-
-    void releasePage(char *pagedata);            //pagedata编辑完成，buffer收回指针，将page存回文件中，释放这个page缓存
-    void dropTable(char *tablename);
-
+    // return the block_num of file file_name
+    int getBlockNum(std::string file_name);
 };
 
 #endif // !BUFFER_MANAGER_H
