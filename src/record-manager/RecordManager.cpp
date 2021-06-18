@@ -25,7 +25,7 @@ int RecordManager::insertRecord(char *tbnm, Tuple tup, TableInfo tbif)       //å
     tablePage *tbpg = new tablePage;
     int pgNum = getPageNum(tbnm);
     int i, k, j, asw = 0, p = 0;
-    char *pgdata = '\0';
+    char *pgdata;
     int MaxPgNUM = 0;
     for (i = 0; i < pgNum; i++) {
         pgdata = buffer.getPage(tbnm, i);
