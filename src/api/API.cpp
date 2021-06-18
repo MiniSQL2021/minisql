@@ -3,7 +3,7 @@
 #include "API_Util.hpp"
 
 void API::handleCreateTableQuery(QueryPointer<CreateTableQuery> query) {
-    TableInfo table = Adapter::toTableInfo(*query);
+    auto table = Adapter::toTableInfo(*query);
     if (catalogManager.checkTable(table.TableName)) {
         API_Util::printError("Table already exists");
         return;
@@ -50,12 +50,13 @@ void API::handleCreateIndexQuery(QueryPointer<CreateIndexQuery> query) {
         API_Util::printError("Index already exists");
         return;
     }
-    TableInfo table = catalogManager.getTableInfo(tableName);
-    Attribute attribute = Adapter::toAttribute(table, attributeName);
+    auto table = catalogManager.getTableInfo(tableName);
+    auto attributeIndex = table.searchAttr(attributeName);
+    auto attribute = Adapter::toAttribute(table, attributeIndex);
 
     Index index(query->tableName, attribute);
     index.createIndexWithDatas(Adapter::getIndexFilePath(query->tableName, query->columnName),
-                               Adapter::toDataType(attribute.type), table.searchAttr(attributeName),
+                               Adapter::toDataType(attribute.type), attributeIndex,
                                recordManager.nonConditionSelect(tableName, table));
 
     catalogManager.createIndex(tableName, attributeName, indexName);
@@ -66,10 +67,11 @@ void API::handleDropIndexQuery(QueryPointer<DropIndexQuery> query) {
         char *indexName = Adapter::unsafeCStyleString(query->indexName);
         auto[tableName, attributeName] = catalogManager.searchIndex(indexName);
 
-        TableInfo table = catalogManager.getTableInfo(tableName);
+        auto table = catalogManager.getTableInfo(tableName);
         auto attribute = Adapter::toAttribute(table, attributeName);
         Index index(tableName, attribute);
-        index.dropIndex(Adapter::getIndexFilePath(tableName, attributeName), Adapter::toDataType(attribute.type));
+        index.dropIndex(Adapter::getIndexFilePath(tableName, attributeName),
+                        Adapter::toDataType(attribute.type));
 
         catalogManager.deleteIndex(indexName);
     } catch (const index_does_not_exist &error) {
@@ -83,16 +85,16 @@ void API::handleSelectQuery(QueryPointer<SelectQuery> query) {
         API_Util::printError("Table doesn't exist");
         return;
     }
-    TableInfo table = catalogManager.getTableInfo(tableName);
+    auto table = catalogManager.getTableInfo(tableName);
     if (!isConditionListValid(table, query->conditions)) {
         API_Util::printError("Some attribute in the input doesn't exist, or the type doesn't match the actual type");
         return;
     }
 
     std::vector<Tuple> tuples;
-    if (query->conditions.empty()) {
+    if (query->conditions.empty())
         tuples = recordManager.nonConditionSelect(tableName, table);
-    } else {
+    else {
         auto locations = selectTuples(table, query->conditions);
         tuples = recordManager.searchTuple(tableName, table, locations);
     }
@@ -105,7 +107,7 @@ void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
         API_Util::printError("Table doesn't exist");
         return;
     }
-    TableInfo table = catalogManager.getTableInfo(tableName);
+    auto table = catalogManager.getTableInfo(tableName);
     if (!isConditionListValid(table, query->conditions)) {
         API_Util::printError("Some attribute in the input doesn't exist, or the type doesn't match the actual type");
         return;
@@ -122,15 +124,6 @@ void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
         }
 
         recordManager.deleteAllRecord(tableName, table);
-
-        // Delete all the records from all the indices in the table
-        for (const auto &attributeName: getAllIndexedAttributeName(table)) {
-            auto attributeIndex = table.searchAttr(Adapter::unsafeCStyleString(attributeName));
-            auto attribute = Adapter::toAttribute(table, attributeIndex);
-            Index index(query->tableName, attribute);
-            index.clearIndex(Adapter::getIndexFilePath(query->tableName, attributeName),
-                             Adapter::toDataType(attribute.type));
-        }
     } else {
         auto locations = selectTuples(table, query->conditions);
         auto tuples = recordManager.searchTuple(tableName, table, locations);
@@ -154,8 +147,7 @@ void API::handleInsertQuery(QueryPointer<InsertQuery> query) {
         API_Util::printError("Table doesn't exist");
         return;
     }
-
-    TableInfo table = catalogManager.getTableInfo(tableName);
+    auto table = catalogManager.getTableInfo(tableName);
     // Check if valid
     if (query->values.size() != table.attrNum) {
         API_Util::printError("The number of attributes doesn't match");
@@ -169,13 +161,12 @@ void API::handleInsertQuery(QueryPointer<InsertQuery> query) {
     int location = recordManager.insertRecord(tableName, Adapter::toTuple(table, query->values), table);
 
     // Update indices
-    for (auto attributeIter = query->values.cbegin(); attributeIter < query->values.cend(); attributeIter++) {
-        int attributeIndex = static_cast<int>(attributeIter - query->values.cbegin());
+    for (int attributeIndex = 0; attributeIndex < table.attrNum; attributeIndex++) {
         if (table.hasIndex[attributeIndex]) {
-            Attribute attribute = Adapter::toAttribute(table, attributeIndex);
+            auto attribute = Adapter::toAttribute(table, attributeIndex);
             Index index(query->tableName, attribute);
             index.insertIndex(Adapter::getIndexFilePath(query->tableName, table.attrName[attributeIndex]),
-                              Adapter::toData(*attributeIter), location);
+                              Adapter::toData(query->values[attributeIndex]), location);
         }
     }
 }

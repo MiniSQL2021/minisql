@@ -71,11 +71,7 @@ Attribute Adapter::toAttribute(const Literal &literal) {
 
 // Get info of an attribute
 Attribute Adapter::toAttribute(TableInfo &table, const std::string &attributeName) {
-    Attribute result;
-    int attributeIndex = table.searchAttr(unsafeCStyleString(attributeName));
-    result.type = table.attrType[attributeIndex];
-    result.dataLength = table.attrLength[attributeIndex];
-    return result;
+    return toAttribute(table, table.searchAttr(unsafeCStyleString(attributeName)));
 }
 
 // Get info of an attribute by index
