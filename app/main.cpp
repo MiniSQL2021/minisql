@@ -6,7 +6,7 @@ int main() {
     CatalogManager catalogManager(bufferManager);
     RecordManager recordManager(bufferManager);
 
-    API api(interpreter, catalogManager, recordManager);
+    API api(interpreter, catalogManager, recordManager, bufferManager);
     api.listen();
     return 0;
 }
