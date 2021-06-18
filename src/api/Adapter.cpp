@@ -140,16 +140,3 @@ int Adapter::toDataType(AttributeType type) {
             return -1;
     }
 }
-
-std::string Adapter::toString(Attribute attribute) {
-    switch (attribute.type) {
-        case AttributeType::INT:
-            return std::to_string(attribute.intData);
-        case AttributeType::FLOAT:
-            return std::to_string(attribute.floatData);
-        case AttributeType::CHAR:
-            return std::string(attribute.charData);
-        case AttributeType::UNDEFINE:
-            return "";
-    }
-}

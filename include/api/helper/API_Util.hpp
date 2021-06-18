@@ -2,8 +2,8 @@
 
 #include <set>
 
-#include "../../catalog-manager/Catalog_Manager.h"
-#include "../../record-manager/RecordManager.h"
+#include "../../catalog-manager/tableInfo.h"
+#include "../../record-manager/tuple.h"
 
 namespace API_Util {
     void printTable(const std::vector<Tuple> &tuples, const TableInfo &table);
