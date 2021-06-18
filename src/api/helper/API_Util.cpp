@@ -1,6 +1,6 @@
 #include "API_Util.hpp"
 #include "Adapter.hpp"
-#include "helper/tabulate.hpp"
+#include "tabulate/table.hpp"
 
 using TableRow = std::vector<variant<std::string, const char *, tabulate::Table>>;
 
