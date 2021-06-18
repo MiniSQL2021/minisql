@@ -54,7 +54,7 @@ void API::handleCreateIndexQuery(QueryPointer<CreateIndexQuery> query) {
     auto attributeIndex = table.searchAttr(attributeName);
     auto attribute = Adapter::toAttribute(table, attributeIndex);
 
-    Index index(query->tableName, attribute);
+    Index index(query->tableName, table, bufferManager);
     index.createIndexWithDatas(Adapter::getIndexFilePath(query->tableName, query->columnName),
                                Adapter::toDataType(attribute.type), attributeIndex,
                                recordManager.nonConditionSelect(tableName, table));
@@ -69,7 +69,7 @@ void API::handleDropIndexQuery(QueryPointer<DropIndexQuery> query) {
 
         auto table = catalogManager.getTableInfo(tableName);
         auto attribute = Adapter::toAttribute(table, attributeName);
-        Index index(tableName, attribute);
+        Index index(tableName, table, bufferManager);
         index.dropIndex(Adapter::getIndexFilePath(tableName, attributeName),
                         Adapter::toDataType(attribute.type));
 
@@ -118,7 +118,7 @@ void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
         for (const auto &attributeIndex: getAllIndexedAttributeIndex(table)) {
             auto attribute = Adapter::toAttribute(table, attributeIndex);
             auto attributeName = table.attrName[attributeIndex];
-            Index index(query->tableName, attribute);
+            Index index(query->tableName, table, bufferManager);
             index.clearIndex(Adapter::getIndexFilePath(query->tableName, attributeName),
                              Adapter::toDataType(attribute.type));
         }
@@ -131,7 +131,7 @@ void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
         // Delete all the selected records from all the indices in the table
         for (const auto &attributeIndex: getAllIndexedAttributeIndex(table)) {
             auto attributeName = table.attrName[attributeIndex];
-            Index index(query->tableName, Adapter::toAttribute(table, attributeIndex));
+            Index index(query->tableName, table, bufferManager);
             for (const auto &tuple : tuples)
                 index.deleteIndexByKey(Adapter::getIndexFilePath(query->tableName, attributeName),
                                        Adapter::toData(tuple.attr[attributeIndex]));
@@ -164,7 +164,7 @@ void API::handleInsertQuery(QueryPointer<InsertQuery> query) {
     for (int attributeIndex = 0; attributeIndex < table.attrNum; attributeIndex++) {
         if (table.hasIndex[attributeIndex]) {
             auto attribute = Adapter::toAttribute(table, attributeIndex);
-            Index index(query->tableName, attribute);
+            Index index(query->tableName, table, bufferManager);
             index.insertIndex(Adapter::getIndexFilePath(query->tableName, table.attrName[attributeIndex]),
                               Adapter::toData(query->values[attributeIndex]), location);
         }
