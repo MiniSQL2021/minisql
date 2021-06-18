@@ -112,7 +112,25 @@ void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
     }
 
     if (query->conditions.empty()) {
+        // Delete all the records from all the indices in the table
+        for (const auto &attributeName: getAllIndexedAttributeName(table)) {
+            auto attributeIndex = table.searchAttr(Adapter::unsafeCStyleString(attributeName));
+            auto attribute = Adapter::toAttribute(table, attributeIndex);
+            Index index(query->tableName, attribute);
+            index.clearIndex(Adapter::getIndexFilePath(query->tableName, attributeName),
+                             Adapter::toDataType(attribute.type));
+        }
+
         recordManager.deleteAllRecord(tableName, table);
+
+        // Delete all the records from all the indices in the table
+        for (const auto &attributeName: getAllIndexedAttributeName(table)) {
+            auto attributeIndex = table.searchAttr(Adapter::unsafeCStyleString(attributeName));
+            auto attribute = Adapter::toAttribute(table, attributeIndex);
+            Index index(query->tableName, attribute);
+            index.clearIndex(Adapter::getIndexFilePath(query->tableName, attributeName),
+                             Adapter::toDataType(attribute.type));
+        }
     } else {
         auto locations = selectTuples(table, query->conditions);
         auto tuples = recordManager.searchTuple(tableName, table, locations);
