@@ -61,7 +61,11 @@ public:
 //创建一个TreeNode，如果是叶子节点，Leaf=True
 template<typename T>
 inline TreeNode<T>::TreeNode(int in_degree, bool Leaf):
-        num(0), parent(NULL), nextLeafNode(NULL), isLeaf(Leaf), degree(in_degree) {
+        num(0),
+        parent(NULL),
+        nextLeafNode(NULL),
+        isLeaf(Leaf),
+        degree(in_degree) {
     for (int i = 0; i < degree + 1; i++) {
         childs.push_back(NULL);
         keys.push_back(T());

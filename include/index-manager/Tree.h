@@ -11,8 +11,6 @@
 #include "exception.h"
 #include "buffer_manager.h"
 
-extern BufferManager buffer_manager;
-
 template<typename T>
 class Tree {
 private:
@@ -53,10 +51,15 @@ private:
     int getBlockNum(std::string table_name);
 
 public:
+    BufferManager &buffer_Manager;
+
     //构造函数
     //用于构造一颗新的树，确定m_name,key的size，树的度
     //同时调用其他函数为本树分配内存
-    Tree(std::string m_name, int key_size, int degree);
+    Tree(std::string m_name, int key_size, int degree, BufferManager &buffer_Manager) : buffer_maneger
+
+    =
+    buffer_Manager;
 
     //析构函数
     //释放相应的内存
@@ -102,8 +105,14 @@ public:
 
 //New Tree
 template<typename T>
-inline Tree<T>::Tree(std::string in_name, int key_size, int in_degree):
-        file_name(in_name), key_num(0), level(0), node_num(0), root(NULL), leafHead(NULL), key_size(key_size),
+inline Tree<T>::Tree(std::string in_name, int key_size, int in_degree, BufferManager &buffer_Manager):
+        file_name(in_name),
+        key_num(0),
+        level(0),
+        node_num(0),
+        root(NULL),
+        leafHead(NULL),
+        key_size(key_size),
         degree(in_degree) {
     //初始化并读取数据
     initialization();
