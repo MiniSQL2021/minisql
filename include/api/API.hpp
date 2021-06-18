@@ -7,6 +7,7 @@
 #include "../catalog-manager/Catalog_Manager.h"
 #include "../record-manager/RecordManager.h"
 #include "../index-manager/Index.h"
+//#include "../index-manager/IndexMock.h"
 
 #include "helper/API_Util.hpp"
 #include "helper/Condition.hpp"

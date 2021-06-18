@@ -1,4 +1,5 @@
 add_library(index-manager Index.cpp)
+#add_library(index-manager IndexMock.cpp)
 
 target_include_directories(index-manager PRIVATE ${CMAKE_SOURCE_DIR}/include/index-manager)
 target_include_directories(index-manager PRIVATE ${CMAKE_SOURCE_DIR}/include/buffer-manager)

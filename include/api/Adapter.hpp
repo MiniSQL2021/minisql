@@ -6,6 +6,7 @@
 #include "../catalog-manager/Catalog_Manager.h"
 #include "../record-manager/RecordManager.h"
 #include "../index-manager/Index.h"
+//#include "../index-manager/IndexMock.h"
 
 namespace Adapter {
     char *unsafeCStyleString(const std::string &str);
