@@ -1,5 +1,4 @@
-#ifndef _EXCEPTION_H_
-#define _EXCEPTION_H_ 1
+#pragma once
 
 #include <exception>
 
@@ -69,5 +68,3 @@ class deleteKey_no_keys_in_tree : public std::exception {
 class adjustAfterinser_can_not_allocate_the_new_root : public std::exception {
     //
 };
-
-#endif #pragma once
