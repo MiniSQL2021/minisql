@@ -1,3 +1,5 @@
+#include <cstring>
+
 /*
 68+72n字节
 	表长 4字节 int

@@ -4,6 +4,7 @@
 	tuple长度 4字节
 	tuple数组： tupleLength*tupleNum
 */
+#include <cstring>
 
 #include"tablePage.h"
 

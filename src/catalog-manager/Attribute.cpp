@@ -1,3 +1,5 @@
+#include <cstring>
+
 #include"Attribute.h"
 
 Attribute::Attribute() {

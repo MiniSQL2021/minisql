@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <string>
+#include <cstring>
 #include <algorithm>
 #include <map>
 #include <iostream>

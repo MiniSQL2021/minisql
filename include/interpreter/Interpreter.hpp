@@ -1,5 +1,8 @@
 #pragma once
 
+#include <functional>
+#include <memory>
+
 #include "query/Queries.hpp"
 #include "type/BinaryOperator.hpp"
 #include "type/Column.hpp"

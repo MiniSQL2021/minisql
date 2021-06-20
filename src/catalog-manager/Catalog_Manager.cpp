@@ -1,4 +1,6 @@
-﻿#include"Catalog_Manager.h"
+﻿#include <cstring>
+
+#include"Catalog_Manager.h"
 
 bool CatalogManager::checkTable(char *tableName)            //参数：表名；检查table是否存在
 {
