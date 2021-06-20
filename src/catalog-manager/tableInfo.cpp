@@ -52,7 +52,7 @@ TableInfo::TableInfo(const TableInfo &tbif) {
     }
 
     memcpy(&dataLength, &tbif.dataLength, 4);
-    strcpy(rowData, tbif.rowData);
+    memcpy(rowData, tbif.rowData, 1024);
 }
 
 TableInfo::~TableInfo() {};
@@ -123,7 +123,7 @@ void TableInfo::getFromRowData() {
     int i, p = 0;
     memcpy(&dataLength, rowData, 4);
     p += 4;
-    memcpy(TableName + p, rowData, 28);
+    memcpy(TableName, rowData + p, 28);
     p += 28;
     memcpy(&attrNum, rowData + p, 4);
     p += 4;

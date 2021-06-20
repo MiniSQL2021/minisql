@@ -19,7 +19,7 @@ struct attrStruct {
 };
 
 class TableInfo {
-  public:
+public:
     TableInfo();
 
     TableInfo(const TableInfo &);

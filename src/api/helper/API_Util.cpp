@@ -44,7 +44,7 @@ void API_Util::printTable(const std::vector<Tuple> &tuples, const TableInfo &tab
     }
 
     std::cout << output << std::endl;
-    std::cout << table.attrNum << (table.attrNum <= 1 ? "row" : "rows") << " in set ";
+    std::cout << tuples.size() << (tuples.size() <= 1 ? " row" : " rows") << " in set ";
 }
 
 void API_Util::printError(const std::string &message) {

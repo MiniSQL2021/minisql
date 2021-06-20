@@ -31,6 +31,7 @@ attrStruct Adapter::toAttrStruct(const Column &column) {
     result.attrType = toAttributeType(column.type);
     result.attrUnique = column.unique;
     if (auto maxLength = column.maxLength) result.attrlength = *maxLength;
+    else result.attrlength = 4;    // sizeof(int) or sizeof(float)
     result.hasIndex = false;
     result.indexname = dynamicCStyleString("");
 

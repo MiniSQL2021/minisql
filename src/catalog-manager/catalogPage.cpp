@@ -22,7 +22,7 @@ int CatalogPage::searchTableInfo(char *tbnm) {
 void CatalogPage::writePage(char *pagedata) {
     int i;
     memcpy(pagedata, &tableNum, 4);
-    strncat(pagedata, (tbif + tableNum - 1)->rowData, (tbif + tableNum - 1)->dataLength);
+    memcpy(pagedata + 4, (tbif + tableNum - 1)->rowData, (tbif + tableNum - 1)->dataLength);
 }
 
 void CatalogPage::updatePage(char *pagedata, int i) {

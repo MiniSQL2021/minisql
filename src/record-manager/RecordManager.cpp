@@ -27,32 +27,34 @@ int RecordManager::insertRecord(char *tbnm, Tuple tup, TableInfo tbif)       //å
     int i, k, j, asw = 0, p = 0;
     char *pgdata;
     int MaxPgNUM = 0;
+    bool isWritten = false;
     for (i = 0; i < pgNum; i++) {
-        pgdata = buffer.getPage(tbnm, i);
+        pgdata = buffer.getPage("./database/data/" + std::string(tbnm), i);
         tbpg->readTablePage(pgdata, tbif);
         MaxPgNUM = 4096 / tbpg->tupleLength;
         k = tbpg->checkdelete();
         if (tbpg->tupleNum < MaxPgNUM || k != -1) {
             p = tbpg->insertTuple(pgdata, tup, k);
-
+            isWritten = true;
         }
         asw += tbpg->tupleNum;
     }
-    if (i == pgNum) {
+    if (!isWritten) {
         p = 1;
         int m = 0;
         int tplength = 0;
         for (j = 0; j < tbif.attrNum; j++) {
             tplength += tbif.attrLength[j];
         }
-        pgdata = buffer.getPage(tbnm, i);
+        pgdata = buffer.getPage("./database/data/" + std::string(tbnm), i);
         memcpy(pgdata, &m, 4);
         memcpy(pgdata + 4, &tplength, 4);
         tbpg->readTablePage(pgdata, tbif);
         tbpg->insertTuple(pgdata, tup, -1);
     }
-    int b = buffer.getPageId(tbnm, i);
+    int b = buffer.getPageId("./database/data/" + std::string(tbnm), i);
     buffer.modifyPage(b);
+    buffer.flushAfterQuery();
     delete tbpg;
     return asw + p;
 }
@@ -67,7 +69,7 @@ void RecordManager::deleteRecord(char *tableName, std::vector<int> no,
     int i, j = 0;
     int p = 0, size = 0;
     for (i = 0; i < pgNum; i++) {
-        pgdata = buffer.getPage(tableName, i);
+        pgdata = buffer.getPage("./database/data/" + std::string(tableName), i);
         tbpg->readTablePage(pgdata, tbif);
 
         size += tbpg->tupleNum;
@@ -80,8 +82,9 @@ void RecordManager::deleteRecord(char *tableName, std::vector<int> no,
         nm.clear();
         if (nm[0]) {
             tbpg->deleteTuple(pgdata, nm);
-            int b = buffer.getPageId(tableName, i);
+            int b = buffer.getPageId("./database/data/" + std::string(tableName), i);
             buffer.modifyPage(b);
+            buffer.flushAfterQuery();
         }
     }
     delete tbpg;
@@ -103,7 +106,7 @@ std::vector<Tuple> RecordManager::searchTuple(char *tableName, TableInfo tbif,
     int i, j = 0;
     int p = 0, size = 0;
     for (i = 0; i < pgNum; i++) {
-        pgdata = buffer.getPage(tableName, i);
+        pgdata = buffer.getPage("./database/data/" + std::string(tableName), i);
         tbpg->readTablePage(pgdata, tbif);
 
         size += tbpg->tupleNum;
@@ -133,7 +136,7 @@ std::vector<int> RecordManager::conditionSelect(char *tableName, int attrno, cha
     int i, j;
     int p = 0;
     for (i = 0; i < pgNum; i++) {
-        pgdata = buffer.getPage(tableName, i);
+        pgdata = buffer.getPage("./database/data/" + std::string(tableName), i);
         tbpg->readTablePage(pgdata, tbif);
 
         temp = tbpg->conditionsearch(attr, op, attrno, p);
@@ -156,7 +159,7 @@ RecordManager::nonConditionSelect(char *tableName,
     int i, j;
     int count = 0;
     for (i = 0; i < pgNum; i++) {
-        pgdata = buffer.getPage(tableName, i);
+        pgdata = buffer.getPage("./database/data/" + std::string(tableName), i);
         tbpg->readTablePage(pgdata, tbif);
         temp = (tbpg->nonconditionsearch());
         tup.insert(tup.end(), temp.begin(), temp.end());
@@ -173,7 +176,7 @@ bool RecordManager::checkUnique(char *tableName, int attrno, Attribute attr, Tab
     char op[3] = "==";
     bool flag = true;
     for (i = 0; i < pgNum; i++) {
-        pgdata = buffer.getPage(tableName, i);
+        pgdata = buffer.getPage("./database/data/" + std::string(tableName), i);
         tbpg->readTablePage(pgdata, tbif);
 
         for (j = 0; j < tbpg->tupleNum; j++) {
@@ -192,8 +195,9 @@ int RecordManager::getPageNum(char *tableName) {
     char *p;
     int block_num = -1;
     do {
-        p = buffer.getPage(name, block_num + 1);
+        p = buffer.getPage("./database/data/" + std::string(name), block_num + 1);
         block_num++;
     } while (p[0] != '\0');
+    if (block_num == 0) block_num = 1;
     return block_num;
 }

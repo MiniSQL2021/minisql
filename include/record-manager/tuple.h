@@ -28,6 +28,8 @@ public:
     void readRowData(char *RowData, TableInfo);
 
     void setTuple(int attrnum, std::vector<Attribute>, TableInfo tbif);
+
+    void setRowData();
 };
 
 #endif // !tuple_hpp

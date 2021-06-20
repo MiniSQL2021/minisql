@@ -15,7 +15,7 @@ Tuple::Tuple(const Tuple &tp) {
     for (i = 0; i < attrNum; i++) {
         attr[i] = tp.attr[i];
     }
-    strcpy(rowData, tp.rowData);
+    memcpy(rowData, tp.rowData, 4096);
 }
 
 void Tuple::writeRowData(char *pageRowData) {
@@ -74,6 +74,34 @@ void Tuple::readRowData(char *RowData, TableInfo tbif) {
     }
 }
 
+void Tuple::setRowData() {
+    memcpy(rowData, &hasdeleted, 1);
+    int i, p = 1;
+    for (i = 0; i < attrNum; i++) {
+
+        switch (attr[i].type) {
+            case AttributeType::INT: {
+                attr[i].getRowData();
+                memcpy(rowData + p, attr[i].rowData, 4);
+                p += 4;
+                break;
+            }
+            case AttributeType::FLOAT: {
+                attr[i].getRowData();
+                memcpy(rowData + p, attr[i].rowData, 4);
+                p += 4;
+                break;
+            }
+            case AttributeType::CHAR: {
+                attr[i].getRowData();
+                memcpy(rowData + p, attr[i].rowData, attr[i].dataLength);
+                p += attr[i].dataLength;
+                break;
+            }
+        }
+    }
+}
+
 void Tuple::setTuple(int attrnum, std::vector<Attribute> atr, TableInfo tbif)
 //参数*rowdata：（4字节 attrType）数据
 {
@@ -87,6 +115,7 @@ void Tuple::setTuple(int attrnum, std::vector<Attribute> atr, TableInfo tbif)
             throw illegal_data();
         }
         attr[i] = atr[i];
-
+        if (attr[i].type == AttributeType::CHAR) attr[i].dataLength = tbif.attrLength[i];
     }
+    setRowData();
 }

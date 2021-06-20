@@ -17,7 +17,7 @@ Attribute::Attribute(const Attribute &attr) {
     this->intData = attr.intData;
     this->floatData = attr.floatData;
     strcpy(charData, attr.charData);
-    strcpy(rowData, attr.rowData);
+    memcpy(rowData, attr.rowData, 255);
 }
 
 void Attribute::getRowData()            //从attribute类中导入到rowData中

@@ -18,7 +18,7 @@ int tablePage::insertTuple(char *pagedata, Tuple tup, int k) {
     if (k == -1) {
         tp[tupleNum] = tup;
         tupleNum++;
-        strncat(pagedata, tup.rowData, tupleLength);
+        memcpy(pagedata, tup.rowData, tupleLength);
         asw = tupleNum;
     } else {
         tp[k] = tup;
