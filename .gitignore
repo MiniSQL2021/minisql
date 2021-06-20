@@ -2,7 +2,7 @@
 .idea
 .vscode
 cmake-build
-
+build
 
 # Created by https://www.toptal.com/developers/gitignore/api/c++,windows,macos,clion,cmake,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=c++,windows,macos,clion,cmake,visualstudiocode
