@@ -35,9 +35,13 @@ void tablePage::deleteTuple(char *pagedata, std::vector<int> no) {
     int asw = 0;
     char null[4096] = "";
     bool f = true;
+    Attribute attr1;
     memcpy(null, &f, 1);
     for (i = 0; i < no.size(); i++) {
-        memcpy((tp + no[i])->rowData, null, tupleLength);
+        tp[no[i]].hasdeleted = f;
+        for (; j < tp[no[i]].attrNum; j++) {
+            tp[no[i]].attr[j] = attr1;
+        }
     }
     writeTablePage(pagedata);
 }
@@ -121,11 +125,14 @@ void tablePage::writeTablePage(char *pagedata) {
 
 void tablePage::readTablePage(char *pagedata, TableInfo tbinfo) {
     tbif = tbinfo;
-    int i;
+    int i, p = 0;
     memcpy(&tupleNum, pagedata, 4);
     memcpy(&tupleLength, pagedata + 4, 4);
 
     for (i = 0; i < tupleNum; i++) {
+
+        memcpy(tp[i].rowData, pagedata + p, tupleLength);
+        p += tupleLength;
         (tp + i)->readRowData(pagedata + 8 + tupleLength * i, tbif);
 
     }

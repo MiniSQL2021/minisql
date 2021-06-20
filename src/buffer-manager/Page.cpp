@@ -7,7 +7,7 @@ Page::Page() {
 void Page::init() {
     file_name = "";
     block_id = -1;
-    pinned_count = -1;
+    pinned_count = 0;
     is_dirty = false;
     ref = false;
     viable = true;

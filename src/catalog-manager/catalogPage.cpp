@@ -57,7 +57,7 @@ void CatalogPage::deleteTable(char *pagedata, int i) {
         memcpy(&size, pagedata + p, 4);
         p += size;
     }
-    memcpy(temp, pagedata + p, 4097 - p);
-    memcpy(pagedata + p - size, temp, 4097 - p + size);
+    memcpy(temp, pagedata + p, 4096 - p);
+    memcpy(pagedata + p - size, temp, 4096 - p + size);
     dataLength -= size;
 }

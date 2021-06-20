@@ -98,6 +98,7 @@ void API::handleSelectQuery(QueryPointer<SelectQuery> query) {
         auto locations = selectTuples(table, query->conditions);
         tuples = recordManager.searchTuple(tableName, table, locations);
     }
+    // TODO: Skip deleted tuples
     API_Util::printTable(tuples, table);
 }
 

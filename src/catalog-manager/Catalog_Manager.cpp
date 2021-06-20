@@ -265,7 +265,7 @@ void CatalogManager::dropTable(char *tableName)                //参数：表名
         throw table_does_not_exist();
     }
     cgpage->deleteTable(pgdata, n);
-    b = buffer.getPageId(tableName, i);
+    b = buffer.getPageId("./database/catalog/catalog", i);
     buffer.modifyPage(b);
     buffer.flushAfterQuery();
     delete cgpage;
@@ -302,7 +302,7 @@ void CatalogManager::createTable(TableInfo tbif)        //参数：TableInfo;若
         cgpage->tableNum++;
         cgpage->tbif[cgpage->tableNum - 1] = tbif;
         cgpage->writePage(pgdata);
-        b = buffer.getPageId(tbif.TableName, i);
+        b = buffer.getPageId("./database/catalog/catalog", i);
         buffer.modifyPage(b);
         buffer.flushAfterQuery();
     };
@@ -345,7 +345,7 @@ void CatalogManager::createIndex(char *tableName, char *attrName, char *indexNam
 
     cgpage->updatePage(pgdata, n);
     delete cgpage;
-    b = buffer.getPageId(tableName, i);
+    b = buffer.getPageId("./database/catalog/catalog", i);
     buffer.modifyPage(b);
     buffer.flushAfterQuery();
 }
@@ -370,7 +370,7 @@ void CatalogManager::deleteIndex(char *indexName)    //参数：indexName；删�
                     memcpy((cgpage->tbif + n)->indexName, nul, 32);
                     cgpage->updatePage(pgdata, n);
                     delete cgpage;
-                    b = buffer.getPageId(cgpage->tbif[n].TableName, i);
+                    b = buffer.getPageId("./database/catalog/catalog", i);
                     buffer.modifyPage(b);
                     buffer.flushAfterQuery();
                     return;

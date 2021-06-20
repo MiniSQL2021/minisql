@@ -74,19 +74,19 @@ void RecordManager::deleteRecord(char *tableName, std::vector<int> no,
         tbpg->readTablePage(pgdata, tbif);
 
         size += tbpg->tupleNum;
-        while (size > no[j]) {
+        while (j < no.size() && size > no[j]) {
             nm.push_back(no[j] - p);
             j++;
         }
         p = size;
 
-        nm.clear();
         if (nm[0]) {
             tbpg->deleteTuple(pgdata, nm);
             int b = buffer.getPageId("./database/data/" + std::string(tableName), i);
             buffer.modifyPage(b);
             buffer.flushAfterQuery();
         }
+        nm.clear();
     }
     delete tbpg;
 }
