@@ -5,7 +5,7 @@ BufferManager::BufferManager(int size) {
 }
 
 void BufferManager::init(int size) {
-    Frames = new Page[size];
+    Frames.resize(size);
     frame_size = size;
     current_pos = 0;
 }
@@ -47,7 +47,7 @@ bool BufferManager::unpinPage(int page_id) {
     }
 }
 
-bool BufferManager::loadDiskBlock(int page_id, std::string file_name, int block_id) {
+void BufferManager::loadDiskBlock(int page_id, std::string file_name, int block_id) {
     Frames[page_id].init();
 
     FILE *f = fopen(file_name.c_str(), "a+");
@@ -67,7 +67,6 @@ bool BufferManager::loadDiskBlock(int page_id, std::string file_name, int block_
     Frames[page_id].setRef(true);
     Frames[page_id].setViable(false);
 
-    return true;
 }
 
 // linear scan
@@ -111,4 +110,18 @@ void BufferManager::flushPage(int page_id, std::string file_name, int block_id) 
     char *buffer = Frames[page_id].getPageData();
     fwrite(buffer, PAGE_SIZE, 1, f);
     fclose(f);
+}
+
+// after each query, write dirty pages to disk
+void BufferManager::flushAfterQuery() {
+    for (int i = 0; i < frame_size; i++) {
+        if (Frames[i].getIsDirty()) {
+            FILE *f = fopen(Frames[i].getName().c_str(), "r+");
+
+            fseek(f, PAGE_SIZE * Frames[i].getBlockId(), SEEK_SET);
+            char *buffer = Frames[i].getPageData();
+            fwrite(buffer, PAGE_SIZE, 1, f);
+            fclose(f);
+        }
+    }
 }

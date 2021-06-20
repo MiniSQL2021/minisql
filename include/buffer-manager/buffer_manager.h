@@ -9,7 +9,7 @@
 
 class BufferManager {
 private:
-    Page *Frames;        // an array of Page
+    std::vector<Page> Frames;        // an array of Page
     int frame_size;
     int current_pos;    // used for LRU
 
@@ -20,7 +20,7 @@ private:
     // load the block with the file_name to the page_id page
     // failed to open, return false
     // else, return true
-    bool loadDiskBlock(int page_id, std::string file_name, int block_id);
+    void loadDiskBlock(int page_id, std::string file_name, int block_id);
 
 public:
     BufferManager(int size = MAX_BLOCK);
@@ -46,8 +46,8 @@ public:
     // return file_name's block_id th block's page_id
     int getPageId(std::string file_name, int block_id);
 
-    // return the block_num of file file_name
-    int getBlockNum(std::string file_name);
+    // after each query, write dirty pages to disk
+    void flushAfterQuery();
 };
 
 #endif // !BUFFER_MANAGER_H
