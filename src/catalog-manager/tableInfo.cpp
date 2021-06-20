@@ -79,7 +79,7 @@ void TableInfo::setTableInfo(char *tbn, char *pn, bool hp, int an, attrStruct *a
 int TableInfo::searchAttr(char *attrname) {
     int i;
     for (i = 0; i < attrNum; i++) {
-        if (strcmp(attrname, attrName[i])) {
+        if (strcmp(attrname, attrName[i]) == 0) {
             return i;
         }
     }

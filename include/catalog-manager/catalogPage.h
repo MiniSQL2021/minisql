@@ -20,6 +20,7 @@ public:
     ~CatalogPage();
 
     int tableNum = 0;
+    int dataLength = 0;
     TableInfo tbif[50];
 
     int searchTableInfo(char *);

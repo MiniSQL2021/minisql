@@ -1,5 +1,3 @@
-#include <cstring>
-
 #include"catalogPage.h"
 
 CatalogPage::CatalogPage() {};
@@ -22,7 +20,7 @@ int CatalogPage::searchTableInfo(char *tbnm) {
 void CatalogPage::writePage(char *pagedata) {
     int i;
     memcpy(pagedata, &tableNum, 4);
-    memcpy(pagedata + 4, (tbif + tableNum - 1)->rowData, (tbif + tableNum - 1)->dataLength);
+    memcpy(pagedata + dataLength, (tbif + tableNum - 1)->rowData, (tbif + tableNum - 1)->dataLength);
 }
 
 void CatalogPage::updatePage(char *pagedata, int i) {
@@ -46,6 +44,7 @@ void CatalogPage::readPage(char *pagedata) {
         p += size;
         (tbif + i)->getFromRowData();
     }
+    dataLength = p;
 }
 
 void CatalogPage::deleteTable(char *pagedata, int i) {
@@ -57,8 +56,8 @@ void CatalogPage::deleteTable(char *pagedata, int i) {
     for (j = 0; j <= i; j++) {
         memcpy(&size, pagedata + p, 4);
         p += size;
-    }//p指向所删数组后一个的位置
+    }
     memcpy(temp, pagedata + p, 4097 - p);
     memcpy(pagedata + p - size, temp, 4097 - p + size);
-
+    dataLength -= size;
 }

@@ -36,6 +36,7 @@ int RecordManager::insertRecord(char *tbnm, Tuple tup, TableInfo tbif)       //å
         if (tbpg->tupleNum < MaxPgNUM || k != -1) {
             p = tbpg->insertTuple(pgdata, tup, k);
             isWritten = true;
+            break;
         }
         asw += tbpg->tupleNum;
     }
@@ -110,7 +111,7 @@ std::vector<Tuple> RecordManager::searchTuple(char *tableName, TableInfo tbif,
         tbpg->readTablePage(pgdata, tbif);
 
         size += tbpg->tupleNum;
-        while (size > no[j]) {
+        while (j < no.size() && size > no[j]) {
             nm.push_back(no[j] - p);
             j++;
         }

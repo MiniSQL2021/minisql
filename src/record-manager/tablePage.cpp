@@ -14,11 +14,13 @@ tablePage::~tablePage() {};
 
 int tablePage::insertTuple(char *pagedata, Tuple tup, int k) {
     int p = k * tupleLength;
+    int pN = tupleNum * tupleLength + 8;
     int asw = 0;
     if (k == -1) {
         tp[tupleNum] = tup;
         tupleNum++;
-        memcpy(pagedata, tup.rowData, tupleLength);
+        memcpy(pagedata, &tupleNum, 4);
+        memcpy(pagedata + pN, tup.rowData, tupleLength);
         asw = tupleNum;
     } else {
         tp[k] = tup;
@@ -110,9 +112,10 @@ void tablePage::writeTablePage(char *pagedata) {
     int i;
     memcpy(pagedata, &tupleNum, 4);
     memcpy(pagedata + 4, &tupleLength, 4);
+    int p = 8;
     for (i = 0; i < tupleNum; i++) {
-        strncat(pagedata, (tp + i)->rowData, tupleLength);
-
+        memcpy(pagedata + p, (tp + i)->rowData, tupleLength);
+        p += tupleLength;
     }
 }
 

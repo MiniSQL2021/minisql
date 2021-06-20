@@ -58,7 +58,6 @@ void Attribute::releaseRowData()        //从rowData导出到attribute中,并给
             break;
         }
         case AttributeType::CHAR: {
-            dataLength = sizeof(rowData);
             strcpy(charData, rowData);
             break;
         }
@@ -144,7 +143,7 @@ bool Attribute::operator>=(const Attribute &attr) {
 }
 
 int Attribute::getOperator(char *op) {
-    if (strcmp(op, "<")) {
+    if (strcmp(op, "<") == 0) {
         return 0;
     } else if (strcmp(op, "<=") == 0) {
         return 1;

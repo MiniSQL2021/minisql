@@ -24,7 +24,6 @@ public:
 
     char rowData[4096] = "";                 //元组记录的格式化，用于存入page
 
-    void writeRowData(char *pageRowData);    //写入rowdata；
     void readRowData(char *RowData, TableInfo);
 
     void setTuple(int attrnum, std::vector<Attribute>, TableInfo tbif);
