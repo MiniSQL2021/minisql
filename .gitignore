@@ -1,6 +1,5 @@
 ### Custom ###
 .idea
-.vscode
 cmake-build
 build
 
