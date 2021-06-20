@@ -8,7 +8,7 @@
 
 #include "Attribute.h"
 #include "Page.h"
-#include "TableInfo.h"
+#include "tableInfo.h"
 #include "buffer_manager.h"
 #include "catalogPage.h"
 #include "exception.h"

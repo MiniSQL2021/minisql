@@ -6,7 +6,7 @@
 #include<string>
 #include<iostream>
 #include"Attribute.h"
-#include"TableInfo.h"
+#include"tableInfo.h"
 #include"exception.h"
 #include<vector>
 

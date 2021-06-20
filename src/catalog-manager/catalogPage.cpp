@@ -1,3 +1,5 @@
+#include <cstring>
+
 #include"catalogPage.h"
 
 CatalogPage::CatalogPage() {};

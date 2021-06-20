@@ -17,7 +17,7 @@
 		属性二、、、
 	primarykey有无 1字节 char
 	primarykey名31字节 char*/
-#include "TableInfo.h"
+#include "tableInfo.h"
 
 TableInfo::TableInfo() {
     int i, j;

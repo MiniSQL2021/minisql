@@ -8,7 +8,7 @@
 #include<iostream>
 #include<string>
 #include <vector>
-#include"TableInfo.h"
+#include"tableInfo.h"
 #include"Attribute.h"
 #include"tuple.h"
 #include"tablePage.h"

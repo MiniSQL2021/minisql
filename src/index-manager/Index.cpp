@@ -2,8 +2,9 @@
 #include <iostream>
 #include "buffer_manager.h"
 #include "Tree.h"
-#include "catalog_manager.h"
+#include "Catalog_Manager.h"
 #include <string>
+#include <cstring>
 #include <vector>
 #include <map>
 #include "exception.h"

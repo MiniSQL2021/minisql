@@ -1,3 +1,5 @@
+#include <cstring>
+
 #include"RecordManager.h"
 
 void RecordManager::createTable(char *tablename, TableInfo tbif) {

@@ -10,7 +10,7 @@ catalogPage格式 ：不定长、单个数据定长
 
 #include<string>
 #include<iostream>
-#include"TableInfo.h"
+#include"tableInfo.h"
 #include "exception.h"
 
 class CatalogPage {
