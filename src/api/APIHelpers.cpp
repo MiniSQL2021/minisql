@@ -60,7 +60,8 @@ void intersectWithSet(std::set<int> &set, int location, bool &isFirstCondition) 
     if (isFirstCondition) {
         isFirstCondition = false;
         set = std::set<int>{location};
-    } else if (!set.contains(location)) set.clear();
+    } else if (set.find(location) == set.end())
+        set.clear();
 }
 
 void removeFromSet(std::set<int> &set, int location, bool &isFirstCondition) {

@@ -3,7 +3,7 @@
 
 // Warning: Erasing type-safety guard of const-ness
 // Need to guarantee that the string is not deallocated when using
-char *Adapter::unsafeCStyleString(const string &str) {
+char *Adapter::unsafeCStyleString(const std::string &str) {
     return const_cast<char *>(str.c_str());
 }
 
@@ -128,7 +128,7 @@ Tuple Adapter::toTuple(TableInfo &table, const std::vector<Literal> &literals) {
     return result;
 }
 
-std::string Adapter::getIndexFilePath(const string &tableName, const string &attributeName) {
+std::string Adapter::getIndexFilePath(const std::string &tableName, const std::string &attributeName) {
     return "INDEX_FILE_" + tableName + "_" + attributeName;
 }
 

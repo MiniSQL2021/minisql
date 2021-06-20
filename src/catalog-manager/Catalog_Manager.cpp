@@ -64,14 +64,15 @@ bool CatalogManager::checkIndex(char *tableName, char *attrname)    //参数：�
 
 }
 
-pair<char *, char *> CatalogManager::searchIndex(char *indexname)            //参数：IndexName；返回所在的表
+std::pair<char *, char *>
+CatalogManager::searchIndex(char *indexname) //参数：IndexName；返回所在的表
 {
     CatalogPage *cgpage = new CatalogPage;
     int pgNum = getCatalogPageNum();
     int i, j, m;
     char *pgdata;
     int n;
-    string str;
+    std::string str;
     for (i = 0; i < pgNum; i++) {
         pgdata = getCatalogPage(i);
         cgpage->readPage(pgdata);
@@ -80,7 +81,8 @@ pair<char *, char *> CatalogManager::searchIndex(char *indexname)            //�
             for (j = 0; j < cgpage->tbif[n].attrNum; j++) {
                 if (strcmp((cgpage->tbif + n)->indexName[j], indexname) == 0) {
                     delete cgpage;
-                    return make_pair((cgpage->tbif + n)->TableName, (cgpage->tbif + n)->indexName[j]);
+                    return std::make_pair((cgpage->tbif + n)->TableName,
+                                          (cgpage->tbif + n)->indexName[j]);
                 }
             }
         }
@@ -89,7 +91,6 @@ pair<char *, char *> CatalogManager::searchIndex(char *indexname)            //�
         delete cgpage;
         throw index_does_not_exist();
     }
-
 }
 
 bool CatalogManager::checkAttr(char *tableName, char *attrnm)        //参数：表名，属性名；检查属性是否存在
@@ -353,7 +354,7 @@ void CatalogManager::deleteIndex(char *indexName)    //参数：indexName；删�
     char *pgdata;
     int n;
     char nul[32] = "";
-    string str;
+    std::string str;
     for (i = 0; i < pgNum; i++) {
         pgdata = getCatalogPage(i);
         cgpage->readPage(pgdata);
@@ -379,7 +380,7 @@ void CatalogManager::deleteIndex(char *indexName)    //参数：indexName；删�
 }
 
 int CatalogManager::getCatalogPageNum() {
-    string name = "./database/catalog/catalog";
+    std::string name = "./database/catalog/catalog";
     char *p;
     int block_num = -1;
     do {

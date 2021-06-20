@@ -28,7 +28,7 @@ int tablePage::insertTuple(char *pagedata, Tuple tup, int k) {
     return asw;
 }
 
-void tablePage::deleteTuple(char *pagedata, vector<int> no) {
+void tablePage::deleteTuple(char *pagedata, std::vector<int> no) {
     int i, j = 0, flag = 0;
     int asw = 0;
     char null[4096] = "";
@@ -40,9 +40,9 @@ void tablePage::deleteTuple(char *pagedata, vector<int> no) {
     writeTablePage(pagedata);
 }
 
-vector<Tuple> tablePage::nonconditionsearch() {
+std::vector<Tuple> tablePage::nonconditionsearch() {
     int i = 0;
-    vector<Tuple> tup;
+    std::vector<Tuple> tup;
 
     for (; i < tupleNum; i++) {
         tup.push_back(*(tp + i));
@@ -50,10 +50,10 @@ vector<Tuple> tablePage::nonconditionsearch() {
     return tup;
 }
 
-vector<Tuple> tablePage::searchTuple(vector<int> no) {
+std::vector<Tuple> tablePage::searchTuple(std::vector<int> no) {
     int i = 0;
     int n = 0;
-    vector<Tuple> tup;
+    std::vector<Tuple> tup;
 
     for (; i < no.size(); i++) {
         n = no[i];
@@ -62,11 +62,11 @@ vector<Tuple> tablePage::searchTuple(vector<int> no) {
     return tup;
 }
 
-vector<int> tablePage::conditionsearch(Attribute attr, char *operater, int attrno,
-                                       int p)        //参数：attr，算术运算符,int attrno;返回tuple编号
+std::vector<int> tablePage::conditionsearch(Attribute attr, char *operater, int attrno,
+                                            int p) //参数：attr，算术运算符,int attrno;返回tuple编号
 {
     int i;
-    vector<int> no;
+    std::vector<int> no;
     for (i = 0; i < tupleNum; i++) {
 
         switch (attr.getOperator(operater)) {
@@ -104,7 +104,6 @@ vector<int> tablePage::conditionsearch(Attribute attr, char *operater, int attrn
         }
     }
     return no;
-
 }
 
 void tablePage::writeTablePage(char *pagedata) {

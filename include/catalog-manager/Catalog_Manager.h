@@ -6,17 +6,15 @@
 #define Catalog_Manager
 //实现关系模式的储存调用，提供函数
 
-
-#include<iostream>
-#include<string>
+#include "Attribute.h"
+#include "Page.h"
 #include "TableInfo.h"
-#include"Attribute.h"
-#include"Page.h"
-#include"catalogPage.h"
-#include"buffer_manager.h"
+#include "buffer_manager.h"
+#include "catalogPage.h"
 #include "exception.h"
-
-using namespace std;
+#include <iostream>
+#include <string>
+#include <utility>
 
 class CatalogManager {
 public:
@@ -31,7 +29,7 @@ public:
     //参数：表名，属性名；检查该属性上是否有Index
     //table_does_not_exist
     //attr_does_not_exist
-    pair<char *, char *> searchIndex(char *);
+    std::pair<char *, char *> searchIndex(char *);
 
     //参数：IndexName；返回值：“表名 /n 属性名”
     //index_does_not_exist

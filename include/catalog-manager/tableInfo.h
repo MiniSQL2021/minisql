@@ -4,12 +4,10 @@
 #ifndef TableInfo_hpp
 #define TableInfo_hpp
 
-#include<cstdio>
+#include "Attribute.h"
+#include "exception.h"
+#include <cstdio>
 #include <string>
-#include"Attribute.h"
-#include"exception.h"
-
-using namespace std;
 
 struct attrStruct {
     char *attrName;
@@ -21,14 +19,15 @@ struct attrStruct {
 };
 
 class TableInfo {
-public:
+  public:
     TableInfo();
 
     TableInfo(const TableInfo &);
 
     ~TableInfo();
 
-    void setTableInfo(char *, char *, bool, int, attrStruct *);                //参数：表名，主键名，有无主键，属性数,attrStruct属性数组
+    void setTableInfo(char *, char *, bool, int,
+                      attrStruct *); //参数：表名，主键名，有无主键，属性数,attrStruct属性数组
 
     char primaryKey[31] = "";
     bool hasPrimaryKey = false;
@@ -44,7 +43,7 @@ public:
 
     int searchAttr(char *attrname);
 
-    int dataLength;                                            //指的是catalogPage的大小
+    int dataLength; //指的是catalogPage的大小
     char rowData[1024] = "";
 
     void insertRowData();
@@ -53,4 +52,3 @@ public:
 };
 
 #endif TableInfo_hpp
-

@@ -1,8 +1,5 @@
 #include"Page.h"
 
-using namespace std;
-
-
 Page::Page() {
 	init();	
 }
@@ -30,14 +27,9 @@ char* Page::getPageData() {
 	return page_data;
 }
 
+void Page::setName(std::string name) { file_name = name; }
 
-void Page::setName(string name) {
-	file_name = name;
-}
-
-string Page::getName() {
-	return file_name;
-}
+std::string Page::getName() { return file_name; }
 
 void Page::setBlockId(int id) {
 	block_id = id;

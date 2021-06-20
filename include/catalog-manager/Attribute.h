@@ -9,8 +9,6 @@
 #include<vector>
 #include<cassert>
 
-using namespace std;
-
 enum class AttributeType {
     INT = 0, FLOAT, CHAR, UNDEFINE,
 };

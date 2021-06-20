@@ -13,8 +13,6 @@ catalogPage格式 ：不定长、单个数据定长
 #include"TableInfo.h"
 #include "exception.h"
 
-using namespace std;
-
 class CatalogPage {
 public:
     CatalogPage();

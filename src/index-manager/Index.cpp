@@ -11,15 +11,10 @@
 #include <tuple>
 #include "tableInfo.h"
 
-
-using namespace std;
-
-
-
 Index::Index(std::string table_name, TableInfo attr, BufferManager &buffer_manager):buffer_manager(buffer_manager){
 	for (int i = 0; i < attr.attrNum; i++)
 		if (attr.hasIndex[i]) {
-			string a = attr.attrName[i];
+			std::string a = attr.attrName[i];
 			int b;
 			memcpy(&b,attr.attrType+i,4);
 			createIndex("INDEX_FILE_" + a + "_" + table_name, b);
@@ -71,7 +66,7 @@ void Index::createIndex(std::string file_path, int type)
 	return;
 }
 
-void Index::createIndexWithDatas(std::string file_path, int type,int n, vector<Tuple> datasTuple)
+void Index::createIndexWithDatas(std::string file_path, int type,int n, std::vector<Tuple> datasTuple)
 {
 	createIndex(file_path, type);
 	for (int i = 0; i < datasTuple.size(); i++) {
@@ -85,7 +80,7 @@ void Index::createIndexWithDatas(std::string file_path, int type,int n, vector<T
 			data.dataf = datasTuple[i].attr[n].floatData;
 		}
 		else {
-			string strtemp = datasTuple[i].attr[n].charData;
+			std::string strtemp = datasTuple[i].attr[n].charData;
 			data.datas = strtemp;
 		}
 		insertIndex(file_path, data, i);
@@ -284,7 +279,7 @@ std::vector<int> Index::searchRange(std::string file_path, Data data1, Data data
 			itString->second->searchRange(data1.datas, data2.datas, index_in_records,flag);
 	}
 
-	return vector<int>(index_in_records);
+	return std::vector<int>(index_in_records);
 }
 
 std::vector<int> Index::searchRange1(std::string file_path, Data data, int flag)
@@ -319,7 +314,7 @@ std::vector<int> Index::searchRange1(std::string file_path, Data data, int flag)
 			itString->second->searchRange1(data.datas,index_in_records,flag);
 	}
 
-	return vector<int>(index_in_records);
+	return std::vector<int>(index_in_records);
 }
 
 std::vector<int> Index::searchRange2(std::string file_path, Data data, int flag)
@@ -354,7 +349,7 @@ std::vector<int> Index::searchRange2(std::string file_path, Data data, int flag)
 			itString->second->searchRange2(data.datas, index_in_records, flag);
 	}
 
-	return vector<int>(index_in_records);
+	return std::vector<int>(index_in_records);
 }
 
 

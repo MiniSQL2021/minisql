@@ -6,7 +6,7 @@ void RecordManager::createTable(char *tablename, TableInfo tbif) {
         length += tbif.attrLength[j];
     }
 
-    string str = "./database/data/";
+    std::string str = "./database/data/";
     str += tablename;
     FILE *f = fopen(str.c_str(), "w");
     int n[2] = {0, length};
@@ -15,7 +15,7 @@ void RecordManager::createTable(char *tablename, TableInfo tbif) {
 }
 
 void RecordManager::deleteTable(char *tablename) {
-    string table_name = tablename;
+    std::string table_name = tablename;
     table_name = "./database/data/" + table_name;
     remove(table_name.c_str());
 }
@@ -57,10 +57,11 @@ int RecordManager::insertRecord(char *tbnm, Tuple tup, TableInfo tbif)       //�
     return asw + p;
 }
 
-void RecordManager::deleteRecord(char *tableName, vector<int> no, TableInfo tbif)   //参数：表名，序号
+void RecordManager::deleteRecord(char *tableName, std::vector<int> no,
+                                 TableInfo tbif) //参数：表名，序号
 {
     tablePage *tbpg = new tablePage;
-    vector<int> nm;
+    std::vector<int> nm;
     int pgNum = getPageNum(tableName);
     char *pgdata;
     int i, j = 0;
@@ -91,11 +92,12 @@ void RecordManager::deleteAllRecord(char *tableName, TableInfo tbif) {
     createTable(tableName, tbif);
 }
 
-vector<Tuple> RecordManager::searchTuple(char *tableName, TableInfo tbif, vector<int> no) {
+std::vector<Tuple> RecordManager::searchTuple(char *tableName, TableInfo tbif,
+                                              std::vector<int> no) {
     tablePage *tbpg = new tablePage;
-    vector<int> nm;
-    vector<Tuple> tup;
-    vector<Tuple> temp;
+    std::vector<int> nm;
+    std::vector<Tuple> tup;
+    std::vector<Tuple> temp;
     int pgNum = getPageNum(tableName);
     char *pgdata;
     int i, j = 0;
@@ -119,11 +121,12 @@ vector<Tuple> RecordManager::searchTuple(char *tableName, TableInfo tbif, vector
     delete tbpg;
 }
 
-vector<int> RecordManager::conditionSelect(char *tableName, int attrno, char *op, Attribute attr, TableInfo tbif)
+std::vector<int> RecordManager::conditionSelect(char *tableName, int attrno, char *op,
+                                                Attribute attr, TableInfo tbif)
 //参数：表名，属性序号（用catalog'的getattrNo），算数比较符，比较值, tbif
 {
-    vector<int> no;
-    vector<int> temp;
+    std::vector<int> no;
+    std::vector<int> temp;
     tablePage *tbpg = new tablePage;
     int pgNum = getPageNum(tableName);
     char *pgdata;
@@ -141,11 +144,12 @@ vector<int> RecordManager::conditionSelect(char *tableName, int attrno, char *op
     return no;
 }
 
-vector<Tuple> RecordManager::nonConditionSelect(char *tableName,
-                                                TableInfo tbif)                        //参数：表名,存放数组，tableinfo；返回全部tuple
+std::vector<Tuple>
+RecordManager::nonConditionSelect(char *tableName,
+                                  TableInfo tbif) //参数：表名,存放数组，tableinfo；返回全部tuple
 {
-    vector<Tuple> tup;
-    vector<Tuple> temp;
+    std::vector<Tuple> tup;
+    std::vector<Tuple> temp;
     tablePage *tbpg = new tablePage;
     int pgNum = getPageNum(tableName);
     char *pgdata;
@@ -183,7 +187,7 @@ bool RecordManager::checkUnique(char *tableName, int attrno, Attribute attr, Tab
 }
 
 int RecordManager::getPageNum(char *tableName) {
-    string name;
+    std::string name;
     name = tableName;
     char *p;
     int block_num = -1;

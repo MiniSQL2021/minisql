@@ -74,7 +74,7 @@ void Tuple::readRowData(char *RowData, TableInfo tbif) {
     }
 }
 
-void Tuple::setTuple(int attrnum, vector<Attribute> atr, TableInfo tbif)
+void Tuple::setTuple(int attrnum, std::vector<Attribute> atr, TableInfo tbif)
 //参数*rowdata：（4字节 attrType）数据
 {
     attrNum = attrnum;
@@ -90,4 +90,3 @@ void Tuple::setTuple(int attrnum, vector<Attribute> atr, TableInfo tbif)
 
     }
 }
-

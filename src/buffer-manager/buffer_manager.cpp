@@ -1,7 +1,5 @@
 #include"buffer_manager.h"
 
-using namespace std;
-
 BufferManager::BufferManager(int size) {
     init(size);
 }
@@ -14,13 +12,13 @@ void BufferManager::init(int size) {
 
 BufferManager::~BufferManager() {
     for (int i = 0; i < frame_size; i++) {
-        string file_name = Frames[i].getName();
+        std::string file_name = Frames[i].getName();
         int block_id = Frames[i].getBlockId();
         flushPage(i, file_name, block_id);
     }
 }
 
-char *BufferManager::getPage(string file_name, int block_id) {
+char *BufferManager::getPage(std::string file_name, int block_id) {
     int page_id = getPageId(file_name, block_id);
     if (page_id == -1) {
         page_id = getAnEmptyPageId();
@@ -49,7 +47,7 @@ bool BufferManager::unpinPage(int page_id) {
     }
 }
 
-bool BufferManager::loadDiskBlock(int page_id, string file_name, int block_id) {
+bool BufferManager::loadDiskBlock(int page_id, std::string file_name, int block_id) {
     Frames[page_id].init();
 
     FILE *f = fopen(file_name.c_str(), "a+");
@@ -73,9 +71,9 @@ bool BufferManager::loadDiskBlock(int page_id, string file_name, int block_id) {
 }
 
 // linear scan
-int BufferManager::getPageId(string file_name, int block_id) {
+int BufferManager::getPageId(std::string file_name, int block_id) {
     for (int i = 0; i < frame_size; i++) {
-        string tmp_file_name = Frames[i].getName();
+        std::string tmp_file_name = Frames[i].getName();
         int tmp_block_id = Frames[i].getBlockId();
         if (tmp_file_name == file_name && tmp_block_id == block_id)
             return i;
@@ -106,7 +104,7 @@ int BufferManager::getAnEmptyPageId() {
     }
 }
 
-void BufferManager::flushPage(int page_id, string file_name, int block_id) {
+void BufferManager::flushPage(int page_id, std::string file_name, int block_id) {
     FILE *f = fopen(file_name.c_str(), "r+");
 
     fseek(f, PAGE_SIZE * block_id, SEEK_SET);
@@ -114,4 +112,3 @@ void BufferManager::flushPage(int page_id, string file_name, int block_id) {
     fwrite(buffer, PAGE_SIZE, 1, f);
     fclose(f);
 }
-

@@ -11,8 +11,6 @@
 #include<vector>
 #include "exception.h"
 
-using namespace std;
-
 class tablePage {
 public:
     tablePage();
@@ -25,15 +23,16 @@ public:
     TableInfo tbif;
     Tuple tp[1024];
 
-    vector<int> conditionsearch(Attribute, char *, int attrno,
-                                int p);            //参数：attr，算术运算符：占两个字节（第二个字节可为\0）;返回tuple编号存储在传入的指针中
-    vector<Tuple> nonconditionsearch();
+    std::vector<int> conditionsearch(
+        Attribute, char *, int attrno,
+        int p); //参数：attr，算术运算符：占两个字节（第二个字节可为\0）;返回tuple编号存储在传入的指针中
+    std::vector<Tuple> nonconditionsearch();
 
-    vector<Tuple> searchTuple(vector<int>);
+    std::vector<Tuple> searchTuple(std::vector<int>);
 
     int insertTuple(char *, Tuple tup, int k);
 
-    void deleteTuple(char *, vector<int>);
+    void deleteTuple(char *, std::vector<int>);
 
     int checkdelete();
 

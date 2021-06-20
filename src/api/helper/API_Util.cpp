@@ -47,7 +47,7 @@ void API_Util::printTable(const std::vector<Tuple> &tuples, const TableInfo &tab
     std::cout << table.attrNum << (table.attrNum <= 1 ? "row" : "rows") << " in set ";
 }
 
-void API_Util::printError(const string &message) {
+void API_Util::printError(const std::string &message) {
     std::cout << "ERROR: " << message << "." << std::endl;
 }
 

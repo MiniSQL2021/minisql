@@ -10,8 +10,6 @@
 #include"exception.h"
 #include<vector>
 
-using namespace std;
-
 class Tuple {
 public:
     Tuple();
@@ -29,7 +27,7 @@ public:
     void writeRowData(char *pageRowData);    //写入rowdata；
     void readRowData(char *RowData, TableInfo);
 
-    void setTuple(int attrnum, vector<Attribute>, TableInfo tbif);
+    void setTuple(int attrnum, std::vector<Attribute>, TableInfo tbif);
 };
 
 #endif // !tuple_hpp
