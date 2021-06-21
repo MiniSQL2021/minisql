@@ -51,6 +51,9 @@ bool CatalogManager::checkIndex(char *tableName, char *attrname)    //参数：�
     for (j = 0; j < (cgpage->tbif[n]).attrNum; j++) {
         if ((cgpage->tbif + n)->hasIndex[j] && strcmp((cgpage->tbif + n)->attrName[j], attrname) == 0) {
             flag = true;
+            delete cgpage;
+            return flag;
+
         }
     }
     if (j == cgpage->tbif[n].attrNum) {
@@ -59,8 +62,6 @@ bool CatalogManager::checkIndex(char *tableName, char *attrname)    //参数：�
         throw attr_does_not_exist();
     }
 
-    delete cgpage;
-    return flag;
 
 }
 
@@ -120,7 +121,7 @@ bool CatalogManager::checkAttr(char *tableName, char *attrnm)        //参数：
     return flag;
 }
 
-bool CatalogManager::checkUnique(char *tableName, char *)    //参数：表名，属性名；检查属性是否unique
+bool CatalogManager::checkUnique(char *tableName, char * attrname)    //参数：表名，属性名；检查属性是否unique
 {
     CatalogPage *cgpage = new CatalogPage;
     int pgNum = getCatalogPageNum();
@@ -141,14 +142,23 @@ bool CatalogManager::checkUnique(char *tableName, char *)    //参数：表名�
         throw table_does_not_exist();
     }
     for (j = 0; j < cgpage->tbif[n].attrNum; j++) {
-        if ((cgpage->tbif + n)->attrUnique[j]) { flag = true; }
+        if (strcmp(cgpage->tbif[n].attrName[j], attrname) == 0) 
+        {
+              if ((cgpage->tbif + n)->attrUnique[j])
+               {
+                    flag = true; 
+                    delete cgpage;
+                    return flag;
+
+                }
+        }
+       
     }
     if (j == cgpage->tbif[n].attrNum) {
         delete cgpage;
         throw attr_does_not_exist();
     }
-    delete cgpage;
-    return flag;
+  
 }
 
 int CatalogManager::getAttrNo(char *tableName, char *attrname) {
