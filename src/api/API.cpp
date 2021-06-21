@@ -95,7 +95,9 @@ void API::handleSelectQuery(QueryPointer<SelectQuery> query) {
     if (query->conditions.empty()) {
         tuples = recordManager.nonConditionSelect(tableName, table);
         // Remove records marked deleted
-        std::remove_if(tuples.begin(), tuples.end(), [](Tuple tuple) { return tuple.hasdeleted; });
+        tuples.erase(std::remove_if(tuples.begin(), tuples.end(), [](Tuple tuple)
+                                    { return tuple.hasdeleted; }),
+                     tuples.end());
     }  else {
         auto locations = selectTuples(table, query->conditions);
         tuples = recordManager.searchTuple(tableName, table, locations);

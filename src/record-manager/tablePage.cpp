@@ -31,19 +31,12 @@ int tablePage::insertTuple(char *pagedata, Tuple tup, int k) {
 }
 
 void tablePage::deleteTuple(char *pagedata, std::vector<int> no) {
-    int i, j = 0, flag = 0;
-    int asw = 0;
-    char null[4096] = "";
-    bool f = true;
-    Attribute attr1;
-    memcpy(null, &f, 1);
-    for (i = 0; i < no.size(); i++) {
-        tp[no[i]].hasdeleted = f;
-        for (; j < tp[no[i]].attrNum; j++) {
-            tp[no[i]].attr[j] = attr1;
-        }
+    int i;
+    bool flag=true;
+    for(i=0;i<no.size();i++)
+    {
+        memcpy(pagedata+no[i]* tupleLength+8,&flag,1);
     }
-    writeTablePage(pagedata);
 }
 
 std::vector<Tuple> tablePage::nonconditionsearch() {
@@ -74,7 +67,10 @@ std::vector<int> tablePage::conditionsearch(Attribute attr, char *operater, int 
     int i;
     std::vector<int> no;
     for (i = 0; i < tupleNum; i++) {
-
+        if((tp + i)->hasdeleted)
+        {
+            continue;
+        }
         switch (attr.getOperator(operater)) {
             case 0:
                 if (*((tp + i)->attr + attrno) < attr) {
@@ -125,7 +121,7 @@ void tablePage::writeTablePage(char *pagedata) {
 
 void tablePage::readTablePage(char *pagedata, TableInfo tbinfo) {
     tbif = tbinfo;
-    int i, p = 0;
+    int i, p = 8;
     memcpy(&tupleNum, pagedata, 4);
     memcpy(&tupleLength, pagedata + 4, 4);
 

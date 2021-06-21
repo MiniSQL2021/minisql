@@ -3,7 +3,7 @@
 #include"RecordManager.h"
 
 void RecordManager::createTable(char *tablename, TableInfo tbif) {
-    int j, length = 0;
+    int j, length = 1;
     for (j = 0; j < tbif.attrNum; j++) {
         length += tbif.attrLength[j];
     }
@@ -82,7 +82,7 @@ void RecordManager::deleteRecord(char *tableName, std::vector<int> no,
         }
         p = size;
 
-        if (nm[0]) {
+        if (!nm.empty()) {
             tbpg->deleteTuple(pgdata, nm);
             int b = buffer.getPageId("./database/data/" + std::string(tableName), i);
             buffer.modifyPage(b);
