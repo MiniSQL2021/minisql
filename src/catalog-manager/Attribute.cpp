@@ -36,7 +36,7 @@ void Attribute::getRowData()            //从attribute类中导入到rowData中
         }
         case AttributeType::CHAR: {
             //dataLength另外赋值
-            strcpy(rowData, charData);
+             memcpy(rowData, charData,dataLength);
             break;
         }
         default:
