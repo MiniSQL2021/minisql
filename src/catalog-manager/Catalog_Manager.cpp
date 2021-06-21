@@ -49,13 +49,18 @@ bool CatalogManager::checkIndex(char *tableName, char *attrname)    //参数：�
         throw table_does_not_exist();
     }
     for (j = 0; j < (cgpage->tbif[n]).attrNum; j++) {
-        if ((cgpage->tbif + n)->hasIndex[j] && strcmp((cgpage->tbif + n)->attrName[j], attrname) == 0) {
-            flag = true;
-            delete cgpage;
-            return flag;
-
+        if (strcmp(cgpage->tbif[n].attrName[j], attrname) == 0) 
+        {
+              if (!cgpage->tbif[n].hasIndex[j])
+               {
+                    delete cgpage;
+                    return flag;
+                }
         }
     }
+    flag = true; 
+    delete cgpage;
+    return flag;
     if (j == cgpage->tbif[n].attrNum) {
 
         delete cgpage;
