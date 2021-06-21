@@ -846,6 +846,7 @@ inline void Tree<T>::writtenbackToDiskAll()
 		j++;
 	}
 
+	buffer_manager.flushAfterQuery();
 	return;
 }
 
