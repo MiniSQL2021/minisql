@@ -62,7 +62,7 @@ void BufferManager::loadDiskBlock(int page_id, std::string file_name, int block_
 
     Frames[page_id].setName(file_name);
     Frames[page_id].setBlockId(block_id);
-    Frames[page_id].setPinnedCount(1);
+    Frames[page_id].setPinnedCount(0);
     Frames[page_id].setIsDirty(false);
     Frames[page_id].setRef(true);
     Frames[page_id].setViable(false);
@@ -110,6 +110,7 @@ void BufferManager::flushPage(int page_id, std::string file_name, int block_id) 
     char *buffer = Frames[page_id].getPageData();
     fwrite(buffer, PAGE_SIZE, 1, f);
     fclose(f);
+    Frames[page_id].setIsDirty(false);
 }
 
 // after each query, write dirty pages to disk
@@ -122,6 +123,7 @@ void BufferManager::flushAfterQuery() {
             char *buffer = Frames[i].getPageData();
             fwrite(buffer, PAGE_SIZE, 1, f);
             fclose(f);
+            Frames[i].setIsDirty(false);
         }
     }
 }
