@@ -10,7 +10,7 @@
 
 struct InsertQuery : public Query {
     const std::string tableName;
-    const std::vector<Literal> values;
+    std::vector<Literal> values;
 
     InsertQuery(std::string tableName, std::vector<Literal> values) : Query(QueryType::Insert),
                                                                       tableName(std::move(tableName)),

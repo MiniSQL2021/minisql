@@ -53,9 +53,9 @@ private:
 
     void dropIndex(TableInfo &table, int attributeIndex);
 
-    static bool isConditionListValid(TableInfo &table, const std::vector<ComparisonCondition> &conditions);
+    static bool isConditionListValid(TableInfo &table, std::vector<ComparisonCondition> &conditions);
 
-    bool isInsertingValueValid(TableInfo &table, const std::vector<Literal> &literals);
+    bool isInsertingValueValid(TableInfo &table, std::vector<Literal> &literals);
 
     static std::vector<int> searchWithIndex(Index &index, const std::string &filePath, const RangeCondition &condition);
 

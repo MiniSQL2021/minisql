@@ -20,28 +20,45 @@ void API::dropIndex(TableInfo &table, int attributeIndex) {
 
 // Check 1) if some attribute name in the condition list doesn't exist
 //       2) if type of some value in the condition list doesn't match the actual type
-bool API::isConditionListValid(TableInfo &table, const std::vector<ComparisonCondition> &conditions) {
-    return std::all_of(conditions.begin(), conditions.end(), [&](auto condition) {
+// Side effect:
+// If it's the case when input is int and expected is float, convert this condition
+bool API::isConditionListValid(TableInfo &table, std::vector<ComparisonCondition> &conditions) {
+    for (auto condition = conditions.begin(); condition < conditions.end(); condition++) {
         try {
-            int attributeIndex = table.searchAttr(Adapter::unsafeCStyleString(condition.columnName));
-            if (Adapter::toAttributeType(condition.value.type()) != table.attrType[attributeIndex]) return false;
-            return true;
+            int attributeIndex = table.searchAttr(Adapter::unsafeCStyleString(condition->columnName));
+            auto inputType = Adapter::toAttributeType(condition->value.type());
+            auto expectedType = table.attrType[attributeIndex];
+            if (inputType != expectedType) {
+                if (inputType == AttributeType::INT && expectedType == AttributeType::FLOAT) {
+                    Literal floatLiteral(static_cast<float>(*condition->value.intValue()));
+                    ComparisonCondition newCondition(condition->columnName, condition->binaryOperator, floatLiteral);
+                    *condition = std::move(newCondition);
+                } else return false;
+            }
         } catch (const attr_does_not_exist &error) {
             return false;
         }
-    });
+    }
+    return true;
 }
 
 // Check 1) if type of some value in the value list doesn't match the actual type
 //       2) if some value of unique attribute conflicts with existing values
-bool API::isInsertingValueValid(TableInfo &table, const std::vector<Literal> &values) {
-    for (auto attributeIter = values.cbegin(); attributeIter < values.cend(); attributeIter++) {
-        int attributeIndex = static_cast<int>(attributeIter - values.cbegin());
-        if (Adapter::toAttributeType(attributeIter->type()) != table.attrType[attributeIndex])
-            return false;
+// Side effect:
+// If it's the case when input is int and expected is float, convert this literal
+bool API::isInsertingValueValid(TableInfo &table, std::vector<Literal> &values) {
+    for (auto attribute = values.begin(); attribute < values.end(); attribute++) {
+        int attributeIndex = static_cast<int>(attribute - values.cbegin());
+        auto inputType = Adapter::toAttributeType(attribute->type());
+        auto expectedType = table.attrType[attributeIndex];
+        if (inputType != expectedType) {
+            if (inputType == AttributeType::INT && expectedType == AttributeType::FLOAT) {
+                Literal floatLiteral(static_cast<float>(*attribute->intValue()));
+                *attribute = std::move(floatLiteral);
+            } else return false;
+        }
         if (table.attrUnique[attributeIndex] &&
-            !recordManager.checkUnique(table.TableName, attributeIndex,
-                                       Adapter::toAttribute(*attributeIter), table))
+            !recordManager.checkUnique(table.TableName, attributeIndex, Adapter::toAttribute(*attribute), table))
             return false;
     }
     return true;
