@@ -19,7 +19,7 @@ void RecordManager::createTable(char *tablename, TableInfo tbif) {
 void RecordManager::deleteTable(char *tablename) {
     std::string table_name = tablename;
     table_name = "./database/data/" + table_name;
-    remove(table_name.c_str());
+    buffer.deleteFile(table_name);
 }
 
 int RecordManager::insertRecord(char *tbnm, Tuple tup, TableInfo tbif)       //参数：表名，rowdata；向表中插入元组，插入失败则报错
