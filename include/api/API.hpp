@@ -49,15 +49,15 @@ public:
 
 private:
 
-    std::vector<int> getAllIndexedAttributeIndex(const TableInfo &table);
+    static std::vector<int> getAllIndexedAttributeIndex(const TableInfo &table);
 
     void dropIndex(TableInfo &table, int attributeIndex);
 
-    bool isConditionListValid(TableInfo &table, const std::vector<ComparisonCondition> &conditions);
+    static bool isConditionListValid(TableInfo &table, const std::vector<ComparisonCondition> &conditions);
 
     bool isInsertingValueValid(TableInfo &table, const std::vector<Literal> &literals);
 
-    std::vector<int> searchWithIndex(Index &index, const std::string &filePath, const RangeCondition &condition);
+    static std::vector<int> searchWithIndex(Index &index, const std::string &filePath, const RangeCondition &condition);
 
     std::vector<int> searchGreaterThanWithRecord(TableInfo &table, int attributeIndex, const LiteralIntervalBound &lhs);
 

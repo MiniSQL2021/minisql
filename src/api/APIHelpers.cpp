@@ -133,7 +133,7 @@ std::vector<int> API::searchWithIndex(Index &index, const std::string &filePath,
     } else if (condition.lhs.isRegular() && condition.rhs.isPositiveInfinity()) {
         return index.searchRange2(filePath,
                                   Adapter::toData(*condition.lhs.value), condition.lhs.isClose());
-    }
+    } else return {};    // Assume unreachable
 }
 
 std::vector<int> API::searchWithRecord(TableInfo &table, int attributeIndex, const RangeCondition &condition) {
@@ -145,7 +145,7 @@ std::vector<int> API::searchWithRecord(TableInfo &table, int attributeIndex, con
         return searchLessThanWithRecord(table, attributeIndex, condition.rhs);
     } else if (condition.lhs.isRegular() && condition.rhs.isPositiveInfinity()) {
         return searchGreaterThanWithRecord(table, attributeIndex, condition.lhs);
-    }
+    } else return {};    // Assume unreachable
 }
 
 std::vector<int> API::searchLessThanWithRecord(TableInfo &table, int attributeIndex, const LiteralIntervalBound &rhs) {
