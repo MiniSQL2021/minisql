@@ -34,7 +34,7 @@ void API_Util::printTable(const std::vector<Tuple> &tuples, const TableInfo &tab
     output.format().hide_border_top();
     output[0].format()
             .show_border_top();
-    output[1].format().show_border_top();
+    if (!tuples.empty()) output[1].format().show_border_top();
 
     // Set alignment (right for numbers, left default)
     for (int i = 0; i < table.attrNum; i++) {
