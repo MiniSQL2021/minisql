@@ -51,4 +51,4 @@ public:
     void getFromRowData();
 };
 
-#endif TableInfo_hpp
+#endif
