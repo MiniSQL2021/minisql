@@ -357,6 +357,7 @@ void CatalogManager::createIndex(char *tableName, char *attrName, char *indexNam
     }
     (cgpage->tbif + n)->hasIndex[j] = true;
     memcpy((cgpage->tbif + n)->indexName[j], indexName, 32);
+    (cgpage->tbif + n)->insertRowData();
 
     cgpage->updatePage(pgdata, n);
     delete cgpage;

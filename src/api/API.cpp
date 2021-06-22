@@ -11,6 +11,8 @@ void API::handleCreateTableQuery(QueryPointer<CreateTableQuery> query) {
 
     recordManager.createTable(table.TableName, table);
     catalogManager.createTable(table);
+
+    std::cout << "query OK ";
 }
 
 void API::handleDropTableQuery(QueryPointer<DropTableQuery> query) {
@@ -28,6 +30,8 @@ void API::handleDropTableQuery(QueryPointer<DropTableQuery> query) {
 
     recordManager.deleteTable(tableName);
     catalogManager.dropTable(tableName);
+
+    std::cout << "query OK ";
 }
 
 void API::handleCreateIndexQuery(QueryPointer<CreateIndexQuery> query) {
@@ -60,6 +64,8 @@ void API::handleCreateIndexQuery(QueryPointer<CreateIndexQuery> query) {
                                recordManager.nonConditionSelect(tableName, table));
 
     catalogManager.createIndex(tableName, attributeName, indexName);
+
+    std::cout << "query OK ";
 }
 
 void API::handleDropIndexQuery(QueryPointer<DropIndexQuery> query) {
@@ -74,6 +80,8 @@ void API::handleDropIndexQuery(QueryPointer<DropIndexQuery> query) {
                         Adapter::toDataType(attribute.type));
 
         catalogManager.deleteIndex(indexName);
+
+        std::cout << "query OK ";
     } catch (const index_does_not_exist &error) {
         API_Util::printError("Index doesn't exists");
     }
@@ -95,8 +103,9 @@ void API::handleSelectQuery(QueryPointer<SelectQuery> query) {
     if (query->conditions.empty()) {
         tuples = recordManager.nonConditionSelect(tableName, table);
         // Remove records marked deleted
-        std::remove_if(tuples.begin(), tuples.end(), [](Tuple tuple) { return tuple.hasdeleted; });
-    }  else {
+        tuples.erase(std::remove_if(tuples.begin(), tuples.end(), [](const Tuple &tuple) { return tuple.hasdeleted; }),
+                     tuples.end());
+    } else {
         auto locations = selectTuples(table, query->conditions);
         tuples = recordManager.searchTuple(tableName, table, locations);
     }
@@ -126,9 +135,14 @@ void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
         }
 
         recordManager.deleteAllRecord(tableName, table);
+
+        std::cout << "query OK ";
     } else {
         auto locations = selectTuples(table, query->conditions);
         auto tuples = recordManager.searchTuple(tableName, table, locations);
+        // Remove records marked deleted
+        tuples.erase(std::remove_if(tuples.begin(), tuples.end(), [](const Tuple &tuple) { return tuple.hasdeleted; }),
+                     tuples.end());
 
         // Delete all the selected records from all the indices in the table
         for (const auto &attributeIndex: getAllIndexedAttributeIndex(table)) {
@@ -140,6 +154,8 @@ void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
         }
 
         recordManager.deleteRecord(tableName, locations, table);
+
+        std::cout << "query OK, " << tuples.size() << (tuples.size() <= 1 ? " row" : " rows") << " affected ";
     }
 }
 
@@ -171,6 +187,8 @@ void API::handleInsertQuery(QueryPointer<InsertQuery> query) {
                               Adapter::toData(query->values[attributeIndex]), location);
         }
     }
+
+    std::cout << "query OK ";
 }
 
 // For convenience to testing

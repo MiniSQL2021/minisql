@@ -9,7 +9,7 @@
 
 struct DeleteQuery : public Query {
     const std::string tableName;
-    const std::vector<ComparisonCondition> conditions;
+    std::vector<ComparisonCondition> conditions;
 
     DeleteQuery(std::string tableName, std::vector<ComparisonCondition> conditions) : Query(QueryType::Delete),
                                                                                       tableName(std::move(tableName)),

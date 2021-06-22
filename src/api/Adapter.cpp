@@ -130,7 +130,7 @@ Tuple Adapter::toTuple(TableInfo &table, const std::vector<Literal> &literals) {
 }
 
 std::string Adapter::getIndexFilePath(const std::string &tableName, const std::string &attributeName) {
-    return "INDEX_FILE_" + tableName + "_" + attributeName;
+    return "INDEX_FILE_" + attributeName + "_" + tableName;
 }
 
 int Adapter::toDataType(AttributeType type) {
