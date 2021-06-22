@@ -36,4 +36,4 @@ delete from person where age <= 20 and height < 170 and name = "Person16";
 
 select * from person;
 
-drop table persion;
+drop table person;
