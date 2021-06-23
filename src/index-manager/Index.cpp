@@ -18,7 +18,7 @@ Index::Index(std::string table_name, TableInfo attr, BufferManager &buffer_manag
 			std::string a = attr.attrName[i];
 			int b;
 			memcpy(&b,attr.attrType+i,4);
-			createIndex("INDEX_FILE_" + a + "_" + table_name, b);
+			createIndex("INDEX_FILE_" +  table_name + "_" +a, b);
 		}
 }
 
