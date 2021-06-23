@@ -9,7 +9,7 @@
 
 struct SelectQuery : public Query {
     const std::string tableName;
-    const std::vector<ComparisonCondition> conditions;
+    std::vector<ComparisonCondition> conditions;
 
     SelectQuery(std::string tableName, std::vector<ComparisonCondition> conditions) : Query(QueryType::Select),
                                                                                       tableName(std::move(tableName)),

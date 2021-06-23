@@ -48,6 +48,9 @@ public:
 
     // after each query, write dirty pages to disk
     void flushAfterQuery();
+
+    // delete a file and clean the buffer
+    void deleteFile(std::string file_name);
 };
 
 #endif // !BUFFER_MANAGER_H

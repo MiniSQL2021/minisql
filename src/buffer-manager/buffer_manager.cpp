@@ -127,3 +127,13 @@ void BufferManager::flushAfterQuery() {
         }
     }
 }
+
+
+void BufferManager::deleteFile(std::string file_name){
+    for (int i = 0; i < frame_size; i++){
+        if (Frames[i].getName() == file_name){
+            Frames[i].init();
+        }
+    }
+    remove(file_name.c_str());
+}

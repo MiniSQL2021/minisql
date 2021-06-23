@@ -9,10 +9,18 @@
 #include "Literal.hpp"
 
 struct ComparisonCondition {
-    const std::string columnName;
-    const BinaryOpearator binaryOperator;
-    const Literal value;
+    std::string columnName;
+    BinaryOpearator binaryOperator;
+    Literal value;
 
     ComparisonCondition(std::string columnName, BinaryOpearator binaryOperator, Literal value)
             : columnName(std::move(columnName)), binaryOperator(binaryOperator), value(std::move(value)) {};
+
+    ComparisonCondition(const ComparisonCondition &other) = default;
+
+    ComparisonCondition &operator=(const ComparisonCondition &other) = default;
+
+    ComparisonCondition(ComparisonCondition &&other) noexcept = default;
+
+    ComparisonCondition &operator=(ComparisonCondition &&other) noexcept = default;
 };
