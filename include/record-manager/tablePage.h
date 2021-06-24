@@ -24,8 +24,8 @@ public:
     Tuple tp[1024];
 
     std::vector<int> conditionsearch(
-        Attribute, char *, int attrno,
-        int p); //参数：attr，算术运算符：占两个字节（第二个字节可为\0）;返回tuple编号存储在传入的指针中
+            Attribute, char *, int attrno,
+            int p); //参数：attr，算术运算符：占两个字节（第二个字节可为\0）;返回tuple编号存储在传入的指针中
     std::vector<Tuple> nonconditionsearch();
 
     std::vector<Tuple> searchTuple(std::vector<int>);

@@ -32,10 +32,9 @@ int tablePage::insertTuple(char *pagedata, Tuple tup, int k) {
 
 void tablePage::deleteTuple(char *pagedata, std::vector<int> no) {
     int i;
-    bool flag=true;
-    for(i=0;i<no.size();i++)
-    {
-        memcpy(pagedata+no[i]* tupleLength+8,&flag,1);
+    bool flag = true;
+    for (i = 0; i < no.size(); i++) {
+        memcpy(pagedata + no[i] * tupleLength + 8, &flag, 1);
     }
 }
 
@@ -67,8 +66,7 @@ std::vector<int> tablePage::conditionsearch(Attribute attr, char *operater, int 
     int i;
     std::vector<int> no;
     for (i = 0; i < tupleNum; i++) {
-        if((tp + i)->hasdeleted)
-        {
+        if ((tp + i)->hasdeleted) {
             continue;
         }
         switch (attr.getOperator(operater)) {
