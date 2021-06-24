@@ -1,9 +1,18 @@
 #include <memory>
 
-#include "parser/QueryParser.hpp"
+#include "parser/Parser.hpp"
 #include "query/Query.hpp"
 
-std::unique_ptr<Query> QueryParser::parse(SQLParser::QueryContext *ctx) {
+std::vector<std::unique_ptr<Query>> Parser::parse(SQLParser::FileContext *ctx) {
+    std::vector<std::unique_ptr<Query>> result;
+    std::transform(ctx->queries.cbegin(), ctx->queries.cend(), std::back_inserter(result),
+                   [&](SQLParser::QueryContext *ctx) {
+                       return parseQuery(ctx);
+                   });
+    return result;
+}
+
+std::unique_ptr<Query> Parser::parseQuery(SQLParser::QueryContext *ctx) {
     if (ctx->statement()) {
         if (ctx->statement()->createTableStatement())
             return parseCreateTableStatement(ctx->statement()->createTableStatement());

@@ -69,7 +69,9 @@ STRING: DOUBLE_QUOTED_STRING | SINGLE_QUOTED_STRING;
 /* Rules */
 
 // Top structure
-query: (statement | commands) SEMICOLON EOF?;
+file: (queries += query)+ EOF;
+
+query: (statement | commands) SEMICOLON;
 
 statement:
 	createTableStatement

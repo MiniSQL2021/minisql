@@ -24,14 +24,14 @@ public:
   };
 
   enum {
-    RuleQuery = 0, RuleStatement = 1, RuleCommands = 2, RuleCreateTableStatement = 3, 
-    RuleDropTableStatement = 4, RuleCreateIndexStatement = 5, RuleDropIndexStatement = 6, 
-    RuleSelectStatement = 7, RuleInsertStatement = 8, RuleDeleteStatement = 9, 
-    RuleWhereClause = 10, RuleColumnElement = 11, RuleColumnElementList = 12, 
-    RulePrimaryKeyConstraint = 13, RuleCondition = 14, RuleConditionList = 15, 
-    RuleAttributeList = 16, RuleIdentifier = 17, RuleDataType = 18, RuleIntType = 19, 
-    RuleFloatType = 20, RuleCharType = 21, RuleLiteral = 22, RuleString = 23, 
-    RuleNumber = 24, RuleBinaryOperator = 25, RuleQuitCommand = 26, RuleExecuteFileCommand = 27
+    RuleFile = 0, RuleQuery = 1, RuleStatement = 2, RuleCommands = 3, RuleCreateTableStatement = 4, 
+    RuleDropTableStatement = 5, RuleCreateIndexStatement = 6, RuleDropIndexStatement = 7, 
+    RuleSelectStatement = 8, RuleInsertStatement = 9, RuleDeleteStatement = 10, 
+    RuleWhereClause = 11, RuleColumnElement = 12, RuleColumnElementList = 13, 
+    RulePrimaryKeyConstraint = 14, RuleCondition = 15, RuleConditionList = 16, 
+    RuleAttributeList = 17, RuleIdentifier = 18, RuleDataType = 19, RuleIntType = 20, 
+    RuleFloatType = 21, RuleCharType = 22, RuleLiteral = 23, RuleString = 24, 
+    RuleNumber = 25, RuleBinaryOperator = 26, RuleQuitCommand = 27, RuleExecuteFileCommand = 28
   };
 
   explicit SQLParser(antlr4::TokenStream *input);
@@ -44,6 +44,7 @@ public:
   virtual antlr4::dfa::Vocabulary& getVocabulary() const override;
 
 
+  class FileContext;
   class QueryContext;
   class StatementContext;
   class CommandsContext;
@@ -73,6 +74,23 @@ public:
   class QuitCommandContext;
   class ExecuteFileCommandContext; 
 
+  class  FileContext : public antlr4::ParserRuleContext {
+  public:
+    SQLParser::QueryContext *queryContext = nullptr;
+    std::vector<QueryContext *> queries;
+    FileContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *EOF();
+    std::vector<QueryContext *> query();
+    QueryContext* query(size_t i);
+
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  FileContext* file();
+
   class  QueryContext : public antlr4::ParserRuleContext {
   public:
     QueryContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -80,7 +98,6 @@ public:
     antlr4::tree::TerminalNode *SEMICOLON();
     StatementContext *statement();
     CommandsContext *commands();
-    antlr4::tree::TerminalNode *EOF();
 
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;

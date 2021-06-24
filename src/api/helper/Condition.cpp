@@ -1,7 +1,6 @@
 #include <set>
-#include <iostream>
 
-#include "Condition.hpp"
+#include "helper/Condition.hpp"
 
 RangeCondition toRangeCondition(const ComparisonCondition &condition) {
     switch (condition.binaryOperator) {

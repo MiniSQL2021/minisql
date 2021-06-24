@@ -19,6 +19,8 @@ public:
   /**
    * Visit parse trees produced by SQLParser.
    */
+    virtual antlrcpp::Any visitFile(SQLParser::FileContext *context) = 0;
+
     virtual antlrcpp::Any visitQuery(SQLParser::QueryContext *context) = 0;
 
     virtual antlrcpp::Any visitStatement(SQLParser::StatementContext *context) = 0;

@@ -2,7 +2,7 @@
 
 #include "Interpreter.hpp"
 #include "query/Queries.hpp"
-#include "parser/QueryParser.hpp"
+#include "parser/Parser.hpp"
 #include "parser/SyntaxErrorListener.hpp"
 #include "antlr/SQLLexer.h"
 #include "antlr/SQLParser.h"
@@ -70,19 +70,17 @@ void Interpreter::parse(std::istream &stream) {
     parser.removeErrorListeners();
     parser.addErrorListener(&errorListener);
 
-    SQLParser::QueryContext *tree;
-    while (!parser.isMatchedEOF()) {
-        tree = parser.query();
-        auto result = QueryParser::parse(tree);
+    auto queries = Parser::parse(parser.file());
 
+    for (auto &query: queries) {
         auto start = std::chrono::steady_clock::now();
-        handleQuery(std::move(result));
+        handleQuery(std::move(query));
         auto end = std::chrono::steady_clock::now();
 
         // If query is handled without exception, print duration of the operation
-        auto durationInMilliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-        std::cout << "(" << std::setprecision(2) << std::fixed
-                  << static_cast<double>(durationInMilliseconds.count()) / 1000.0
+        auto durationInMicroseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        std::cout << "(" << std::setprecision(3) << std::fixed
+                  << static_cast<double>(durationInMicroseconds.count()) / 1e6
                   << " sec)" << std::endl;
     }
 }

@@ -4,7 +4,7 @@ FetchContent_Declare(
         GIT_TAG v2.13.1)
 FetchContent_MakeAvailable(Catch2)
 
-add_executable(catch-test test.cpp ConditionTest.cpp InterpreterTest.cpp APITest.cpp)
+add_executable(catch-test test.cpp ConditionTest.cpp InterpreterTest.cpp)
 
 target_include_directories(catch-test PRIVATE ${CMAKE_SOURCE_DIR}/include)
 

@@ -1,6 +1,6 @@
 #include "type/ComparisonCondition.hpp"
-#include "parser/QueryParser.hpp"
+#include "parser/Parser.hpp"
 
-std::vector<ComparisonCondition> QueryParser::parseWhereClause(SQLParser::WhereClauseContext *ctx) {
+std::vector<ComparisonCondition> Parser::parseWhereClause(SQLParser::WhereClauseContext *ctx) {
     return ctx != nullptr ? parseConditionList(ctx->conditionList()) : std::vector<ComparisonCondition>();
 }

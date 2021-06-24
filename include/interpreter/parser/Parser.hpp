@@ -8,8 +8,10 @@
 #include "../query/Query.hpp"
 #include "../antlr/SQLParser.h"
 
-struct QueryParser {
-    static std::unique_ptr<Query> parse(SQLParser::QueryContext *ctx);
+struct Parser {
+    static std::vector<std::unique_ptr<Query>> parse(SQLParser::FileContext *ctx);
+
+    static std::unique_ptr<Query> parseQuery(SQLParser::QueryContext *ctx);
 
     static std::unique_ptr<CreateTableQuery> parseCreateTableStatement(SQLParser::CreateTableStatementContext *ctx);
 

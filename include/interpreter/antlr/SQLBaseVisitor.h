@@ -15,6 +15,10 @@
 class  SQLBaseVisitor : public SQLVisitor {
 public:
 
+  virtual antlrcpp::Any visitFile(SQLParser::FileContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitQuery(SQLParser::QueryContext *ctx) override {
     return visitChildren(ctx);
   }

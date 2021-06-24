@@ -2,9 +2,9 @@
 
 #include "type/BinaryOperator.hpp"
 #include "type/Literal.hpp"
-#include "parser/QueryParser.hpp"
+#include "parser/Parser.hpp"
 
-std::string QueryParser::parseIdentifier(SQLParser::IdentifierContext *ctx) {
+std::string Parser::parseIdentifier(SQLParser::IdentifierContext *ctx) {
     if (ctx->IDENTIFIER()) return ctx->IDENTIFIER()->getText();
     else {
         std::string backtickQuotedString = ctx->BACKTICK_QUOTED_ID()->getText();
@@ -12,7 +12,7 @@ std::string QueryParser::parseIdentifier(SQLParser::IdentifierContext *ctx) {
     }
 }
 
-Literal QueryParser::parseLiteral(SQLParser::LiteralContext *ctx) {
+Literal Parser::parseLiteral(SQLParser::LiteralContext *ctx) {
     if (ctx->string()) return Literal(parseString(ctx->string()));
     if (ctx->number()->INT_NUMBER())
         return Literal(std::stoi(ctx->number()->INT_NUMBER()->getText()));
@@ -23,13 +23,13 @@ Literal QueryParser::parseLiteral(SQLParser::LiteralContext *ctx) {
     throw std::logic_error("Unexpected Literal");
 }
 
-std::string QueryParser::parseString(SQLParser::StringContext *ctx) {
+std::string Parser::parseString(SQLParser::StringContext *ctx) {
     std::string text = ctx->SINGLE_QUOTED_STRING() ? ctx->SINGLE_QUOTED_STRING()->getText()
                                                    : ctx->DOUBLE_QUOTED_STRING()->getText();
     return text.substr(1, text.length() - 2);
 }
 
-BinaryOpearator QueryParser::parseBinaryOperator(SQLParser::BinaryOperatorContext *ctx) {
+BinaryOpearator Parser::parseBinaryOperator(SQLParser::BinaryOperatorContext *ctx) {
     if (ctx->EQUAL()) return BinaryOpearator::Equal;
     if (ctx->NOT_EQUAL()) return BinaryOpearator::NotEqual;
     if (ctx->LESS_THAN()) return BinaryOpearator::LessThan;
