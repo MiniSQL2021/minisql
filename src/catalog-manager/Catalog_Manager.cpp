@@ -49,16 +49,14 @@ bool CatalogManager::checkIndex(char *tableName, char *attrname)    //参数：�
         throw table_does_not_exist();
     }
     for (j = 0; j < (cgpage->tbif[n]).attrNum; j++) {
-        if (strcmp(cgpage->tbif[n].attrName[j], attrname) == 0) 
-        {
-              if (!cgpage->tbif[n].hasIndex[j])
-               {
-                    delete cgpage;
-                    return flag;
-                }
+        if (strcmp(cgpage->tbif[n].attrName[j], attrname) == 0) {
+            if (!cgpage->tbif[n].hasIndex[j]) {
+                delete cgpage;
+                return flag;
+            }
         }
     }
-    flag = true; 
+    flag = true;
     delete cgpage;
     return flag;
     if (j == cgpage->tbif[n].attrNum) {
@@ -66,7 +64,6 @@ bool CatalogManager::checkIndex(char *tableName, char *attrname)    //参数：�
         delete cgpage;
         throw attr_does_not_exist();
     }
-
 
 }
 
@@ -88,7 +85,7 @@ CatalogManager::searchIndex(char *indexname) //参数：IndexName；返回所在
                 if (strcmp((cgpage->tbif + n)->indexName[j], indexname) == 0) {
                     delete cgpage;
                     return std::make_pair((cgpage->tbif + n)->TableName,
-                                          (cgpage->tbif + n)->indexName[j]);
+                                          (cgpage->tbif + n)->attrName[j]);
                 }
             }
         }
@@ -126,7 +123,7 @@ bool CatalogManager::checkAttr(char *tableName, char *attrnm)        //参数：
     return flag;
 }
 
-bool CatalogManager::checkUnique(char *tableName, char * attrname)    //参数：表名，属性名；检查属性是否unique
+bool CatalogManager::checkUnique(char *tableName, char *attrname)    //参数：表名，属性名；检查属性是否unique
 {
     CatalogPage *cgpage = new CatalogPage;
     int pgNum = getCatalogPageNum();
@@ -147,23 +144,23 @@ bool CatalogManager::checkUnique(char *tableName, char * attrname)    //参数�
         throw table_does_not_exist();
     }
     for (j = 0; j < cgpage->tbif[n].attrNum; j++) {
-        if (strcmp(cgpage->tbif[n].attrName[j], attrname) == 0) 
-        {
-              if ((cgpage->tbif + n)->attrUnique[j])
-               {
-                    flag = true; 
-                    delete cgpage;
-                    return flag;
-
-                }
+        if (strcmp(cgpage->tbif[n].attrName[j], attrname) == 0) {
+            if ((cgpage->tbif + n)->attrUnique[j]) {
+                flag = true;
+                delete cgpage;
+                return flag;
+            } else {
+                delete cgpage;
+                return false;
+            }
         }
-       
+
     }
     if (j == cgpage->tbif[n].attrNum) {
         delete cgpage;
         throw attr_does_not_exist();
     }
-  
+
 }
 
 int CatalogManager::getAttrNo(char *tableName, char *attrname) {
