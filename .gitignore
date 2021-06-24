@@ -233,6 +233,6 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/c++,windows,macos,clion,cmake,visualstudiocode
 
 ### Custom ###
-cmake-build
 .idea
 .vscode/settings.json
+test/test-result
