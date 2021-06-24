@@ -1,68 +1,9 @@
 #include "API.hpp"
 #include "Adapter.hpp"
 #include "API_Util.hpp"
+#include "InvalidQueryException.hpp"
 
-std::vector<int> API::getAllIndexedAttributeIndex(const TableInfo &table) {
-    std::vector<int> result;
-    for (int i = 0; i < table.attrNum; i++)
-        if (table.hasIndex[i]) result.push_back(i);
-    return result;
-}
-
-void API::dropIndex(TableInfo &table, int attributeIndex) {
-    // Assume the index exists
-    auto attribute = Adapter::toAttribute(table, attributeIndex);
-    auto attributeName = table.attrName[attributeIndex];
-    Index index(table.TableName, table, bufferManager);
-    index.dropIndex(Adapter::getIndexFilePath(table.TableName, attributeName),
-                    Adapter::toDataType(attribute.type));
-}
-
-// Check 1) if some attribute name in the condition list doesn't exist
-//       2) if type of some value in the condition list doesn't match the actual type
-// Side effect:
-// If it's the case when input is int and expected is float, convert this condition
-bool API::isConditionListValid(TableInfo &table, std::vector<ComparisonCondition> &conditions) {
-    for (auto condition = conditions.begin(); condition < conditions.end(); condition++) {
-        try {
-            int attributeIndex = table.searchAttr(Adapter::unsafeCStyleString(condition->columnName));
-            auto inputType = Adapter::toAttributeType(condition->value.type());
-            auto expectedType = table.attrType[attributeIndex];
-            if (inputType != expectedType) {
-                if (inputType == AttributeType::INT && expectedType == AttributeType::FLOAT) {
-                    Literal floatLiteral(static_cast<float>(*condition->value.intValue()));
-                    ComparisonCondition newCondition(condition->columnName, condition->binaryOperator, floatLiteral);
-                    *condition = std::move(newCondition);
-                } else return false;
-            }
-        } catch (const attr_does_not_exist &error) {
-            return false;
-        }
-    }
-    return true;
-}
-
-// Check 1) if type of some value in the value list doesn't match the actual type
-//       2) if some value of unique attribute conflicts with existing values
-// Side effect:
-// If it's the case when input is int and expected is float, convert this literal
-bool API::isInsertingValueValid(TableInfo &table, std::vector<Literal> &values) {
-    for (auto attribute = values.begin(); attribute < values.end(); attribute++) {
-        int attributeIndex = static_cast<int>(attribute - values.cbegin());
-        auto inputType = Adapter::toAttributeType(attribute->type());
-        auto expectedType = table.attrType[attributeIndex];
-        if (inputType != expectedType) {
-            if (inputType == AttributeType::INT && expectedType == AttributeType::FLOAT) {
-                Literal floatLiteral(static_cast<float>(*attribute->intValue()));
-                *attribute = std::move(floatLiteral);
-            } else return false;
-        }
-        if (table.attrUnique[attributeIndex] &&
-            !recordManager.checkUnique(table.TableName, attributeIndex, Adapter::toAttribute(*attribute), table))
-            return false;
-    }
-    return true;
-}
+#include <unordered_set>
 
 // MARK: Local helper functions
 
@@ -87,6 +28,108 @@ void removeFromSet(std::set<int> &set, int location, bool &isFirstCondition) {
         set = std::set<int>{};
     } else set.erase(location);
 }
+
+std::string toString(AttributeType type) {
+    switch (type) {
+        case AttributeType::INT:
+            return "INT";
+        case AttributeType::FLOAT:
+            return "FLOAT";
+        case AttributeType::CHAR:
+            return "CHAR";
+        case AttributeType::UNDEFINE:
+            return "UNDEFINED";
+    }
+}
+
+// MARK: Basic Helpers
+
+std::vector<int> API::getAllIndexedAttributeIndex(const TableInfo &table) {
+    std::vector<int> result;
+    for (int i = 0; i < table.attrNum; i++)
+        if (table.hasIndex[i]) result.push_back(i);
+    return result;
+}
+
+void API::dropIndex(TableInfo &table, int attributeIndex) {
+    // Assume the index exists
+    auto attribute = Adapter::toAttribute(table, attributeIndex);
+    auto attributeName = table.attrName[attributeIndex];
+    Index index(table.TableName, table, bufferManager);
+    index.dropIndex(Adapter::getIndexFilePath(table.TableName, attributeName),
+                    Adapter::toDataType(attribute.type));
+}
+
+// MARK: Check
+
+void API::checkTableSchema(const std::vector<Column> &columns, const std::string &primaryKey) {
+    std::unordered_set<std::string> set;
+    for (const auto &column : columns) {
+        if (set.contains(column.name))
+            throw InvalidQueryException("Attribute `" + column.name + "` appears more than once");
+        else if (column.type == LiteralType::String && (*column.maxLength < 1 || *column.maxLength > 255))
+            throw InvalidQueryException(
+                    "Max length of CHAR must fall between 1 and 255 (in attribute `" + column.name + "`)");
+        set.insert(column.name);
+    }
+    if (!set.contains(primaryKey))
+        throw InvalidQueryException(
+                "Primary key `" + primaryKey + "` doesn't appear in attribute list");
+}
+
+// Check 1) if some attribute name in the condition list doesn't exist
+//       2) if type of some value in the condition list doesn't match the actual type
+// Side effect: if it's the case when input is int and expected is float, convert this condition
+// Throw: InvalidQueryException
+void API::checkConditionList(TableInfo &table, std::vector<ComparisonCondition> &conditions) {
+    for (auto condition = conditions.begin(); condition < conditions.end(); condition++) {
+        try {
+            int attributeIndex = table.searchAttr(Adapter::unsafeCStyleString(condition->columnName));
+            auto inputType = Adapter::toAttributeType(condition->value.type());
+            auto expectedType = table.attrType[attributeIndex];
+            if (inputType != expectedType) {
+                if (inputType == AttributeType::INT && expectedType == AttributeType::FLOAT) {
+                    Literal floatLiteral(static_cast<float>(*condition->value.intValue()));
+                    ComparisonCondition newCondition(condition->columnName, condition->binaryOperator, floatLiteral);
+                    *condition = std::move(newCondition);
+                } else
+                    throw InvalidQueryException(
+                            "Attribute `" + condition->columnName + "` expects " + toString(expectedType) +
+                            ", but received " + toString(inputType));
+            }
+        } catch (const attr_does_not_exist &error) {
+            throw InvalidQueryException("Attribute `" + condition->columnName + "` doesn't exists");
+        }
+    }
+}
+
+// Check 1) if type of some value in the value list doesn't match the actual type
+//       2) if some value of unique attribute conflicts with existing values
+// Side effect: if it's the case when input is int and expected is float, convert this literal
+// Throw: InvalidQueryException
+void API::checkInsertingValues(TableInfo &table, std::vector<Literal> &literals) {
+    for (auto attribute = literals.begin(); attribute < literals.end(); attribute++) {
+        int attributeIndex = static_cast<int>(attribute - literals.cbegin());
+        auto inputType = Adapter::toAttributeType(attribute->type());
+        auto expectedType = table.attrType[attributeIndex];
+        if (inputType != expectedType) {
+            if (inputType == AttributeType::INT && expectedType == AttributeType::FLOAT) {
+                Literal floatLiteral(static_cast<float>(*attribute->intValue()));
+                *attribute = std::move(floatLiteral);
+            } else
+                throw InvalidQueryException(
+                        "Attribute `" + std::string(table.attrName[attributeIndex]) + "` expects " +
+                        toString(expectedType) + ", but received " + toString(inputType));
+        }
+        if (table.attrUnique[attributeIndex] &&
+            !recordManager.checkUnique(table.TableName, attributeIndex, Adapter::toAttribute(*attribute), table))
+            throw InvalidQueryException(
+                    "Value `" + attribute->toString() + "` already exists in the unique attribute " +
+                    table.TableName + "(" + table.attrName[attributeIndex] + ")");
+    }
+}
+
+// MARK: Select Tuples
 
 std::vector<int> API::selectTuples(TableInfo &table, const std::vector<ComparisonCondition> &conditions) {
     std::set<int> set;
@@ -178,7 +221,8 @@ API::searchGreaterThanWithRecord(TableInfo &table, int attributeIndex, const Lit
                                          Adapter::toAttribute(*lhs.value), table);
 }
 
-// For testing
+// MARK: Testing
+
 void API::directlyInput(const std::string &query) {
     std::stringstream ss(query);
     interpreter.parse(ss);

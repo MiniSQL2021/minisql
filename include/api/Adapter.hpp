@@ -6,7 +6,6 @@
 #include "../catalog-manager/Catalog_Manager.h"
 #include "../record-manager/RecordManager.h"
 #include "../index-manager/Index.h"
-//#include "../index-manager/IndexMock.h"
 
 namespace Adapter {
     char *unsafeCStyleString(const std::string &str);
@@ -15,7 +14,7 @@ namespace Adapter {
 
     AttributeType toAttributeType(LiteralType type);
 
-    attrStruct toAttrStruct(const Column &column);
+    attrStruct toAttrStruct(const Column &column, const std::string &primaryKey);
 
     TableInfo toTableInfo(const CreateTableQuery &query);
 

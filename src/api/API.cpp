@@ -1,8 +1,16 @@
 #include "API.hpp"
 #include "Adapter.hpp"
 #include "API_Util.hpp"
+#include "InvalidQueryException.hpp"
 
 void API::handleCreateTableQuery(QueryPointer<CreateTableQuery> query) {
+    try {
+        checkTableSchema(query->columns, query->primaryKey);
+    } catch (const InvalidQueryException &error) {
+        API_Util::printError(error.what());
+        return;
+    }
+
     auto table = Adapter::toTableInfo(*query);
     if (catalogManager.checkTable(table.TableName)) {
         API_Util::printError("Table already exists");
@@ -93,9 +101,12 @@ void API::handleSelectQuery(QueryPointer<SelectQuery> query) {
         API_Util::printError("Table doesn't exist");
         return;
     }
+
     auto table = catalogManager.getTableInfo(tableName);
-    if (!isConditionListValid(table, query->conditions)) {
-        API_Util::printError("Some attribute in the input doesn't exist, or the type doesn't match the actual type");
+    try {
+        checkConditionList(table, query->conditions);
+    } catch (const InvalidQueryException &error) {
+        API_Util::printError(error.what());
         return;
     }
 
@@ -118,9 +129,12 @@ void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
         API_Util::printError("Table doesn't exist");
         return;
     }
+
     auto table = catalogManager.getTableInfo(tableName);
-    if (!isConditionListValid(table, query->conditions)) {
-        API_Util::printError("Some attribute in the input doesn't exist, or the type doesn't match the actual type");
+    try {
+        checkConditionList(table, query->conditions);
+    } catch (const InvalidQueryException &error) {
+        API_Util::printError(error.what());
         return;
     }
 
@@ -166,13 +180,15 @@ void API::handleInsertQuery(QueryPointer<InsertQuery> query) {
         return;
     }
     auto table = catalogManager.getTableInfo(tableName);
-    // Check if valid
     if (query->values.size() != table.attrNum) {
         API_Util::printError("The number of attributes doesn't match");
         return;
     }
-    if (!isInsertingValueValid(table, query->values)) {
-        API_Util::printError("Some attribute in the input doesn't match the actual type, or conflicts in uniqueness");
+
+    try {
+        checkInsertingValues(table, query->values);
+    } catch (const InvalidQueryException &error) {
+        API_Util::printError(error.what());
         return;
     }
 

@@ -25,11 +25,11 @@ AttributeType Adapter::toAttributeType(LiteralType type) {
     }
 }
 
-attrStruct Adapter::toAttrStruct(const Column &column) {
+attrStruct Adapter::toAttrStruct(const Column &column, const std::string &primaryKey) {
     attrStruct result{};
     result.attrName = dynamicCStyleString(column.name);                     // Warning: allocate char *
     result.attrType = toAttributeType(column.type);
-    result.attrUnique = column.unique;
+    result.attrUnique = column.unique || column.name == primaryKey;
     if (auto maxLength = column.maxLength) result.attrlength = *maxLength;
     else result.attrlength = 4;    // sizeof(int) or sizeof(float)
     result.hasIndex = false;
@@ -41,7 +41,7 @@ attrStruct Adapter::toAttrStruct(const Column &column) {
 TableInfo Adapter::toTableInfo(const CreateTableQuery &query) {
     TableInfo result;
     std::vector<attrStruct> attributes;
-    for (const auto &column : query.columns) attributes.push_back(toAttrStruct(column));
+    for (const auto &column : query.columns) attributes.push_back(toAttrStruct(column, query.primaryKey));
 
     result.setTableInfo(Adapter::unsafeCStyleString(query.tableName), Adapter::unsafeCStyleString(query.primaryKey),
                         true, static_cast<int>(query.columns.size()), attributes.data());
