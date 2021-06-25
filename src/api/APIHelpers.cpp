@@ -69,7 +69,7 @@ void API::checkTableSchema(const std::vector<Column> &columns, const std::string
             throw InvalidQueryException("Attribute `" + column.name + "` appears more than once");
         else if (column.type == LiteralType::String && (*column.maxLength < 1 || *column.maxLength > 255))
             throw InvalidQueryException(
-                    "Max length of CHAR must fall between 1 and 255 (in attribute `" + column.name + "`)");
+                    "Max length of CHAR attribute `" + column.name + "` must fall between 1 and 255");
         set.insert(column.name);
     }
     if (!set.contains(primaryKey))

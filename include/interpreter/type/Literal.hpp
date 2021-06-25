@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <string>
 #include <variant>
-#include <sstream>
+#include <string>
 
 using LiteralVariant = std::variant<int, float, std::string>;
 
@@ -53,20 +53,14 @@ public:
     [[nodiscard]] std::optional<std::string> stringValue() const { return getValue<std::string>(); }
 
     [[nodiscard]] std::string toString() const {
-        std::stringstream stream;
         switch (type()) {
             case LiteralType::Int:
-                stream << "int(" << intValue().value();
-                break;
+                return std::to_string(intValue().value());
             case LiteralType::Float:
-                stream << "float(" << floatValue().value();
-                break;
+                return std::to_string(floatValue().value());
             case LiteralType::String:
-                stream << "string(" << stringValue().value();
-                break;
+                return stringValue().value();
         }
-        stream << ")";
-        return stream.str();
     }
 
     constexpr bool operator==(const Literal &that) const { return this->value == that.value; }
