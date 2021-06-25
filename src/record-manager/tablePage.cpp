@@ -21,11 +21,11 @@ int tablePage::insertTuple(char *pagedata, Tuple tup, int k) {
         tupleNum++;
         memcpy(pagedata, &tupleNum, 4);
         memcpy(pagedata + pN, tup.rowData, tupleLength);
-        asw = tupleNum;
+        asw = tupleNum-1;
     } else {
         tp[k] = tup;
         memcpy(pagedata + p, tup.rowData, tupleLength);
-        asw = k + 1;
+        asw = k;
     }
     return asw;
 }
