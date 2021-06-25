@@ -19,13 +19,13 @@ public:
     API(Interpreter &interpreter, CatalogManager &catalogManager,
         RecordManager &recordManager, BufferManager &bufferManager) :
             interpreter(interpreter), catalogManager(catalogManager),
-            recordManager(recordManager), bufferManager(bufferManager) {};
+            recordManager(recordManager), bufferManager(bufferManager) { bootstrap(); };
+
+    void bootstrap();
 
     void listen();
 
     void registerEvents();
-
-    void directlyInput(const std::string &query);
 
     void handleCreateTableQuery(QueryPointer<CreateTableQuery> query);
 

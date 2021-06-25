@@ -1,8 +1,18 @@
 #include "API.hpp"
 
-void API::directlyInput(const std::string &query) {
-    std::stringstream ss(query);
-    interpreter.parse(ss);
+#include <filesystem>
+
+namespace fs = std::filesystem;
+
+void API::bootstrap() {
+    try {
+        fs::create_directories("database/catalog");
+        fs::create_directories("database/data");
+        fs::create_directories("database/index");
+    } catch (...) {
+        std::cout << "FATAL ERROR: File access denied." << std::endl;
+        exit(1);
+    }
 }
 
 std::string API::toString(AttributeType type) {
