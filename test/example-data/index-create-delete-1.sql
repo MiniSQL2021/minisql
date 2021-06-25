@@ -33,7 +33,7 @@ create index idx_identity on person(identity);
 create index idx_age on person(age);
 
 select * from person where age > 24;
-select * from person where identity = "Person15";
+select * from person where name = "Person15";
 select * from person where height <= 176.3;
 
 drop index idx_height;
