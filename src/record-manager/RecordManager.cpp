@@ -123,8 +123,8 @@ std::vector<Tuple> RecordManager::searchTuple(char *tableName, TableInfo tbif,
         nm.clear();
         temp.clear();
     }
-    return tup;
     delete tbpg;
+    return tup;
 }
 
 std::vector<int> RecordManager::conditionSelect(char *tableName, int attrno, char *op,

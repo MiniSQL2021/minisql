@@ -83,9 +83,10 @@ CatalogManager::searchIndex(char *indexname) //参数：IndexName；返回所在
         for (n = 0; n < m; n++) {
             for (j = 0; j < cgpage->tbif[n].attrNum; j++) {
                 if (strcmp((cgpage->tbif + n)->indexName[j], indexname) == 0) {
+                    auto result = std::make_pair((cgpage->tbif + n)->TableName,
+                                                 (cgpage->tbif + n)->attrName[j]);
                     delete cgpage;
-                    return std::make_pair((cgpage->tbif + n)->TableName,
-                                          (cgpage->tbif + n)->attrName[j]);
+                    return result;
                 }
             }
         }
@@ -246,8 +247,9 @@ TableInfo CatalogManager::getTableInfo(char *tableName)   //参数：表名；�
         }
     }
     if (i != pgNum) {
+        auto result = *(cgpage->tbif + n);
         delete cgpage;
-        return *(cgpage->tbif + n);
+        return result;
     } else {
         delete cgpage;
         throw table_does_not_exist();
@@ -363,8 +365,7 @@ void CatalogManager::createIndex(char *tableName, char *attrName, char *indexNam
     buffer.flushAfterQuery();
 }
 
-void CatalogManager::renameIndex(char *tableName, char *attrName, char *indexName)
-{
+void CatalogManager::renameIndex(char *tableName, char *attrName, char *indexName) {
     CatalogPage *cgpage = new CatalogPage;
     int pgNum = getCatalogPageNum();
     int i, j, b;
