@@ -70,19 +70,27 @@ void API::dropIndex(TableInfo &table, int attributeIndex) {
 
 // MARK: Check
 
-void API::checkTableSchema(const std::vector<Column> &columns, const std::string &primaryKey) {
+void API::checkTableSchema(const CreateTableQuery &query) {
+    if (query.tableName.length() > 24)
+        throw InvalidQueryException("Table name must be no more than 24 characters");
+    if (query.columns.size() > 32)
+        throw InvalidQueryException("The number of attributes must be no more than 32");
+
     std::unordered_set<std::string> set;
-    for (const auto &column : columns) {
+    for (const auto &column : query.columns) {
         if (set.contains(column.name))
             throw InvalidQueryException("Attribute `" + column.name + "` appears more than once");
+        else if (column.name.length() > 24)
+            throw InvalidQueryException(
+                    "Attribute name of `" + column.name + "` must be no more than 24 characters");
         else if (column.type == LiteralType::String && (*column.maxLength < 1 || *column.maxLength > 255))
             throw InvalidQueryException(
                     "Max length of CHAR attribute `" + column.name + "` must fall between 1 and 255");
         set.insert(column.name);
     }
-    if (!set.contains(primaryKey))
+    if (!set.contains(query.primaryKey))
         throw InvalidQueryException(
-                "Primary key `" + primaryKey + "` doesn't appear in attribute list");
+                "Primary key `" + query.primaryKey + "` doesn't appear in attribute list");
 }
 
 // Check 1) if some attribute name in the condition list doesn't exist
@@ -138,6 +146,10 @@ void API::checkInsertingValues(TableInfo &table, Index &index, std::vector<Liter
                         "Attribute `" + std::string(table.attrName[attributeIndex]) + "` expects " +
                         toString(expectedType) + ", but received " + toString(inputType));
         }
+        if (expectedType == AttributeType::CHAR && value->stringValue()->size() > table.attrLength[attributeIndex])
+            throw InvalidQueryException(
+                    "Value `" + value->toString() + "` on `" + table.attrName[attributeIndex] +
+                    "` is longer than its max length " + std::to_string(table.attrLength[attributeIndex]));
         if (table.attrUnique[attributeIndex] && isValueExists(table, index, attributeIndex, *value))
             throw InvalidQueryException(
                     "Value `" + value->toString() + "` already exists in the unique attribute `" +
