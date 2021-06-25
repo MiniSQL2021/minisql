@@ -74,8 +74,11 @@ public:
     //参数：indexName；删除index
     //index_does_not_exist
 
+    void renameIndex(char *tableName, char *attrName, char *indexName);
+
 
     int getCatalogPageNum();
+
 
     char *getCatalogPage(int pageID);
 };
