@@ -11,7 +11,7 @@ void API::checkTableSchema(const CreateTableQuery &query) {
 
     std::unordered_set<std::string> set;
     for (const auto &column : query.columns) {
-        if (set.contains(column.name))
+        if (set.find(column.name) != set.end())
             throw InvalidQueryException("Attribute `" + column.name + "` appears more than once");
         else if (column.name.length() > 24)
             throw InvalidQueryException(
@@ -21,7 +21,7 @@ void API::checkTableSchema(const CreateTableQuery &query) {
                     "Max length of CHAR attribute `" + column.name + "` must fall between 1 and 255");
         set.insert(column.name);
     }
-    if (!set.contains(query.primaryKey))
+    if (set.find(query.primaryKey) == set.end())
         throw InvalidQueryException(
                 "Primary key `" + query.primaryKey + "` doesn't appear in attribute list");
 }
