@@ -47,8 +47,8 @@ TableInfo Adapter::toTableInfo(const CreateTableQuery &query) {
                         true, static_cast<int>(query.columns.size()), attributes.data());
 
     for (const auto &attribute : attributes) {                              // Deallocate char *
-        delete attribute.attrName;
-        delete attribute.indexname;
+        delete[]attribute.attrName;
+        delete[]attribute.indexname;
     }
 
     return result;
