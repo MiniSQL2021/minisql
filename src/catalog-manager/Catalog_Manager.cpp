@@ -363,6 +363,44 @@ void CatalogManager::createIndex(char *tableName, char *attrName, char *indexNam
     buffer.flushAfterQuery();
 }
 
+void CatalogManager::renameIndex(char *tableName, char *attrName, char *indexName)
+{
+    CatalogPage *cgpage = new CatalogPage;
+    int pgNum = getCatalogPageNum();
+    int i, j, b;
+    char *pgdata;
+    bool flag = false;
+    int n = -1;
+    int num;
+    for (i = 0; i < pgNum; i++) {
+        pgdata = getCatalogPage(i);
+        cgpage->readPage(pgdata);
+        n = cgpage->searchTableInfo(tableName);
+        if (n != -1) {
+            break;
+        }
+    }
+
+    if (i == pgNum) {
+        delete cgpage;
+        throw table_does_not_exist();
+    }
+    num = (cgpage->tbif + n)->attrNum;
+    j = (cgpage->tbif + n)->searchAttr(attrName);
+    if ((cgpage->tbif + n)->attrUnique[j] == false) {
+        delete cgpage;
+        throw attr_does_not_unique();
+    }
+    memcpy((cgpage->tbif + n)->indexName[j], indexName, 32);
+    (cgpage->tbif + n)->insertRowData();
+
+    cgpage->updatePage(pgdata, n);
+    delete cgpage;
+    b = buffer.getPageId("./database/catalog/catalog", i);
+    buffer.modifyPage(b);
+    buffer.flushAfterQuery();
+}
+
 void CatalogManager::deleteIndex(char *indexName)    //参数：indexName；删除index，失败则报错：index_does_not_exist
 {
     CatalogPage *cgpage = new CatalogPage;
