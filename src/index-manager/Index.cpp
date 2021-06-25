@@ -12,13 +12,14 @@
 #include <tuple>
 #include "tableInfo.h"
 
-Index::Index(std::string table_name, TableInfo attr, BufferManager &buffer_manager):buffer_manager(buffer_manager){
-	for (int i = 0; i < attr.attrNum; i++)
-		if (attr.hasIndex[i]) {
-			std::string a = attr.attrName[i];
+Index::Index(std::string table_name, TableInfo tbif, BufferManager &buffer_manager):buffer_manager(buffer_manager){
+	for (int i = 0; i < tbif.attrNum; i++)
+		if (tbif.hasIndex[i]) {
+			std::string a = tbif.attrName[i];
 			int b;
-			memcpy(&b,attr.attrType+i,4);
-			createIndex("INDEX_FILE_" +  table_name + "_" +a, b);
+			int string_lenght = tbif.attrLength[i];
+			memcpy(&b,tbif.attrType+i,4);
+			createIndex("INDEX_FILE_" +  table_name + "_" +a, b, string_lenght);
 		}
 }
 
@@ -44,9 +45,10 @@ Index::~Index()
 	}
 }
 
-void Index::createIndex(std::string file_path, int type)
+void Index::createIndex(std::string file_path, int type, int string_length)
 {
-	int key_size = getKeySize(type); //获取key的size
+
+	int key_size = getKeySize(type, string_length); //获取key的size
 	int degree = getDegree(type); //获取需要的degree
 
 	//根据数据类型不同，用对应的方法建立映射关系
@@ -67,9 +69,9 @@ void Index::createIndex(std::string file_path, int type)
 	return;
 }
 
-void Index::createIndexWithDatas(std::string file_path, int type,int n, std::vector<Tuple> datasTuple)
+void Index::createIndexWithDatas(std::string file_path, int type,int n, std::vector<Tuple> datasTuple, int string_length)
 {
-	createIndex(file_path, type);
+	createIndex(file_path, type, string_length);
 	for (int i = 0; i < datasTuple.size(); i++) {
 		Data data;
 		data.type = type;
@@ -136,10 +138,11 @@ void Index::dropIndex(std::string file_path, int type)
 	return;
 }
 
-void Index::clearIndex(std::string file_path, int type)
+void Index::clearIndex(std::string file_path, int type, int string_length)
 {
-	Index::createIndex( file_path, type);
+	
 	Index::dropIndex(file_path, type);
+	Index::createIndex( file_path, type, string_length);
 
 }
 
@@ -366,14 +369,14 @@ int Index::getDegree(int type)
 	return degree;
 }
 
-int Index::getKeySize(int type)
+int Index::getKeySize(int type,int string_length)
 {
 	if (type == TYPE_FLOAT)
 		return sizeof(float);
 	else if (type == TYPE_INT)
 		return sizeof(int);
 	else if (type > 0)
-		return 255;
+		return string_length;
 	else {
 		throw getKeySize_wrong();
 		return -100;
