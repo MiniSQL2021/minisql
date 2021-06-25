@@ -20,7 +20,7 @@ void API::handleCreateTableQuery(QueryPointer<CreateTableQuery> query) {
     recordManager.createTable(table.TableName, table);
     catalogManager.createTable(table);
 
-    std::cout << "query OK ";
+    std::cout << "created table `" << query->tableName << "` ";
 }
 
 void API::handleDropTableQuery(QueryPointer<DropTableQuery> query) {
@@ -39,7 +39,7 @@ void API::handleDropTableQuery(QueryPointer<DropTableQuery> query) {
     recordManager.deleteTable(tableName);
     catalogManager.dropTable(tableName);
 
-    std::cout << "query OK ";
+    std::cout << "dropped table `" << query->tableName << "` ";
 }
 
 void API::handleCreateIndexQuery(QueryPointer<CreateIndexQuery> query) {
@@ -67,7 +67,8 @@ void API::handleCreateIndexQuery(QueryPointer<CreateIndexQuery> query) {
     Index index(query->tableName, table, bufferManager);
     createIndex(table, index, attributeIndex, query->indexName);
 
-    std::cout << "query OK ";
+    std::cout << "created index `" << query->indexName
+              << "` on `" << query->tableName << "." << query->columnName << "` ";
 }
 
 void API::handleDropIndexQuery(QueryPointer<DropIndexQuery> query) {
@@ -83,7 +84,8 @@ void API::handleDropIndexQuery(QueryPointer<DropIndexQuery> query) {
 
         catalogManager.deleteIndex(indexName);
 
-        std::cout << "query OK ";
+        std::cout << "dropped index `" << query->indexName
+                  << "` on `" << tableName << "." << attributeName << "` ";
     } catch (const index_does_not_exist &error) {
         API_Util::printError("Index doesn't exists");
     }
@@ -144,7 +146,7 @@ void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
 
         recordManager.deleteAllRecord(tableName, table);
 
-        std::cout << "query OK ";
+        std::cout << "deleted all tuples from `" + query->tableName << "` ";
     } else {
         auto locations = selectTuples(table, query->conditions);
         auto tuples = recordManager.searchTuple(tableName, table, locations);
@@ -162,7 +164,8 @@ void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
 
         recordManager.deleteRecord(tableName, locations, table);
 
-        std::cout << "query OK, " << tuples.size() << (tuples.size() <= 1 ? " row" : " rows") << " affected ";
+        std::cout << "deleted tuples from `" + query->tableName << "`, "
+                  << tuples.size() << (tuples.size() <= 1 ? " row" : " rows") << " affected ";
     }
 }
 
@@ -196,7 +199,7 @@ void API::handleInsertQuery(QueryPointer<InsertQuery> query) {
         }
     }
 
-    std::cout << "query OK ";
+    std::cout << "inserted value into `" + query->tableName + "` ";
 }
 
 // For convenience to testing

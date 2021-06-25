@@ -52,7 +52,7 @@ void API_Util::printTable(const std::vector<Tuple> &tuples, const TableInfo &tab
     std::cout << tuples.size() << (tuples.size() <= 1 ? " row" : " rows") << " in set ";
 }
 
-void API_Util::printError(const std::string &message) { std::cout << "ERROR: " << message << ". "; }
+void API_Util::printError(const std::string &message) { std::cout << "ERROR: " << message << " "; }
 
 std::set<int> API_Util::intersect(const std::set<int> &a, const std::vector<int> &b) {
     std::set<int> result;
