@@ -1,6 +1,8 @@
 #include "catch2/catch.hpp"
 #include "interpreter/Interpreter.hpp"
 
+#include <sstream>
+
 TEST_CASE("Interpret queries", "[interpreter:queries]") {
     Interpreter interpreter;
 
