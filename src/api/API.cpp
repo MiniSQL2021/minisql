@@ -143,7 +143,7 @@ void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
             auto attribute = Adapter::toAttribute(table, attributeIndex);
             auto attributeName = table.attrName[attributeIndex];
             index.clearIndex(Adapter::getIndexFilePath(query->tableName, attributeName),
-                             Adapter::toDataType(attribute.type));
+                             Adapter::toDataType(attribute.type), table.attrLength[attributeIndex]);
         }
 
         recordManager.deleteAllRecord(tableName, table);

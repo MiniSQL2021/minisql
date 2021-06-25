@@ -55,7 +55,8 @@ void API::createIndex(TableInfo &table, Index &index, int attributeIndex, const 
     auto attribute = Adapter::toAttribute(table, attributeIndex);
     index.createIndexWithDatas(Adapter::getIndexFilePath(table.TableName, table.attrName[attributeIndex]),
                                Adapter::toDataType(attribute.type), attributeIndex,
-                               recordManager.nonConditionSelect(table.TableName, table));
+                               recordManager.nonConditionSelect(table.TableName, table),
+                               table.attrLength[attributeIndex]);
     catalogManager.createIndex(table.TableName, table.attrName[attributeIndex], Adapter::unsafeCStyleString(indexName));
 }
 
