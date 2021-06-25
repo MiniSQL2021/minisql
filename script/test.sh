@@ -31,7 +31,7 @@ fi
 for file in ../../test/example-data/*.sql; do
   name=$(basename $file)
   base=${name%.sql}
-  if [[ $base =~ "1000" ]]; then
+  if [[ $base =~ "test-" ]]; then
     continue
   fi
   echo -n "Testing $name... "
