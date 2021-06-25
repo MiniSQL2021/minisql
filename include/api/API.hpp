@@ -54,7 +54,7 @@ private:
 
     void dropIndex(TableInfo &table, int attributeIndex);
 
-    static void checkTableSchema(const std::vector<Column> &columns, const std::string &primaryKey);
+    static void checkTableSchema(const CreateTableQuery &query);
 
     static void checkConditionList(TableInfo &table, std::vector<ComparisonCondition> &conditions);
 

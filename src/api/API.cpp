@@ -5,7 +5,7 @@
 
 void API::handleCreateTableQuery(QueryPointer<CreateTableQuery> query) {
     try {
-        checkTableSchema(query->columns, query->primaryKey);
+        checkTableSchema(*query);
     } catch (const InvalidQueryException &error) {
         API_Util::printError(error.what());
         return;
