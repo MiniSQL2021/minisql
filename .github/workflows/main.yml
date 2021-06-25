@@ -1,0 +1,47 @@
+name: Build and Release
+
+on:
+  release:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        - os: ubuntu-latest
+          artifact: ubuntu
+        - os: macos-latest
+          artifact: macos
+        - os: windows-latest
+          artifact: windows
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - uses: lukka/get-cmake@latest
+      
+      - uses: lukka/run-cmake@latest
+        with:
+          cmakeListsOrSettingsJson: 'CMakeListsTxtBasic'
+          cmakeBuildType: Release
+          buildDirectory: build
+          
+      - shell: bash
+        run: |
+          mkdir artifact
+          cp build/app/app* artifact
+        
+      - uses: actions/upload-artifact@latest
+        with:
+          name: ${{ matrix.config.artifact }}
+          path: artifact
+          
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: artifact
+          asset_name: ${{ matrix.config.artifact }}
