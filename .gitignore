@@ -235,4 +235,5 @@ $RECYCLE.BIN/
 ### Custom ###
 .idea
 .vscode/settings.json
+build
 test/test-result
