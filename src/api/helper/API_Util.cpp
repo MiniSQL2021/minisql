@@ -73,3 +73,7 @@ std::set<int> API_Util::intersect(const std::vector<int> &a, const std::vector<i
                           std::inserter(result, result.begin()));
     return result;
 }
+
+std::string API_Util::internalIndexName(const std::string &tableName, const std::string &attributeName) {
+    return "__idx" + tableName + "_" + attributeName;
+}

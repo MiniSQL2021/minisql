@@ -13,4 +13,6 @@ namespace API_Util {
     std::set<int> intersect(const std::set<int> &a, const std::vector<int> &b);
 
     std::set<int> intersect(const std::vector<int> &a, const std::vector<int> &b);
+
+    std::string internalIndexName(const std::string &tableName, const std::string &attributeName);
 }

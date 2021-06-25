@@ -71,32 +71,35 @@ parsePrimaryKeyConstraint(ctx->primaryKeyConstraint()));
 
 ```cpp
 while (true) {
-try {
-std::getline(std::cin, line);
-parse(buffer);
-// No syntax error occurs, clear buffer
-buffer.empty();
-isWaitingForMoreInput = false;
-} catch (const SyntaxError &error) {
-if (!error.hitEOF) {
-// Didn't hit EOF, that is to say
-// there exists syntax error in the middle
-// Discard buffer, and print error message
-std::cout << error.message() << std::endl;
-buffer.empty();
-isWaitingForMoreInput = false;
-} else {
-// Hit EOF, that is to say
-// additional input is expected
-// Reset buffer's get pointer to the beginning
-buffer.seekg(0);
-isWaitingForMoreInput = true;
-}
-}
+	try {
+		std::getline(std::cin, line);
+		parse(buffer);
+		// No syntax error occurs, clear buffer
+		buffer.empty();
+		isWaitingForMoreInput = false;
+	} catch (const SyntaxError &error) {
+		if (!error.hitEOF) {
+			// Didn't hit EOF, that is to say
+			// there exists syntax error in the middle
+			// Discard buffer, and print error message
+			std::cout << error.message() << std::endl;
+			buffer.empty();
+			isWaitingForMoreInput = false;
+		} else {
+			// Hit EOF, that is to say
+			// additional input is expected
+			// Reset buffer's get pointer to the beginning
+			buffer.seekg(0);
+			isWaitingForMoreInput = true;
+		}
+	}
 }
 ```
 
 ## References
 
-- [ANTLR4 Documentation](https://github.com/antlr/antlr4/blob/master/doc/interpreters.md)
-- [The ANTLR4 grammar of MySQL Workbench](https://github.com/mysql/mysql-workbench/tree/8.0/library/parsers/grammars)
+- [ANTLR4 Documentation][1]
+- [The ANTLR4 grammar of MySQL Workbench][2]
+
+[1]:	https://github.com/antlr/antlr4/blob/master/doc/interpreters.md
+[2]:	https://github.com/mysql/mysql-workbench/tree/8.0/library/parsers/grammars

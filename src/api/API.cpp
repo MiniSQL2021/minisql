@@ -20,6 +20,13 @@ void API::handleCreateTableQuery(QueryPointer<CreateTableQuery> query) {
     recordManager.createTable(table.TableName, table);
     catalogManager.createTable(table);
 
+    // Create indices for all unique (or primary) attribute internally
+    Index index(query->tableName, table, bufferManager);
+    for (int i = 0; i < table.attrNum; i++)
+        if (table.attrUnique[i])
+            createIndex(table, index, i,
+                        API_Util::internalIndexName(query->tableName, table.attrName[i]));
+
     std::cout << "created table `" << query->tableName << "` ";
 }
 
@@ -45,6 +52,7 @@ void API::handleDropTableQuery(QueryPointer<DropTableQuery> query) {
 void API::handleCreateIndexQuery(QueryPointer<CreateIndexQuery> query) {
     char *tableName = Adapter::unsafeCStyleString(query->tableName);
     char *attributeName = Adapter::unsafeCStyleString(query->columnName);
+    char *indexName = Adapter::unsafeCStyleString(query->indexName);
     if (!catalogManager.checkTable(tableName)) {
         API_Util::printError("Table doesn't exist");
         return;
@@ -57,15 +65,10 @@ void API::handleCreateIndexQuery(QueryPointer<CreateIndexQuery> query) {
         API_Util::printError("Attribute is not unique");
         return;
     }
-    if (catalogManager.checkIndex(tableName, attributeName)) {
-        API_Util::printError("Index already exists");
-        return;
-    }
     auto table = catalogManager.getTableInfo(tableName);
-    auto attributeIndex = table.searchAttr(attributeName);
 
-    Index index(query->tableName, table, bufferManager);
-    createIndex(table, index, attributeIndex, query->indexName);
+    // Actually just rename the existing index that created internally
+    catalogManager.renameIndex(tableName, attributeName, indexName);
 
     std::cout << "created index `" << query->indexName
               << "` on `" << query->tableName << "." << query->columnName << "` ";
@@ -78,11 +81,10 @@ void API::handleDropIndexQuery(QueryPointer<DropIndexQuery> query) {
 
         auto table = catalogManager.getTableInfo(tableName);
         auto attribute = Adapter::toAttribute(table, attributeName);
-        Index index(tableName, table, bufferManager);
-        index.dropIndex(Adapter::getIndexFilePath(tableName, attributeName),
-                        Adapter::toDataType(attribute.type));
 
-        catalogManager.deleteIndex(indexName);
+        // Actually just rename the existing index to an internal name
+        auto internalIndexName = API_Util::internalIndexName(tableName, attributeName);
+        catalogManager.renameIndex(tableName, attributeName, Adapter::unsafeCStyleString(internalIndexName));
 
         std::cout << "dropped index `" << query->indexName
                   << "` on `" << tableName << "." << attributeName << "` ";
