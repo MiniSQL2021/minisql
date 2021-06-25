@@ -767,9 +767,9 @@ inline void Tree<T>::searchRange2(T & key, std::vector<int>& index_in_records, i
 		} while (!finished);
 		
 	}
-
+	int a = searchKey(key_temp);
 	if (flag == 0) {
-		if (key_temp == key) {
+		if (a != -1) {
 			index_in_records.erase(index_in_records.begin());
 		}
 	}

@@ -321,7 +321,7 @@ inline int TreeNode<T>::addKey(T & key, int index_in_record)
 	}
 	else {
 		int index = 0;
-		bool a = findKey1(key, index_in_record);
+		bool a = findKey1(key, index);
 		if (a) {
 	//		throw addKey_already_in();
 		}
@@ -392,10 +392,16 @@ inline bool TreeNode<T>::findRange(int index, T & key, std::vector<int>& return_
 	for ( i = index; i < num && keys[i] <= key; i++) {
 		return_index_in_records.push_back(index_in_records[i]);
 	}
-	if (keys[i] > key)
+	if (keys[i] > key){
+
+		key=keys[i-1];
 		return true;
-	else
+	}
+	else{
+		key=keys[i-1];
 		return false;
+	}
+		
 }
 
 
