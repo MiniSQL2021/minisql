@@ -32,7 +32,7 @@ public :
     //输出：void
     //功能：创建索引文件及B+树
     //异常：
-    void createIndex(std::string file_path, int type);
+    void createIndex(std::string file_path, int type , int string_length=255);
 
     void createIndexWithDatas(std::string file_path, int type, int n,
                               std::vector<Tuple> datasTuple);
@@ -90,6 +90,6 @@ private:
     int getDegree(int type);
 
     //计算不同类型Key的size
-    int getKeySize(int type);
+    int getKeySize(int type,int string_length=255);
 
 };

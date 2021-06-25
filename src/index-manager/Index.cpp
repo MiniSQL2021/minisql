@@ -44,9 +44,10 @@ Index::~Index()
 	}
 }
 
-void Index::createIndex(std::string file_path, int type)
+void Index::createIndex(std::string file_path, int type, int string_length)
 {
-	int key_size = getKeySize(type); //获取key的size
+
+	int key_size = getKeySize(type, string_length); //获取key的size
 	int degree = getDegree(type); //获取需要的degree
 
 	//根据数据类型不同，用对应的方法建立映射关系
@@ -366,14 +367,14 @@ int Index::getDegree(int type)
 	return degree;
 }
 
-int Index::getKeySize(int type)
+int Index::getKeySize(int type,int string_length)
 {
 	if (type == TYPE_FLOAT)
 		return sizeof(float);
 	else if (type == TYPE_INT)
 		return sizeof(int);
 	else if (type > 0)
-		return 255;
+		return string_length;
 	else {
 		throw getKeySize_wrong();
 		return -100;
