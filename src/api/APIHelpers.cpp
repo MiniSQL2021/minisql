@@ -51,6 +51,14 @@ std::vector<int> API::getAllIndexedAttributeIndex(const TableInfo &table) {
     return result;
 }
 
+void API::createIndex(TableInfo &table, Index &index, int attributeIndex, const std::string &indexName) {
+    auto attribute = Adapter::toAttribute(table, attributeIndex);
+    index.createIndexWithDatas(Adapter::getIndexFilePath(table.TableName, table.attrName[attributeIndex]),
+                               Adapter::toDataType(attribute.type), attributeIndex,
+                               recordManager.nonConditionSelect(table.TableName, table));
+    catalogManager.createIndex(table.TableName, table.attrName[attributeIndex], Adapter::unsafeCStyleString(indexName));
+}
+
 void API::dropIndex(TableInfo &table, int attributeIndex) {
     // Assume the index exists
     auto attribute = Adapter::toAttribute(table, attributeIndex);
@@ -103,29 +111,37 @@ void API::checkConditionList(TableInfo &table, std::vector<ComparisonCondition> 
     }
 }
 
+bool API::isValueExists(TableInfo &table, Index &index, int attributeIndex, const Literal &value) {
+    if (table.hasIndex[attributeIndex])
+        return index.findIndex(Adapter::getIndexFilePath(table.TableName, table.attrName[attributeIndex]),
+                               Adapter::toData(value)) != -1;
+    else
+        return !recordManager.checkUnique(
+                table.TableName, attributeIndex, Adapter::toAttribute(value), table);
+}
+
 // Check 1) if type of some value in the value list doesn't match the actual type
 //       2) if some value of unique attribute conflicts with existing values
 // Side effect: if it's the case when input is int and expected is float, convert this literal
 // Throw: InvalidQueryException
-void API::checkInsertingValues(TableInfo &table, std::vector<Literal> &literals) {
-    for (auto attribute = literals.begin(); attribute < literals.end(); attribute++) {
-        int attributeIndex = static_cast<int>(attribute - literals.cbegin());
-        auto inputType = Adapter::toAttributeType(attribute->type());
+void API::checkInsertingValues(TableInfo &table, Index &index, std::vector<Literal> &literals) {
+    for (auto value = literals.begin(); value < literals.end(); value++) {
+        int attributeIndex = static_cast<int>(value - literals.cbegin());
+        auto inputType = Adapter::toAttributeType(value->type());
         auto expectedType = table.attrType[attributeIndex];
         if (inputType != expectedType) {
             if (inputType == AttributeType::INT && expectedType == AttributeType::FLOAT) {
-                Literal floatLiteral(static_cast<float>(*attribute->intValue()));
-                *attribute = std::move(floatLiteral);
+                Literal floatLiteral(static_cast<float>(*value->intValue()));
+                *value = std::move(floatLiteral);
             } else
                 throw InvalidQueryException(
                         "Attribute `" + std::string(table.attrName[attributeIndex]) + "` expects " +
                         toString(expectedType) + ", but received " + toString(inputType));
         }
-        if (table.attrUnique[attributeIndex] &&
-            !recordManager.checkUnique(table.TableName, attributeIndex, Adapter::toAttribute(*attribute), table))
+        if (table.attrUnique[attributeIndex] && isValueExists(table, index, attributeIndex, *value))
             throw InvalidQueryException(
-                    "Value `" + attribute->toString() + "` already exists in the unique attribute " +
-                    table.TableName + "(" + table.attrName[attributeIndex] + ")");
+                    "Value `" + value->toString() + "` already exists in the unique attribute `" +
+                    table.TableName + "." + table.attrName[attributeIndex] + "`");
     }
 }
 
@@ -136,14 +152,13 @@ std::vector<int> API::selectTuples(TableInfo &table, const std::vector<Compariso
     bool isFirstCondition = true;
 
     auto conditionListMap = combineConditions(conditions);
-
+    Index index(table.TableName, table, bufferManager);
     for (const auto &[name, conditionList]: conditionListMap) {
         if (!conditionList) return {};    // Empty range
         int attributeIndex = table.searchAttr(Adapter::unsafeCStyleString(name));
 
         if (table.hasIndex[attributeIndex]) {
 
-            Index index(table.TableName, table, bufferManager);
             auto filePath = Adapter::getIndexFilePath(table.TableName, name);
 
             for (const auto &condition : *conditionList) {

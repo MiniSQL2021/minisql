@@ -50,13 +50,17 @@ private:
 
     static std::vector<int> getAllIndexedAttributeIndex(const TableInfo &table);
 
+    void createIndex(TableInfo &table, Index &index, int attributeIndex, const std::string &indexName);
+
     void dropIndex(TableInfo &table, int attributeIndex);
 
     static void checkTableSchema(const std::vector<Column> &columns, const std::string &primaryKey);
 
     static void checkConditionList(TableInfo &table, std::vector<ComparisonCondition> &conditions);
 
-    void checkInsertingValues(TableInfo &table, std::vector<Literal> &literals);
+    bool isValueExists(TableInfo &table, Index &index, int attributeIndex, const Literal &value);
+
+    void checkInsertingValues(TableInfo &table, Index &index, std::vector<Literal> &literals);
 
     static std::vector<int> searchWithIndex(Index &index, const std::string &filePath, const RangeCondition &condition);
 

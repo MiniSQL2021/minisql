@@ -45,7 +45,6 @@ void API::handleDropTableQuery(QueryPointer<DropTableQuery> query) {
 void API::handleCreateIndexQuery(QueryPointer<CreateIndexQuery> query) {
     char *tableName = Adapter::unsafeCStyleString(query->tableName);
     char *attributeName = Adapter::unsafeCStyleString(query->columnName);
-    char *indexName = Adapter::unsafeCStyleString(query->indexName);
     if (!catalogManager.checkTable(tableName)) {
         API_Util::printError("Table doesn't exist");
         return;
@@ -64,14 +63,9 @@ void API::handleCreateIndexQuery(QueryPointer<CreateIndexQuery> query) {
     }
     auto table = catalogManager.getTableInfo(tableName);
     auto attributeIndex = table.searchAttr(attributeName);
-    auto attribute = Adapter::toAttribute(table, attributeIndex);
 
     Index index(query->tableName, table, bufferManager);
-    index.createIndexWithDatas(Adapter::getIndexFilePath(query->tableName, query->columnName),
-                               Adapter::toDataType(attribute.type), attributeIndex,
-                               recordManager.nonConditionSelect(tableName, table));
-
-    catalogManager.createIndex(tableName, attributeName, indexName);
+    createIndex(table, index, attributeIndex, query->indexName);
 
     std::cout << "query OK ";
 }
@@ -138,12 +132,12 @@ void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
         return;
     }
 
+    Index index(query->tableName, table, bufferManager);
     if (query->conditions.empty()) {
         // Delete all the records from all the indices in the table
         for (const auto &attributeIndex: getAllIndexedAttributeIndex(table)) {
             auto attribute = Adapter::toAttribute(table, attributeIndex);
             auto attributeName = table.attrName[attributeIndex];
-            Index index(query->tableName, table, bufferManager);
             index.clearIndex(Adapter::getIndexFilePath(query->tableName, attributeName),
                              Adapter::toDataType(attribute.type));
         }
@@ -161,7 +155,6 @@ void API::handleDeleteQuery(QueryPointer<DeleteQuery> query) {
         // Delete all the selected records from all the indices in the table
         for (const auto &attributeIndex: getAllIndexedAttributeIndex(table)) {
             auto attributeName = table.attrName[attributeIndex];
-            Index index(query->tableName, table, bufferManager);
             for (const auto &tuple : tuples)
                 index.deleteIndexByKey(Adapter::getIndexFilePath(query->tableName, attributeName),
                                        Adapter::toData(tuple.attr[attributeIndex]));
@@ -184,9 +177,9 @@ void API::handleInsertQuery(QueryPointer<InsertQuery> query) {
         API_Util::printError("The number of attributes doesn't match");
         return;
     }
-
+    Index index(query->tableName, table, bufferManager);
     try {
-        checkInsertingValues(table, query->values);
+        checkInsertingValues(table, index, query->values);
     } catch (const InvalidQueryException &error) {
         API_Util::printError(error.what());
         return;
@@ -198,7 +191,6 @@ void API::handleInsertQuery(QueryPointer<InsertQuery> query) {
     for (int attributeIndex = 0; attributeIndex < table.attrNum; attributeIndex++) {
         if (table.hasIndex[attributeIndex]) {
             auto attribute = Adapter::toAttribute(table, attributeIndex);
-            Index index(query->tableName, table, bufferManager);
             index.insertIndex(Adapter::getIndexFilePath(query->tableName, table.attrName[attributeIndex]),
                               Adapter::toData(query->values[attributeIndex]), location);
         }
