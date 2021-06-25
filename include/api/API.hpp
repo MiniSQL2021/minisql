@@ -71,4 +71,12 @@ private:
     std::vector<int> searchWithRecord(TableInfo &table, int attributeIndex, const RangeCondition &condition);
 
     std::vector<int> selectTuples(TableInfo &table, const std::vector<ComparisonCondition> &conditions);
+
+    static void intersectWithSet(std::set<int> &set, const std::vector<int> &locations, bool &isFirstCondition);
+
+    static void intersectWithSet(std::set<int> &set, int location, bool &isFirstCondition);
+
+    static void removeFromSet(std::set<int> &set, int location, bool &isFirstCondition);
+
+    static std::string toString(AttributeType type);
 };

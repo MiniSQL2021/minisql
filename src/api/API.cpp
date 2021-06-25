@@ -1,6 +1,4 @@
 #include "API.hpp"
-#include "Adapter.hpp"
-#include "API_Util.hpp"
 #include "InvalidQueryException.hpp"
 
 void API::handleCreateTableQuery(QueryPointer<CreateTableQuery> query) {

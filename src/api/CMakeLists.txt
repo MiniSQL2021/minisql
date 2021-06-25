@@ -4,7 +4,8 @@ FetchContent_Declare(
         GIT_TAG v1.4)
 FetchContent_MakeAvailable(tabulate)
 
-add_library(api API.cpp Adapter.cpp APIHelpers.cpp helper/API_Util.cpp helper/Condition.cpp)
+add_library(api API.cpp Checking.cpp Helpers.cpp IndexRelated.cpp Selection.cpp Adapter.cpp
+        helper/API_Util.cpp helper/Condition.cpp)
 
 target_include_directories(api PRIVATE ${CMAKE_SOURCE_DIR}/include/api)
 target_include_directories(api PRIVATE ${CMAKE_SOURCE_DIR}/include/api/helper)
