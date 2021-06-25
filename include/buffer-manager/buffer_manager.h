@@ -9,9 +9,8 @@
 
 class BufferManager {
 private:
-    std::vector<Page> Frames;        // an array of Page
-    int frame_size;
-    int current_pos;    // used for LRU
+    std::vector<Page> Frames;   // store pages
+    int current_pos;            // used for clock
 
     void init(int size);
 
@@ -54,4 +53,3 @@ public:
 };
 
 #endif // !BUFFER_MANAGER_H
-

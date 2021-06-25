@@ -764,7 +764,7 @@ inline void Tree<T>::searchRange2(T & key, std::vector<int>& index_in_records, i
 				break;
 			else
 				pNode = pNode->nextLeaf();
-		} while (!finished);
+		} while (1);
 		
 	}
 	int a = searchKey(key_temp);
@@ -818,7 +818,7 @@ inline void Tree<T>::writtenbackToDiskAll()
 
 		memset(p, 0, PAGE_SIZE);
 
-		for (i = 0; i < ntmp->num; i++) {
+		for (i = 0; i < ntmp->num ; i++) {
 			p[offset++] = '#';
 			p[offset++] = ' ';
 
@@ -861,7 +861,7 @@ inline void Tree<T>::readFromDisk(char * p, char * end)
 			return;
 		else {
 			i += 2;
-			char tmp[100];
+			char tmp[255];
 			int j;
 
 			for (j = 0; i < PAGE_SIZE && p[i] != ' '; i++)

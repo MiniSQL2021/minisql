@@ -131,6 +131,8 @@ void Index::dropIndex(std::string file_path, int type)
 		}
 	}
 
+	std::string file_name = "./database/index/" + file_path;
+	buffer_manager.deleteFile(file_name);
 	return;
 }
 
@@ -358,7 +360,7 @@ std::vector<int> Index::searchRange2(std::string file_path, Data data, int flag)
 
 int Index::getDegree(int type)
 {
-	int degree = (PAGE_SIZE - sizeof(int)) / (getKeySize(type) + sizeof(int));
+	int degree = (PAGE_SIZE - sizeof(int)) / (getKeySize(type) + sizeof(int)+4);
 	if (degree % 2 == 0)
 		degree -= 1;
 	return degree;
@@ -371,7 +373,7 @@ int Index::getKeySize(int type)
 	else if (type == TYPE_INT)
 		return sizeof(int);
 	else if (type > 0)
-		return type;
+		return 255;
 	else {
 		throw getKeySize_wrong();
 		return -100;

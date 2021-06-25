@@ -4,17 +4,17 @@
 #include<string>
 
 #define PAGE_SIZE 4096
-#define MAX_BLOCK 40
+#define MAX_BLOCK 400
 
 class Page {
 private:
     char page_data[PAGE_SIZE];
     std::string file_name;        // the file name of this page
     int block_id;                // the block id of this page in this file
-    int pinned_count;
-    bool is_dirty;
-    bool ref;                    // reference number, used for LRU
-    bool viable;
+    bool is_pinned;
+    bool is_dirty;         
+    int ref_count;              
+    bool is_empty;             
 
 public:
     Page();
@@ -33,21 +33,21 @@ public:
 
     int getBlockId();
 
-    void setPinnedCount(int count);
+    void setIsPinned(bool p);
 
-    int getPinnedCount();
+    int getIsPinned();
 
     void setIsDirty(bool dirty);
 
     bool getIsDirty();
 
-    void setRef(bool r);
+    void setRefCount(int r);
 
-    bool getRef();
+    bool getRefCount();
 
-    void setViable(bool via);
+    void setIsEmpty(bool e);
 
-    bool getViable();
+    bool getIsEmpty();
 
 };
 

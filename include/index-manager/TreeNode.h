@@ -79,7 +79,7 @@ inline bool TreeNode<T>::isRoot()
 		return false;
 	}
 	else {
-		return false;
+		return true;
 	}
 }
 

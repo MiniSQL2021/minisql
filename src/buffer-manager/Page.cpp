@@ -7,10 +7,10 @@ Page::Page() {
 void Page::init() {
     file_name = "";
     block_id = -1;
-    pinned_count = 0;
+    is_pinned = 0;
     is_dirty = false;
-    ref = false;
-    viable = true;
+    ref_count = 1;
+    is_empty = true;
     for (int i = 0; i < PAGE_SIZE; i++)
         page_data[i] = '\0';
 }
@@ -35,12 +35,12 @@ int Page::getBlockId() {
     return block_id;
 }
 
-void Page::setPinnedCount(int count) {
-    pinned_count = count;
+void Page::setIsPinned(bool p) {
+    is_pinned = p;
 }
 
-int Page::getPinnedCount() {
-    return pinned_count;
+int Page::getIsPinned() {
+    return is_pinned;
 }
 
 void Page::setIsDirty(bool dirty) {
@@ -51,18 +51,21 @@ bool Page::getIsDirty() {
     return is_dirty;
 }
 
-void Page::setRef(bool r) {
-    ref = r;
+void Page::setRefCount(int r) {
+    if (r >= 0)
+        ref_count = r;
+    else
+        ref_count = 0;
 }
 
-bool Page::getRef() {
-    return ref;
+bool Page::getRefCount() {
+    return ref_count;
 }
 
-void Page::setViable(bool via) {
-    viable = via;
+void Page::setIsEmpty(bool e) {
+    is_empty = e;
 }
 
-bool Page::getViable() {
-    return viable;
+bool Page::getIsEmpty() {
+    return is_empty;
 }
