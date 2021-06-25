@@ -12,3 +12,4 @@ fi
 rm $CMAKE_FOLDER/app/database/catalog/* >/dev/null 2>&1
 rm $CMAKE_FOLDER/app/database/data/* >/dev/null 2>&1
 rm $CMAKE_FOLDER/app/database/index/* >/dev/null 2>&1
+exit 0
