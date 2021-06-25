@@ -17,7 +17,7 @@ void intersectWithSet(std::set<int> &set, const std::vector<int> &locations, boo
 void intersectWithSet(std::set<int> &set, int location, bool &isFirstCondition) {
     if (isFirstCondition) {
         isFirstCondition = false;
-        set = std::set<int>{location};
+        if (location != -1) set = std::set<int>{location};
     } else if (set.find(location) == set.end())
         set.clear();
 }
