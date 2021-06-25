@@ -1,6 +1,6 @@
 # MiniSQL
 
-🚧 Under Construction
+A bare-bone SQL implementation.
 
 ## Project Structure
 
@@ -26,9 +26,9 @@
 To build the project, run the following commands:
 
 ```shell
-mkdir build
-cmake build
+cmake -B build
 cd build && make
+./app/app  # executable
 ```
 
 ## Unit Test
@@ -41,17 +41,24 @@ test:
 ./test/catch-test
 ```
 
-## Declaration
-
-This project which serves as a coursework of _Database System Principle_ fully belongs
-to [@frothywater](http://github.com/frothywater) and his teammates.
-
 ## Dependencies
 
 - [Catch2](https://github.com/catchorg/Catch2): A modern, C++-native, header-only, test framework for unit-tests, TDD
   and BDD
 - [ANTLR4](https://github.com/antlr/antlr4): ANother Tool for Language Recognition
 - [Tabulate](https://github.com/p-ranav/tabulate): Table Maker for Modern C++
+
+## Declaration
+
+This project which serves as a coursework of _Database System Principle_ fully belongs
+to the team [MiniSQL2021](http://github.com/MiniSQL2021).
+
+## Contributors
+
+- [@frothywater](http://github.com/frothywater)
+- [@Sam-Wang-Xinyu](http://github.com/Sam-Wang-Xinyu)
+- [@coderczhhh](http://github.com/coderczhhh)
+- [@Rstln](http://github.com/Rstln)
 
 ## License
 
