@@ -135,7 +135,7 @@ inline int Tree<T>::searchKey(T & key)
 		return -1;
 	}
 	else {
-		return return_node->index_in_records[return_index];
+		return return_index;
 	}
 }
 
@@ -524,7 +524,7 @@ inline bool Tree<T>::findToLeaf1(TreeNode1 pNode, T key, TreeNode1 &return_node,
 		}
 		else {
 			//递归寻找下一层
-			findToLeaf1(pNode->childs[index], key, return_node, return_index);
+			return findToLeaf1(pNode->childs[index], key, return_node, return_index);
 		}
 
 
