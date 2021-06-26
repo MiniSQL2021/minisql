@@ -78,3 +78,4 @@ jobs:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: artifact
           asset_name: minisql-${{ runner.os }}
+          asset_content_type: application/zip
