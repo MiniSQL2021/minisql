@@ -16,24 +16,27 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       
-      - name: Restore Cache for `build`
-        uses: actions/cache@v2.1.6
-        with:
-          path: build
-          key: ${{ runner.os }}-cache
-      
-      - name: Setup CMake
-        if: ${{ runner.os != 'Windows' }}
-        uses: lukka/get-cmake@latest
+#       - name: Restore Cache for `build`
+#         uses: actions/cache@v2.1.6
+#         with:
+#           path: build
+#           key: ${{ runner.os }}-cache
           
       - name: Setup MSYS2
         if: ${{ runner.os == 'Windows' }}
         uses: msys2/setup-msys2@v2
+        with:
+          install: >-
+            git
+            base-devel
         
-      - name: Setup CMake on Windows
-        if: ${{ runner.os == 'Windows' }}
-        shell: msys2 {0}
-        run: pacman -S mingw-w64-x86_64-cmake mingw-w64-x86_64-ninja
+      - name: Setup CMake
+        uses: lukka/get-cmake@latest
+        
+#       - name: Setup CMake on Windows
+#         if: ${{ runner.os == 'Windows' }}
+#         shell: msys2 {0}
+#         run: yes | pacman -S --noconfirm mingw-w64-x86_64-cmake mingw-w64-x86_64-ninja
         
       - name: Configure CMake and Build
         if: ${{ runner.os != 'Windows' }}
