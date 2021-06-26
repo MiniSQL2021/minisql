@@ -16,11 +16,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       
-      - name: Restore Cache for `build`
-        uses: actions/cache@v2.1.6
-        with:
-          path: build
-          key: ${{ runner.os }}-cache
+#       - name: Restore Cache for `build`
+#         uses: actions/cache@v2.1.6
+#         with:
+#           path: build
+#           key: ${{ runner.os }}-cache
       
       - name: Setup CMake
         if: ${{ runner.os != 'Windows' }}
@@ -33,7 +33,7 @@ jobs:
       - name: Setup CMake on Windows
         if: ${{ runner.os == 'Windows' }}
         shell: msys2 {0}
-        run: pacman -S mingw-w64-x86_64-cmake mingw-w64-x86_64-ninja
+        run: yes | pacman -S --noconfirm mingw-w64-x86_64-cmake mingw-w64-x86_64-ninja
         
       - name: Configure CMake and Build
         if: ${{ runner.os != 'Windows' }}
