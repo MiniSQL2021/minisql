@@ -7,21 +7,21 @@ Interpreter的任务是将用户输入的SQL文本转换为API可以理解的信
 ```cpp
 class Interpreter {
 public:
-void listen();
+    void listen();
 
-void onCreateTableQuery(QueryHandler<CreateTableQuery> handler);
+    void onCreateTableQuery(QueryHandler<CreateTableQuery> handler);
 
-void onDropTableQuery(QueryHandler<DropTableQuery> handler);
+    void onDropTableQuery(QueryHandler<DropTableQuery> handler);
 
-void onCreateIndexQuery(QueryHandler<CreateIndexQuery> handler);
+    void onCreateIndexQuery(QueryHandler<CreateIndexQuery> handler);
 
-void onDropIndexQuery(QueryHandler<DropIndexQuery> handler);
+    void onDropIndexQuery(QueryHandler<DropIndexQuery> handler);
 
-void onSelectQuery(QueryHandler<SelectQuery> handler);
+    void onSelectQuery(QueryHandler<SelectQuery> handler);
 
-void onInsertQuery(QueryHandler<InsertQuery> handler);
+    void onInsertQuery(QueryHandler<InsertQuery> handler);
 
-void onDeleteQuery(QueryHandler<DeleteQuery> handler);
+    void onDeleteQuery(QueryHandler<DeleteQuery> handler);
 };
 ```
 
@@ -37,17 +37,17 @@ ANTLR4的解释文件分为词汇表和规则表两部分，其中规则表的�
 
 ```
 createTableStatement:
- CREATE TABLE tableName = identifier (
-  LPARN columnElementList primaryKeyConstraint RPARN
- );
+    CREATE TABLE tableName = identifier (
+    LPARN columnElementList primaryKeyConstraint RPARN
+    );
 
 columnElement:
- columnName = identifier dataType unique = UNIQUE?;
+    columnName = identifier dataType unique = UNIQUE?;
 
 columnElementList: (elements += columnElement COMMA)+;
 
 primaryKeyConstraint:
- PRIMARY KEY LPARN columnName = identifier RPARN;
+    PRIMARY KEY LPARN columnName = identifier RPARN;
 ```
 
 这种规则的定义方式完全利用了待解释语言本身的结构性，给本模块的实现提供了很大的方便。至于代码方面，ANTLR4提供的类型安全也使编写过程十分现代。
@@ -55,9 +55,10 @@ primaryKeyConstraint:
 ```cpp
 std::unique_ptr<CreateTableQuery>
 Parser::parseCreateTableStatement(SQLParser::CreateTableStatementContext *ctx) {
-return std::make_unique<CreateTableQuery>(parseIdentifier(ctx->tableName),
-parseColumnElementList(ctx->columnElementList()),
-parsePrimaryKeyConstraint(ctx->primaryKeyConstraint()));
+    return std::make_unique<CreateTableQuery>(
+        parseIdentifier(ctx->tableName),
+        parseColumnElementList(ctx->columnElementList()),
+        parsePrimaryKeyConstraint(ctx->primaryKeyConstraint()));
 }
 ```
 
@@ -71,28 +72,28 @@ parsePrimaryKeyConstraint(ctx->primaryKeyConstraint()));
 
 ```cpp
 while (true) {
-	try {
-		std::getline(std::cin, line);
-		parse(buffer);
-		// No syntax error occurs, clear buffer
-		buffer.empty();
-		isWaitingForMoreInput = false;
-	} catch (const SyntaxError &error) {
-		if (!error.hitEOF) {
-			// Didn't hit EOF, that is to say
-			// there exists syntax error in the middle
-			// Discard buffer, and print error message
-			std::cout << error.message() << std::endl;
-			buffer.empty();
-			isWaitingForMoreInput = false;
-		} else {
-			// Hit EOF, that is to say
-			// additional input is expected
-			// Reset buffer's get pointer to the beginning
-			buffer.seekg(0);
-			isWaitingForMoreInput = true;
-		}
-	}
+    try {
+        std::getline(std::cin, line);
+        parse(buffer);
+        // No syntax error occurs, clear buffer
+        buffer.empty();
+        isWaitingForMoreInput = false;
+    } catch (const SyntaxError &error) {
+        if (!error.hitEOF) {
+            // Didn't hit EOF, that is to say
+            // there exists syntax error in the middle
+            // Discard buffer, and print error message
+            std::cout << error.message() << std::endl;
+            buffer.empty();
+            isWaitingForMoreInput = false;
+        } else {
+            // Hit EOF, that is to say
+            // additional input is expected
+            // Reset buffer's get pointer to the beginning
+            buffer.seekg(0);
+            isWaitingForMoreInput = true;
+        }
+    }
 }
 ```
 
