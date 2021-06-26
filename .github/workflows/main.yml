@@ -21,13 +21,17 @@ jobs:
 #         with:
 #           path: build
 #           key: ${{ runner.os }}-cache
-      
-      - name: Setup CMake
-        uses: lukka/get-cmake@latest
           
       - name: Setup MSYS2
         if: ${{ runner.os == 'Windows' }}
         uses: msys2/setup-msys2@v2
+        with:
+          install: >-
+            git
+            base-devel
+        
+      - name: Setup CMake
+        uses: lukka/get-cmake@latest
         
 #       - name: Setup CMake on Windows
 #         if: ${{ runner.os == 'Windows' }}
